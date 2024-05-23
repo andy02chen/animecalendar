@@ -1,14 +1,21 @@
-from flask import request, jsonify
+from flask import request, jsonify, redirect
 from config import app, db
 import pkce
+import os
+from dotenv import load_dotenv
+from random import randrange
+import requests
 
 # TODO Import DB later
-# from models import 
+# from models import
 
-@app.route('/login', methods=["POST"])
-def login():
-    code_verifier = pkce.generate_code_verifier(length=128)
-    code_challenge = pkce.get_code_challenge(code_verifier)
+load_dotenv()
+
+# Get the client id
+@app.route('/api/client-id', methods=["GET"])
+def getClientID():
+    return jsonify({"clientId": os.getenv('CLIENT_ID')})
+
 
 if __name__ == '__main__':
     with app.app_context():
