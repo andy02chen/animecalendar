@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, session
+from flask import request, jsonify, redirect, session, make_response
 from config import app, db
 from flask_session import Session
 import pkce
@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from random import randrange
 import requests
 from models import db, User
+import urllib.parse
+import base64
 
 load_dotenv()
 
@@ -54,17 +56,49 @@ def auth():
 
 @app.route('/oauth/callback')
 def oauth():
-    authorization_code = request.args.get('code')
+    user = User.query.filter_by(user_id=session.get("user_id")).first()
     returned_state = request.args.get('state')
 
-    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    if returned_state == user.oauth_state:
+        
+        client_id = os.getenv("CLIENT_ID")
+        base64.b64encode(bytes('your_string', 'utf-8'))
+        client_secret = os.getenv("CLIENT_SECRET")
+        code_verifier = user.code_challenge
+        authorization_code = request.args.get('code')
 
-    print(user.code_challenge)
-    print(user.oauth_state)
-    print(returned_state)
-    print(returned_state == user.oauth_state)
+        url = 'https://myanimelist.net/v1/oauth2/token'
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        data = {
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'grant_type': 'authorization_code',
+            'code': authorization_code,
+            'redirect_uri': 'http://localhost:5173/oauth/callback',
+            'code_verifier': code_verifier
+        }
 
-    return user.oauth_state
+        response = requests.post(url, headers=headers, data=data)
+
+        if response.status_code == 200:
+            data = response.json()
+            # print(data["access_token"])
+            # print(data["refresh_token"])
+            # print(data["expires_in"])
+            response = make_response(redirect('/home'))
+            response.set_cookie('access_token', data["access_token"], httponly=True)
+            response.set_cookie('refresh_token', data["refresh_token"], httponly=True)
+            response.set_cookie('expires_in', str(data["expires_in"]), httponly=True)
+            return response
+            # return jsonify(data)
+        else:
+            return jsonify({'error': 'Failed to get token', 'status_code': response.status_code, 'response': response.text})
+
+    else:
+        # return error message
+        return "State did not match. Please Try again or something idk"
 
 if __name__ == '__main__':
     with app.app_context():
