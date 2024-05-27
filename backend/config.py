@@ -13,7 +13,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "sqlalchemy"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sessions.db'
 
-
 db = SQLAlchemy(app)
 app.config['SESSION_SQLALCHEMY'] = db
-Session(app)
+server_session = Session(app)

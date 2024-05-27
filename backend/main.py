@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from random import randrange
 import requests
-from models import db, User
+from models import db, User, Auth
 import urllib.parse
 import base64
 
@@ -34,35 +34,39 @@ def generateCodeChallenge(length = 128):
 
     return result
 
-# Get the client id
-@app.route('/api/client-id', methods=["GET"])
-def getClientID():
-    return jsonify({"clientId": os.getenv('CLIENT_ID')})
-
 @app.route('/auth')
 def auth():
     oauth_state = generateRandomState()
     client_id = os.getenv('CLIENT_ID')
     code_challenge = generateCodeChallenge()
 
-    new_user = User(oauth_state=oauth_state, code_challenge=code_challenge)
+    new_user = User()
     db.session.add(new_user)
     db.session.commit()
 
     session["user_id"] = new_user.user_id
+    
+    new_user_auth = Auth(user_id=new_user.user_id,session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
+    db.session.add_all([new_user, new_user_auth])
+    db.session.commit()
+
+    # new_user = User(oauth_state=oauth_state, code_challenge=code_challenge)
+    # db.session.add(new_user)
+    # db.session.commit()
+
+    
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     return redirect(auth_url)
 
 @app.route('/oauth/callback')
 def oauth():
-    user = User.query.filter_by(user_id=session.get("user_id")).first()
+    user = Auth.query.filter_by(user_id=session.get("user_id")).first()
     returned_state = request.args.get('state')
 
     if returned_state == user.oauth_state:
         
         client_id = os.getenv("CLIENT_ID")
-        base64.b64encode(bytes('your_string', 'utf-8'))
         client_secret = os.getenv("CLIENT_SECRET")
         code_verifier = user.code_challenge
         authorization_code = request.args.get('code')
@@ -88,9 +92,9 @@ def oauth():
             # print(data["refresh_token"])
             # print(data["expires_in"])
             response = make_response(redirect('/home'))
-            response.set_cookie('access_token', data["access_token"], httponly=True)
-            response.set_cookie('refresh_token', data["refresh_token"], httponly=True)
-            response.set_cookie('expires_in', str(data["expires_in"]), httponly=True)
+            # response.set_cookie('access_token', data["access_token"], httponly=True, secure=True)
+            # response.set_cookie('refresh_token', data["refresh_token"], httponly=True, secure=True)
+            # response.set_cookie('expires_in', str(data["expires_in"]), httponly=True, secure=True)
             return response
             # return jsonify(data)
         else:
@@ -102,7 +106,7 @@ def oauth():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.drop_all()
+        # db.drop_all()
         db.create_all()
     
     app.run(debug=True,port=5000)
