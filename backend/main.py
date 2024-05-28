@@ -34,6 +34,7 @@ def generateCodeChallenge(length = 128):
 
     return result
 
+# Redirect when user logs in with MAL
 @app.route('/auth')
 def auth():
     oauth_state = generateRandomState()
@@ -54,18 +55,23 @@ def auth():
     # db.session.add(new_user)
     # db.session.commit()
 
-    
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     return redirect(auth_url)
 
+# Redirect from OAuth
 @app.route('/oauth/callback')
 def oauth():
-    user = Auth.query.filter_by(user_id=session.get("user_id")).first()
+
+    # Gets session from cookie
+    user_session_id = request.cookies.get("session")
+    user = Auth.query.filter_by(session_id=user_session_id).first()
     returned_state = request.args.get('state')
 
+    # Verifies state is same
     if returned_state == user.oauth_state:
         
+        # Post Request for access tokens
         client_id = os.getenv("CLIENT_ID")
         client_secret = os.getenv("CLIENT_SECRET")
         code_verifier = user.code_challenge
@@ -86,22 +92,22 @@ def oauth():
 
         response = requests.post(url, headers=headers, data=data)
 
+        # If OK stores in database and redirects user to home page
         if response.status_code == 200:
             data = response.json()
-            # print(data["access_token"])
-            # print(data["refresh_token"])
-            # print(data["expires_in"])
+
             response = make_response(redirect('/home'))
-            # response.set_cookie('access_token', data["access_token"], httponly=True, secure=True)
-            # response.set_cookie('refresh_token', data["refresh_token"], httponly=True, secure=True)
-            # response.set_cookie('expires_in', str(data["expires_in"]), httponly=True, secure=True)
+
+            user_store_tokens = User.query.filter_by(user_id=user.user_id).first()
+            user_store_tokens.access_token = data["access_token"]
+            user_store_tokens.refresh_token = data["refresh_token"]
+            user_store_tokens.expires_in = str(data["expires_in"])
+
             return response
-            # return jsonify(data)
         else:
             return jsonify({'error': 'Failed to get token', 'status_code': response.status_code, 'response': response.text})
 
     else:
-        # return error message
         return "State did not match. Please Try again or something idk"
 
 if __name__ == '__main__':
