@@ -9,14 +9,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/a",
     element: <Auth/>
   },
   {
     path: "/home",
-    element: (
-      <HomePage/>
-    )
+    element: <HomePage/>
   },
 ]);
 

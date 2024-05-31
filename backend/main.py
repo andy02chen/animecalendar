@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, session, make_response
+from flask import request, jsonify, redirect, session, make_response, url_for
 from config import app, db
 from flask_session import Session
 import pkce
@@ -11,6 +11,19 @@ import urllib.parse
 import base64
 
 load_dotenv()
+
+@app.route('/')
+def checkSession():
+    # Check if user session exists
+    user_session_id = request.cookies.get("session")
+    user_id = Auth.query.filter_by(session_id=user_session_id).first()
+    
+    # Redirect to Home page if the user exists
+    if user_id:
+        return redirect("http://localhost:5173/home")
+    
+    else:
+        return redirect("http://localhost:5173/a")
 
 # Generates a random state
 def generateRandomState(length = 32):

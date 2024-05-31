@@ -8,6 +8,14 @@ export default defineConfig({
       '/auth':"http://localhost:5000",
       '/api':"http://localhost:5000",
       '/oauth':"http://localhost:5000",
+      '/':{
+        target: "http://localhost:5000",
+        bypass: (req) => {
+          if (req.url !== '/') {
+            return req.url;
+          }
+        }
+      }
     }
   },
   plugins: [react()]
