@@ -81,8 +81,6 @@ def oauth():
     user_session_id = request.cookies.get("session")
     user = Auth.query.filter_by(session_id=user_session_id).first()
 
-    print(user)
-
     returned_state = request.args.get('state')
 
     # Verifies state is same
@@ -124,15 +122,30 @@ def oauth():
             # Check if the request was successful
             if response.status_code == 200:
 
-                # Store user data
+                # Check if the user already exist in the database
                 user_data = response.json()
                 user_username = user_data['name']
-                new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=str(token_data['expires_in']))
+
+                # Delete existing session
+                session_to_delete = Auth.query.filter_by(user_id=user_username).first()
+                if(session_to_delete):
+                    db.session.delete(session_to_delete)
+                    db.session.commit()
+
+                    # Update existing user
+                    existing_user = User.query.filter_by(user_id=user_username).first()
+                    existing_user.access_token = mal_access_token
+                    existing_user.refresh_token = token_data["refresh_token"]
+                    existing_user.expires_in = token_data["expires_in"]
+                
+                else:
+                    # Store new user data
+                    new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=str(token_data['expires_in']))
+                    db.session.add(new_user)
 
                 auth_to_update = Auth.query.filter_by(session_id=user_session_id).first()
                 auth_to_update.user_id = user_username
-
-                db.session.add_all([new_user,auth_to_update])
+                db.session.add(auth_to_update)
                 db.session.commit()
 
             else:
