@@ -54,14 +54,15 @@ def auth():
     client_id = os.getenv('CLIENT_ID')
     code_challenge = generateCodeChallenge()
 
-    new_user = User()
-    db.session.add(new_user)
-    db.session.commit()
+    # new_user = User()
+    # db.session.add(new_user)
+    # db.session.commit()
 
-    session["user_id"] = new_user.user_id
-    
-    new_user_auth = Auth(user_id=new_user.user_id,session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
-    db.session.add_all([new_user, new_user_auth])
+    # session["user_id"] = new_user.user_id
+
+    session["session_id"] = session.sid
+    new_user_auth = Auth(session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
+    db.session.add(new_user_auth)
     db.session.commit()
 
     # new_user = User(oauth_state=oauth_state, code_challenge=code_challenge)
@@ -79,6 +80,9 @@ def oauth():
     # Gets session from cookie
     user_session_id = request.cookies.get("session")
     user = Auth.query.filter_by(session_id=user_session_id).first()
+
+    print(user)
+
     returned_state = request.args.get('state')
 
     # Verifies state is same
@@ -119,18 +123,22 @@ def oauth():
 
             # Check if the request was successful
             if response.status_code == 200:
+
+                # Store user data
                 user_data = response.json()
-                print(user_data)
+                user_username = user_data['name']
+                new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=str(token_data['expires_in']))
+
+                auth_to_update = Auth.query.filter_by(session_id=user_session_id).first()
+                auth_to_update.user_id = user_username
+
+                db.session.add_all([new_user,auth_to_update])
+                db.session.commit()
+
             else:
                 return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
 
-            response = make_response(redirect('/home'))
-            user_store_tokens = User.query.filter_by(user_id=user.user_id).first()
-            user_store_tokens.access_token = mal_access_token
-            user_store_tokens.refresh_token = token_data["refresh_token"]
-            user_store_tokens.expires_in = str(token_data["expires_in"])
-
-            return response
+            return make_response(redirect('/home'))
         else:
             return jsonify({'error': 'Failed to get token', 'status_code': response.status_code, 'response': response.text})
 
