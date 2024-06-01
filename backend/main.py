@@ -107,14 +107,28 @@ def oauth():
 
         # If OK stores in database and redirects user to home page
         if response.status_code == 200:
-            data = response.json()
+            token_data = response.json()
+
+            # Get user information
+            mal_get_me = 'https://api.myanimelist.net/v2/users/@me'
+            mal_access_token = token_data["access_token"]
+            headers = {
+                'Authorization': f'Bearer {mal_access_token}'
+            }
+            response = requests.get(mal_get_me, headers=headers)
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                user_data = response.json()
+                print(user_data)
+            else:
+                return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
 
             response = make_response(redirect('/home'))
-
             user_store_tokens = User.query.filter_by(user_id=user.user_id).first()
-            user_store_tokens.access_token = data["access_token"]
-            user_store_tokens.refresh_token = data["refresh_token"]
-            user_store_tokens.expires_in = str(data["expires_in"])
+            user_store_tokens.access_token = mal_access_token
+            user_store_tokens.refresh_token = token_data["refresh_token"]
+            user_store_tokens.expires_in = str(token_data["expires_in"])
 
             return response
         else:
