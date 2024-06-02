@@ -12,6 +12,31 @@ import base64
 
 load_dotenv()
 
+# Function for refreshing
+def refreshTokens(user_to_refresh):
+    # Refresh the access token
+    url = 'https://myanimelist.net/v1/oauth2/token'
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'client_id': os.getenv('CLIENT_ID'),
+        'client_secret': os.getenv("CLIENT_SECRET"),
+        'grant_type': 'refresh_token',
+        'refresh_token':user_to_refresh.refresh_token
+    }
+    
+    response = requests.post(url, headers=headers, data=data)
+    if response.status_code == 200:
+        token_data = response.json()
+
+        user_to_refresh.access_token = token_data["access_token"]
+        user_to_refresh.refresh_token = token_data["refresh_token"]
+        user_to_refresh.expires_in = token_data["expires_in"]
+        db.session.commit()
+
+        return True
+
 @app.route('/')
 def checkSession():
     # Check if user session exists
@@ -26,28 +51,11 @@ def checkSession():
         # Get refresh token using user id
         user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
 
-        # Refresh the access token
-        url = 'https://myanimelist.net/v1/oauth2/token'
-        headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-        data = {
-            'client_id': os.getenv('CLIENT_ID'),
-            'client_secret': os.getenv("CLIENT_SECRET"),
-            'grant_type': 'refresh_token',
-            'refresh_token':user_to_refresh.refresh_token
-        }
-        response = requests.post(url, headers=headers, data=data)
-
-        if response.status_code == 200:
-            token_data = response.json()
-
-            user_to_refresh.access_token = token_data["access_token"]
-            user_to_refresh.refresh_token = token_data["refresh_token"]
-            user_to_refresh.expires_in = token_data["expires_in"]
-            db.session.commit()
-
+        if refreshTokens(user_to_refresh):
             return redirect("http://localhost:5173/home")
+
+        else:
+            return "Error with refreshing token"
     
     # Login the user for the first time
     else:
@@ -82,21 +90,10 @@ def auth():
     client_id = os.getenv('CLIENT_ID')
     code_challenge = generateCodeChallenge()
 
-    # new_user = User()
-    # db.session.add(new_user)
-    # db.session.commit()
-
-    # session["user_id"] = new_user.user_id
-
     session["session_id"] = session.sid
     new_user_auth = Auth(session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
     db.session.add(new_user_auth)
     db.session.commit()
-
-    # new_user = User(oauth_state=oauth_state, code_challenge=code_challenge)
-    # db.session.add(new_user)
-    # db.session.commit()
-
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     return redirect(auth_url)
