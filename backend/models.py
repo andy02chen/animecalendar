@@ -15,4 +15,4 @@ class User(db.Model):
     user_id = db.Column(db.String(), primary_key=True, nullable=False)
     access_token = db.Column(db.String())
     refresh_token = db.Column(db.String())
-    expires_in = db.Column(db.String())
+    expires_in = db.Column(db.Integer())

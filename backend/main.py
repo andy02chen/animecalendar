@@ -9,6 +9,7 @@ import requests
 from models import db, User, Auth
 import urllib.parse
 import base64
+import time
 
 load_dotenv()
 
@@ -30,9 +31,10 @@ def refreshTokens(user_to_refresh):
     if response.status_code == 200:
         token_data = response.json()
 
+        token_expiration_time = int(time.time()) + int(token_data["expires_in"])
         user_to_refresh.access_token = token_data["access_token"]
         user_to_refresh.refresh_token = token_data["refresh_token"]
-        user_to_refresh.expires_in = token_data["expires_in"]
+        user_to_refresh.expires_in = token_expiration_time
         db.session.commit()
 
         return True
@@ -146,6 +148,8 @@ def oauth():
 
             # Check if the request was successful
             if response.status_code == 200:
+                # Stores expiration time in Unix
+                token_expiration_time = int(time.time()) + int(token_data["expires_in"])
 
                 # Check if the user already exist in the database
                 user_data = response.json()
@@ -157,15 +161,17 @@ def oauth():
                     db.session.delete(session_to_delete)
                     db.session.commit()
 
+                    
+
                     # Update existing user
                     existing_user = User.query.filter_by(user_id=user_username).first()
                     existing_user.access_token = mal_access_token
                     existing_user.refresh_token = token_data["refresh_token"]
-                    existing_user.expires_in = token_data["expires_in"]
+                    existing_user.expires_in = token_expiration_time
                 
                 else:
                     # Store new user data
-                    new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=str(token_data['expires_in']))
+                    new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=token_expiration_time)
                     db.session.add(new_user)
 
                 auth_to_update = Auth.query.filter_by(session_id=user_session_id).first()
