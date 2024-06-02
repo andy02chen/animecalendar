@@ -18,10 +18,38 @@ def checkSession():
     user_session_id = request.cookies.get("session")
     user_id = Auth.query.filter_by(session_id=user_session_id).first()
     
-    # Redirect to Home page if the user exists
+    # Refresh access and refresh token if the user already exists before redirecting to home page
     if user_id:
-        return redirect("http://localhost:5173/home")
+        # Get user id using session id
+        user_auth_username = Auth.query.filter_by(session_id=user_session_id).first().user_id
+
+        # Get refresh token using user id
+        user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
+
+        # Refresh the access token
+        url = 'https://myanimelist.net/v1/oauth2/token'
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        data = {
+            'client_id': os.getenv('CLIENT_ID'),
+            'client_secret': os.getenv("CLIENT_SECRET"),
+            'grant_type': 'refresh_token',
+            'refresh_token':user_to_refresh.refresh_token
+        }
+        response = requests.post(url, headers=headers, data=data)
+
+        if response.status_code == 200:
+            token_data = response.json()
+
+            user_to_refresh.access_token = token_data["access_token"]
+            user_to_refresh.refresh_token = token_data["refresh_token"]
+            user_to_refresh.expires_in = token_data["expires_in"]
+            db.session.commit()
+
+            return redirect("http://localhost:5173/home")
     
+    # Login the user for the first time
     else:
         return redirect("http://localhost:5173/a")
 
