@@ -13,6 +13,18 @@ import time
 
 load_dotenv()
 
+# Function checks to ensure that the user is allowed to visited route
+@app.route('/api/check-login', methods=["GET"])
+def protectedRoute():
+    user_session_id = request.cookies.get('session')
+    find_user = Auth.query.filter_by(session_id=user_session_id).first()
+
+    if find_user:
+        print('here')
+        return jsonify({'loggedIn':True})
+
+    return jsonify({'loggedIn':False})
+
 # Function for refreshing
 def refreshTokens(user_to_refresh):
     # Refresh the access token
@@ -103,7 +115,6 @@ def auth():
 # Redirect from OAuth
 @app.route('/oauth/callback')
 def oauth():
-
     # Gets session from cookie
     user_session_id = request.cookies.get("session")
     user = Auth.query.filter_by(session_id=user_session_id).first()
@@ -160,8 +171,6 @@ def oauth():
                 if(session_to_delete):
                     db.session.delete(session_to_delete)
                     db.session.commit()
-
-                    
 
                     # Update existing user
                     existing_user = User.query.filter_by(user_id=user_username).first()
