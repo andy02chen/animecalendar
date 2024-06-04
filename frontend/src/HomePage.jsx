@@ -42,22 +42,6 @@ function HomePage() {
             }
         </>
     );
-
-    // if (isLoading) {
-    //     return <p>Loading...</p>;
-    // }
-
-    // if (!isLoggedIn) {
-    //     loginRedirect();
-    //     return null;
-    // }
-
-    // return (
-    //     <>
-    //         <h1>Home Page</h1>
-    //         <p>User is logged in.</p>
-    //     </>
-    // );
 }
 
 export default HomePage;

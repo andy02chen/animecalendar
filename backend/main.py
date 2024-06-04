@@ -20,7 +20,6 @@ def protectedRoute():
     find_user = Auth.query.filter_by(session_id=user_session_id).first()
 
     if find_user:
-        print('here')
         return jsonify({'loggedIn':True})
 
     return jsonify({'loggedIn':False})
