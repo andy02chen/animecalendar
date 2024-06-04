@@ -103,9 +103,19 @@ def auth():
     client_id = os.getenv('CLIENT_ID')
     code_challenge = generateCodeChallenge()
 
+    # Check if session id is already in database    
     session["session_id"] = session.sid
-    new_user_auth = Auth(session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
-    db.session.add(new_user_auth)
+
+    find_session = Auth.query.filter_by(session_id=session.sid).first()
+
+    if find_session:
+        find_session.oauth_state=oauth_state
+        find_session.code_challenge=code_challenge
+
+    else:
+        new_user_auth = Auth(session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
+        db.session.add(new_user_auth)
+
     db.session.commit()
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
@@ -114,6 +124,7 @@ def auth():
 # Redirect from OAuth
 @app.route('/oauth/callback')
 def oauth():
+
     # Gets session from cookie
     user_session_id = request.cookies.get("session")
     user = Auth.query.filter_by(session_id=user_session_id).first()
