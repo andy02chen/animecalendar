@@ -1,6 +1,7 @@
 from flask import request, jsonify, redirect, session, make_response, url_for
 from config import app, db
 from flask_session import Session
+from flask_limiter import Limiter
 import pkce
 import os
 from dotenv import load_dotenv
@@ -23,6 +24,24 @@ def protectedRoute():
         return jsonify({'loggedIn':True})
 
     return jsonify({'loggedIn':False})
+
+# Endpoint for refreshing the user's access token
+@app.route('/api/refresh-token', methods=["POST"])
+def refreshUsersTokens():
+    user_session_id = request.cookies.get('session')
+    find_user = Auth.query.filter_by(session_id=user_session_id).first()
+
+    if find_user:
+        user_auth_username = find_user.user_id
+        user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
+
+        if refreshTokens(user_to_refresh):
+            return '', 201
+
+        else:
+            return '', 403
+
+    return '', 401
 
 # Function for refreshing
 def refreshTokens(user_to_refresh):

@@ -14,6 +14,7 @@ function Auth() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [hasLoaded, setLoaded] = useState(false);
 
+    // Calls API to check if user is logged in
     useEffect(() => {
         axios.get("/api/check-login")
             .then(response => {
@@ -25,6 +26,7 @@ function Auth() {
             });
     }, []);
 
+    // Redirects to login page if not logged in
     return(
         <>
             {hasLoaded ?
