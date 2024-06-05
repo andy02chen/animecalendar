@@ -2,6 +2,7 @@ from flask import request, jsonify, redirect, session, make_response, url_for
 from config import app, db
 from flask_session import Session
 from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import pkce
 import os
 from dotenv import load_dotenv
@@ -14,8 +15,14 @@ import time
 
 load_dotenv()
 
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app
+)
+
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
+@limiter.limit("20 per minute")
 def protectedRoute():
     user_session_id = request.cookies.get('session')
     find_user = Auth.query.filter_by(session_id=user_session_id).first()

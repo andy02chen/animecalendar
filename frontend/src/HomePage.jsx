@@ -30,6 +30,7 @@ function HomePage() {
             .then(response => {
                 setLoggedIn(response.data.loggedIn);
                 setLoaded(true);
+                console.log(response);
             })
             .catch(error => {
                 setLoaded(true);
