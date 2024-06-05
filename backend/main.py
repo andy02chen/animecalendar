@@ -1,4 +1,5 @@
 from flask import request, jsonify, redirect, session, make_response, url_for
+from cryptography.fernet import Fernet
 from config import app, db
 from flask_session import Session
 from flask_limiter import Limiter
@@ -12,8 +13,12 @@ from models import db, User, Auth
 import urllib.parse
 import base64
 import time
+import hashlib
 
 load_dotenv()
+
+encryption_key = os.getenv("ENC_KEY").encode()
+cipher_suite = Fernet(encryption_key)
 
 limiter = Limiter(
     key_func=get_remote_address,
@@ -49,6 +54,9 @@ def refreshUsersTokens():
             return '', 403
 
     return '', 401
+
+def hash_text(text):
+    return hashlib.sha256(text.encode()).hexdigest()
 
 # Function for refreshing
 def refreshTokens(user_to_refresh):
@@ -129,18 +137,30 @@ def auth():
     client_id = os.getenv('CLIENT_ID')
     code_challenge = generateCodeChallenge()
 
-    # Check if session id is already in database    
-    session["session_id"] = session.sid
+    # OLD
+    # # Check if session id is already in database    
+    # session["session_id"] = session.sid
 
-    find_session = Auth.query.filter_by(session_id=session.sid).first()
+    # find_session = Auth.query.filter_by(session_id=session.sid).first()
 
-    if find_session:
-        find_session.oauth_state=oauth_state
-        find_session.code_challenge=code_challenge
+    # if find_session:
+    #     find_session.oauth_state=oauth_state
+    #     find_session.code_challenge=code_challenge
 
-    else:
-        new_user_auth = Auth(session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
-        db.session.add(new_user_auth)
+    # else:
+    #     new_user_auth = Auth(session_id=session.sid, oauth_state=oauth_state, code_challenge=code_challenge)
+    #     db.session.add(new_user_auth)
+
+    # db.session.commit()
+
+    # -----
+    # NEW
+
+    # TODO check if the session already exists
+
+    # Hashes State and Encrypts code challenge before storing
+    new_user_auth = Auth(oauth_state=hash_text(oauth_state), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=session.sid)
+    db.session.add(new_user_auth)
 
     db.session.commit()
 
@@ -151,88 +171,158 @@ def auth():
 @app.route('/oauth/callback')
 def oauth():
 
-    # Gets session from cookie
-    user_session_id = request.cookies.get("session")
-    user = Auth.query.filter_by(session_id=user_session_id).first()
-
+    # Compare hashed state
     returned_state = request.args.get('state')
+    authorization_code = request.args.get('code')
 
-    # Verifies state is same
-    if returned_state == user.oauth_state:
-        
-        # Post Request for access tokens
-        client_id = os.getenv("CLIENT_ID")
-        client_secret = os.getenv("CLIENT_SECRET")
-        code_verifier = user.code_challenge
-        authorization_code = request.args.get('code')
+    if returned_state and authorization_code:
+        find_state = Auth.query.filter_by(oauth_state=hash_text(returned_state)).first()
 
-        url = 'https://myanimelist.net/v1/oauth2/token'
-        headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-        data = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'grant_type': 'authorization_code',
-            'code': authorization_code,
-            'redirect_uri': 'http://localhost:5173/oauth/callback',
-            'code_verifier': code_verifier
-        }
+        if find_state:
+            # Post Request for access tokens
+            client_id = os.getenv("CLIENT_ID")
+            client_secret = os.getenv("CLIENT_SECRET")
+            code_verifier = cipher_suite.decrypt(find_state.code_challenge)
+            authorization_code = request.args.get('code')
 
-        response = requests.post(url, headers=headers, data=data)
-
-        # If OK stores in database and redirects user to home page
-        if response.status_code == 200:
-            token_data = response.json()
-
-            # Get user information
-            mal_get_me = 'https://api.myanimelist.net/v2/users/@me'
-            mal_access_token = token_data["access_token"]
+            url = 'https://myanimelist.net/v1/oauth2/token'
             headers = {
-                'Authorization': f'Bearer {mal_access_token}'
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
-            response = requests.get(mal_get_me, headers=headers)
+            data = {
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'grant_type': 'authorization_code',
+                'code': authorization_code,
+                'redirect_uri': 'http://localhost:5173/oauth/callback',
+                'code_verifier': code_verifier
+            }
+            response = requests.post(url, headers=headers, data=data)
 
-            # Check if the request was successful
             if response.status_code == 200:
-                # Stores expiration time in Unix
-                token_expiration_time = int(time.time()) + int(token_data["expires_in"])
+                token_data = response.json()
 
-                # Check if the user already exist in the database
-                user_data = response.json()
-                user_username = user_data['name']
+                # Get user information
+                mal_get_me = 'https://api.myanimelist.net/v2/users/@me'
+                mal_access_token = token_data["access_token"]
+                headers = {
+                    'Authorization': f'Bearer {mal_access_token}'
+                }
+                response = requests.get(mal_get_me, headers=headers)
 
-                # Delete existing session
-                session_to_delete = Auth.query.filter_by(user_id=user_username).first()
-                if(session_to_delete):
-                    db.session.delete(session_to_delete)
+                # Check if the request was successful
+                if response.status_code == 200:
+                    # Stores expiration time in Unix
+                    token_expiration_time = int(time.time()) + int(token_data["expires_in"])
+
+                    # Check if the user already exist in the database
+                    user_data = response.json()
+                    user_username = user_data['name']
+
+                    # Assign username to session id
+                    find_state.user_id = user_username
                     db.session.commit()
 
-                    # Update existing user
-                    existing_user = User.query.filter_by(user_id=user_username).first()
-                    existing_user.access_token = mal_access_token
-                    existing_user.refresh_token = token_data["refresh_token"]
-                    existing_user.expires_in = token_expiration_time
-                
-                else:
                     # Store new user data
-                    new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=token_expiration_time)
+                    new_user = User(user_id=user_username,access_token=cipher_suite.encrypt(mal_access_token.encode()),refresh_token=cipher_suite.encrypt(token_data["refresh_token"].encode()),expires_in=token_expiration_time)
                     db.session.add(new_user)
+                    db.session.commit()
 
-                auth_to_update = Auth.query.filter_by(session_id=user_session_id).first()
-                auth_to_update.user_id = user_username
-                db.session.add(auth_to_update)
-                db.session.commit()
 
             else:
                 return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
+            
+            resp = make_response(redirect('/home'))
+            resp.set_cookie('session', find_state.session_id)
+            return resp
 
-            return make_response(redirect('/home'))
-        else:
-            return jsonify({'error': 'Failed to get token', 'status_code': response.status_code, 'response': response.text})
-
-    else:
         return "State did not match. Please Try again or something idk"
+
+    return redirect('/a')
+
+    # OLD
+    # # Gets session from cookie
+    # user_session_id = request.cookies.get("session")
+    # user = Auth.query.filter_by(session_id=user_session_id).first()
+
+    # returned_state = request.args.get('state')
+
+    # # Verifies state is same
+    # if returned_state == user.oauth_state:
+        
+    #     # Post Request for access tokens
+    #     client_id = os.getenv("CLIENT_ID")
+    #     client_secret = os.getenv("CLIENT_SECRET")
+    #     code_verifier = user.code_challenge
+    #     authorization_code = request.args.get('code')
+
+    #     url = 'https://myanimelist.net/v1/oauth2/token'
+    #     headers = {
+    #         'Content-Type': 'application/x-www-form-urlencoded'
+    #     }
+    #     data = {
+    #         'client_id': client_id,
+    #         'client_secret': client_secret,
+    #         'grant_type': 'authorization_code',
+    #         'code': authorization_code,
+    #         'redirect_uri': 'http://localhost:5173/oauth/callback',
+    #         'code_verifier': code_verifier
+    #     }
+
+    #     response = requests.post(url, headers=headers, data=data)
+
+    #     # If OK stores in database and redirects user to home page
+    #     if response.status_code == 200:
+    #         token_data = response.json()
+
+    #         # Get user information
+    #         mal_get_me = 'https://api.myanimelist.net/v2/users/@me'
+    #         mal_access_token = token_data["access_token"]
+    #         headers = {
+    #             'Authorization': f'Bearer {mal_access_token}'
+    #         }
+    #         response = requests.get(mal_get_me, headers=headers)
+
+    #         # Check if the request was successful
+    #         if response.status_code == 200:
+    #             # Stores expiration time in Unix
+    #             token_expiration_time = int(time.time()) + int(token_data["expires_in"])
+
+    #             # Check if the user already exist in the database
+    #             user_data = response.json()
+    #             user_username = user_data['name']
+
+    #             # Delete existing session
+    #             session_to_delete = Auth.query.filter_by(user_id=user_username).first()
+    #             if(session_to_delete):
+    #                 db.session.delete(session_to_delete)
+    #                 db.session.commit()
+
+    #                 # Update existing user
+    #                 existing_user = User.query.filter_by(user_id=user_username).first()
+    #                 existing_user.access_token = mal_access_token
+    #                 existing_user.refresh_token = token_data["refresh_token"]
+    #                 existing_user.expires_in = token_expiration_time
+                
+    #             else:
+    #                 # Store new user data
+    #                 new_user = User(user_id=user_username,access_token=mal_access_token,refresh_token=token_data["refresh_token"],expires_in=token_expiration_time)
+    #                 db.session.add(new_user)
+
+    #             auth_to_update = Auth.query.filter_by(session_id=user_session_id).first()
+    #             auth_to_update.user_id = user_username
+    #             db.session.add(auth_to_update)
+    #             db.session.commit()
+
+    #         else:
+    #             return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
+
+    #         return make_response(redirect('/home'))
+    #     else:
+    #         return jsonify({'error': 'Failed to get token', 'status_code': response.status_code, 'response': response.text})
+
+    # else:
+    #     return "State did not match. Please Try again or something idk"
 
 if __name__ == '__main__':
     with app.app_context():
