@@ -1,5 +1,6 @@
 from config import db
 from uuid import uuid4
+import time
 
 def get_uid():
     return uuid4().hex
@@ -16,3 +17,9 @@ class User(db.Model):
     access_token = db.Column(db.BLOB())
     refresh_token = db.Column(db.BLOB())
     expires_in = db.Column(db.Integer())
+
+class RateLimit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ip = db.Column(db.String(50), nullable=False)
+    endpoint = db.Column(db.String(50), nullable=False)
+    timestamp = db.Column(db.Integer, default=int(time.time()))
