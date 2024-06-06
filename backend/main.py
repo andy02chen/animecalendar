@@ -69,7 +69,7 @@ def refreshTokens(user_to_refresh):
         'client_id': os.getenv('CLIENT_ID'),
         'client_secret': os.getenv("CLIENT_SECRET"),
         'grant_type': 'refresh_token',
-        'refresh_token':user_to_refresh.refresh_token
+        'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token.decode())
     }
     
     response = requests.post(url, headers=headers, data=data)
@@ -77,8 +77,8 @@ def refreshTokens(user_to_refresh):
         token_data = response.json()
 
         token_expiration_time = int(time.time()) + int(token_data["expires_in"])
-        user_to_refresh.access_token = token_data["access_token"]
-        user_to_refresh.refresh_token = token_data["refresh_token"]
+        user_to_refresh.access_token = cipher_suite.encrypt(token_data["access_token"].encode())
+        user_to_refresh.refresh_token = cipher_suite.encrypt(token_data["refresh_token"].encode())
         user_to_refresh.expires_in = token_expiration_time
         db.session.commit()
 
