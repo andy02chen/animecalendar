@@ -223,11 +223,23 @@ def oauth():
                     find_state.user_id = user_username
                     db.session.commit()
 
-                    # Store new user data
-                    new_user = User(user_id=user_username,access_token=cipher_suite.encrypt(mal_access_token.encode()),refresh_token=cipher_suite.encrypt(token_data["refresh_token"].encode()),expires_in=token_expiration_time)
-                    db.session.add(new_user)
+                    # Check if user already exists
+                    find_user = User.query.filter_by(user_id=user_username).first()
+
+                    if find_user:
+                        find_user.access_token = cipher_suite.encrypt(mal_access_token.encode())
+                        find_user.refresh_token = cipher_suite.encrypt(token_data["refresh_token"].encode())
+                        find_user.expires_in = token_expiration_time
+
+                    else:
+                        # Store new user data
+                        new_user = User(user_id=user_username,access_token=cipher_suite.encrypt(mal_access_token.encode()),refresh_token=cipher_suite.encrypt(token_data["refresh_token"].encode()),expires_in=token_expiration_time)
+                        db.session.add(new_user)
+                    
                     db.session.commit()
 
+                else:
+                    return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
 
             else:
                 return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
