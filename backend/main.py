@@ -12,6 +12,7 @@ import urllib.parse
 import base64
 import time
 import hashlib
+import uuid
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ def is_rate_limited(ip, endpoint, limit, period):
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     new_request = RateLimit(ip=request.remote_addr, endpoint=request.endpoint)
@@ -59,8 +60,8 @@ def refreshUsersTokens():
 
     return '', 401
 
-def hash_text(text):
-    return hashlib.sha256(text.encode() + os.getenv("SALT").encode()).hexdigest()
+def hash_text(text, salt):
+    return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
 
 # Function for refreshing
 def refreshTokens(user_to_refresh):
@@ -142,13 +143,17 @@ def auth():
     code_challenge = generateCodeChallenge()
 
     # Hashes State and Encrypts code challenge before storing
-    new_user_auth = Auth(oauth_state=hash_text(oauth_state), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=session.sid)
+    salt = uuid.uuid4().hex
+    new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=session.sid, salt=salt)
     db.session.add(new_user_auth)
 
     db.session.commit()
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
-    return redirect(auth_url)
+    
+    response = redirect(auth_url)
+    response.set_cookie('session', session.sid)
+    return response
 
 # Redirect from OAuth
 @app.route('/oauth/callback')
@@ -159,13 +164,16 @@ def oauth():
     authorization_code = request.args.get('code')
 
     if returned_state and authorization_code:
-        find_state = Auth.query.filter_by(oauth_state=hash_text(returned_state)).first()
+        session_id = request.cookies.get('session')
+        find_auth = Auth.query.filter_by(session_id=session_id).first()
+        auth_salt = find_auth.salt
+        find_auth_state = find_auth.oauth_state
 
-        if find_state:
+        if find_auth_state == hash_text(returned_state, auth_salt):
             # Post Request for access tokens
             client_id = os.getenv("CLIENT_ID")
             client_secret = os.getenv("CLIENT_SECRET")
-            code_verifier = cipher_suite.decrypt(find_state.code_challenge)
+            code_verifier = cipher_suite.decrypt(find_auth.code_challenge)
             authorization_code = request.args.get('code')
 
             url = 'https://myanimelist.net/v1/oauth2/token'
@@ -203,7 +211,7 @@ def oauth():
                     user_username = user_data['name']
 
                     # Assign username to session id
-                    find_state.user_id = user_username
+                    find_auth.user_id = user_username
                     db.session.commit()
 
                     # Check if user already exists
@@ -228,10 +236,10 @@ def oauth():
                 return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
             
             resp = make_response(redirect('/home'))
-            resp.set_cookie('session', find_state.session_id)
             return resp
 
-        return "State did not match. Please Try again or something idk"
+        else:
+            return "State did not match. Please Try again or something idk"
 
     return redirect('/a')
 
