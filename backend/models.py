@@ -21,6 +21,6 @@ class User(db.Model):
 
 class RateLimit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ip = db.Column(db.String(50), nullable=False)
+    ip = db.Column(db.String(), nullable=False)
     endpoint = db.Column(db.String(50), nullable=False)
     timestamp = db.Column(db.Integer, default=int(time.time()))

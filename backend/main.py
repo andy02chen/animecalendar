@@ -21,7 +21,7 @@ cipher_suite = Fernet(encryption_key)
 
 def is_rate_limited(ip, endpoint, limit, period):
     period_start = int(time.time()) - period
-    recent_requests = RateLimit.query.filter_by(ip=ip, endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
+    recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, os.getenv("IP_SALT")), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
     return recent_requests >= limit
 
 # Function checks to ensure that the user is allowed to visited route
@@ -30,7 +30,7 @@ def protectedRoute():
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
-    new_request = RateLimit(ip=request.remote_addr, endpoint=request.endpoint)
+    new_request = RateLimit(ip=hash_text(request.remote_addr, os.getenv("IP_SALT")), endpoint=request.endpoint)
     db.session.add(new_request)
     db.session.commit()
 
