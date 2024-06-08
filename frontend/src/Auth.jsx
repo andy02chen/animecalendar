@@ -38,7 +38,10 @@ function Auth() {
                         </>
                         :
                         <>
-                            <button onClick={authRedirect} className='login-button'>Login with MAL</button>
+                            <button onClick={() => {
+                                document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                authRedirect();
+                            }} className='login-button'>Login with MAL</button>
                             <br></br>
                             <button>Continue as Guest</button>
                         </>
