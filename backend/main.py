@@ -57,7 +57,7 @@ def protectedRoute():
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
-        find_user = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
             return jsonify({'loggedIn':True})
@@ -72,7 +72,7 @@ def refreshUsersTokens():
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
-        find_user = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
             user_auth_username = find_user.user_id
@@ -123,12 +123,12 @@ def checkSession():
     user_session_id = request.cookies.get("session")
 
     if user_session_id:
-        user_id = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        user_id = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
         
         # Refresh access and refresh token if the user already exists before redirecting to home page
         if user_id:
             # Get user id using session id
-            user_auth_username = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first().user_id
+            user_auth_username = user_id.user_id
 
             # Get refresh token using user id
             user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
@@ -140,7 +140,9 @@ def checkSession():
                 return "Error with refreshing token"
 
         else:
-            return redirect("http://localhost:5173/a")
+            response = redirect("http://localhost:5173/a")
+            response.set_cookie('session', '', expires=0)
+            return response
         
     # Login the user for the first time
     else:
@@ -170,6 +172,20 @@ def generateCodeChallenge(length = 128):
 # Redirect when user logs in with MAL
 @app.route('/auth')
 def auth():
+    user_session_id = request.cookies.get("session")
+
+    if user_session_id:
+        # Check if session id is assigned to user
+        user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
+        if user:
+            return redirect("http://localhost:5173/home")
+
+        # Delete cookie if not present
+        response = redirect("http://localhost:5173/")
+        response.set_cookie('session', '', expires=0)
+        return response
+
     oauth_state = generateRandomState()
     code_challenge = generateCodeChallenge()
 
@@ -273,7 +289,7 @@ def oauth():
         else:
             return "State did not match. Please Try again or something idk"
 
-    return redirect('/a')
+    return redirect('/')
 
 if __name__ == '__main__':
     with app.app_context():
