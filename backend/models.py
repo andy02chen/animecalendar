@@ -11,13 +11,14 @@ class Auth(db.Model):
     session_id = db.Column(db.String(), db.ForeignKey('sessions.session_id'), unique=True)
     oauth_state = db.Column(db.String(), nullable=False, unique=True, primary_key=True)
     code_challenge = db.Column(db.BLOB(), nullable=False)
-    salt = db.Column(db.String(32), nullable=False)
+    state_salt = db.Column(db.String(32), nullable=False)
 
 class User(db.Model):
     user_id = db.Column(db.String(), primary_key=True, nullable=False)
     access_token = db.Column(db.BLOB())
     refresh_token = db.Column(db.BLOB())
     expires_in = db.Column(db.Integer())
+    session_id = db.Column(db.String(), db.ForeignKey('sessions.session_id'), unique=True)
 
 class RateLimit(db.Model):
     id = db.Column(db.Integer, primary_key=True)

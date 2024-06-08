@@ -17,11 +17,31 @@ import uuid
 load_dotenv()
 
 encryption_key = os.getenv("ENC_KEY").encode()
+session_salt = os.getenv("SESSION_SALT")
+ip_salt = os.getenv("IP_SALT")
+client_id = os.getenv('CLIENT_ID')
+client_secret = os.getenv('CLIENT_SECRET')
+
 cipher_suite = Fernet(encryption_key)
 
+# Function for checking expiry time
+# Calls function for refreshing if expired
+def is_expired():
+    # Get user using session id
+    session_id = request.cookies.get("session")
+    user = User.query.filter_by(session_id=hash_text(session_id, session_salt))
+
+    # Check if it has expired
+
+
+    # Refresh if expired
+
+    return False
+
+# Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):
     period_start = int(time.time()) - period
-    recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, os.getenv("IP_SALT")), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
+    recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
     return recent_requests >= limit
 
 # Function checks to ensure that the user is allowed to visited route
@@ -30,33 +50,41 @@ def protectedRoute():
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
-    new_request = RateLimit(ip=hash_text(request.remote_addr, os.getenv("IP_SALT")), endpoint=request.endpoint)
+    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
     db.session.add(new_request)
     db.session.commit()
 
     user_session_id = request.cookies.get('session')
-    find_user = Auth.query.filter_by(session_id=user_session_id).first()
 
-    if find_user:
-        return jsonify({'loggedIn':True})
+    if user_session_id:
+        find_user = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
+        if find_user:
+            return jsonify({'loggedIn':True})
+
+        return jsonify({'loggedIn':False})
+    
     return jsonify({'loggedIn':False})
 
 # Endpoint for refreshing the user's access token
 @app.route('/api/refresh-token', methods=["POST"])
 def refreshUsersTokens():
     user_session_id = request.cookies.get('session')
-    find_user = Auth.query.filter_by(session_id=user_session_id).first()
 
-    if find_user:
-        user_auth_username = find_user.user_id
-        user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
+    if user_session_id:
+        find_user = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
-        if refreshTokens(user_to_refresh):
-            return '', 201
+        if find_user:
+            user_auth_username = find_user.user_id
+            user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
 
-        else:
-            return '', 403
+            if refreshTokens(user_to_refresh):
+                return '', 201
+
+            else:
+                return '', 403
+
+        return '', 401
 
     return '', 401
 
@@ -71,8 +99,8 @@ def refreshTokens(user_to_refresh):
         'Content-Type': 'application/x-www-form-urlencoded'
     }
     data = {
-        'client_id': os.getenv('CLIENT_ID'),
-        'client_secret': os.getenv("CLIENT_SECRET"),
+        'client_id': client_id,
+        'client_secret': client_secret,
         'grant_type': 'refresh_token',
         'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token.decode())
     }
@@ -93,22 +121,27 @@ def refreshTokens(user_to_refresh):
 def checkSession():
     # Check if user session exists
     user_session_id = request.cookies.get("session")
-    user_id = Auth.query.filter_by(session_id=user_session_id).first()
-    
-    # Refresh access and refresh token if the user already exists before redirecting to home page
-    if user_id:
-        # Get user id using session id
-        user_auth_username = Auth.query.filter_by(session_id=user_session_id).first().user_id
 
-        # Get refresh token using user id
-        user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
+    if user_session_id:
+        user_id = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        
+        # Refresh access and refresh token if the user already exists before redirecting to home page
+        if user_id:
+            # Get user id using session id
+            user_auth_username = Auth.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first().user_id
 
-        if refreshTokens(user_to_refresh):
-            return redirect("http://localhost:5173/home")
+            # Get refresh token using user id
+            user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
+
+            if refreshTokens(user_to_refresh):
+                return redirect("http://localhost:5173/home")
+
+            else:
+                return "Error with refreshing token"
 
         else:
-            return "Error with refreshing token"
-    
+            return redirect("http://localhost:5173/a")
+        
     # Login the user for the first time
     else:
         return redirect("http://localhost:5173/a")
@@ -121,7 +154,6 @@ def generateRandomState(length = 32):
     for i in range(length):
         result += chars[randrange(length_chars)]
 
-    print(len(result))
     return result
 
 # Generates code challenge and code verifier
@@ -139,12 +171,11 @@ def generateCodeChallenge(length = 128):
 @app.route('/auth')
 def auth():
     oauth_state = generateRandomState()
-    client_id = os.getenv('CLIENT_ID')
     code_challenge = generateCodeChallenge()
 
     # Hashes State and Encrypts code challenge before storing
     salt = uuid.uuid4().hex
-    new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=session.sid, salt=salt)
+    new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=hash_text(session.sid,session_salt), state_salt=salt)
     db.session.add(new_user_auth)
 
     db.session.commit()
@@ -165,14 +196,12 @@ def oauth():
 
     if returned_state and authorization_code:
         session_id = request.cookies.get('session')
-        find_auth = Auth.query.filter_by(session_id=session_id).first()
-        auth_salt = find_auth.salt
+        find_auth = Auth.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+        auth_salt = find_auth.state_salt
         find_auth_state = find_auth.oauth_state
 
         if find_auth_state == hash_text(returned_state, auth_salt):
             # Post Request for access tokens
-            client_id = os.getenv("CLIENT_ID")
-            client_secret = os.getenv("CLIENT_SECRET")
             code_verifier = cipher_suite.decrypt(find_auth.code_challenge)
             authorization_code = request.args.get('code')
 
@@ -221,10 +250,13 @@ def oauth():
                         find_user.access_token = cipher_suite.encrypt(mal_access_token.encode())
                         find_user.refresh_token = cipher_suite.encrypt(token_data["refresh_token"].encode())
                         find_user.expires_in = token_expiration_time
+                        find_user.session_id = hash_text(session_id,session_salt)
 
                     else:
                         # Store new user data
-                        new_user = User(user_id=user_username,access_token=cipher_suite.encrypt(mal_access_token.encode()),refresh_token=cipher_suite.encrypt(token_data["refresh_token"].encode()),expires_in=token_expiration_time)
+                        new_user = User(user_id=user_username,access_token=cipher_suite.encrypt(mal_access_token.encode()),
+                                        refresh_token=cipher_suite.encrypt(token_data["refresh_token"].encode()),
+                                        expires_in=token_expiration_time,session_id=hash_text(session_id,session_salt))
                         db.session.add(new_user)
                     
                     db.session.commit()
