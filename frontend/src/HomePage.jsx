@@ -5,24 +5,33 @@ function loginRedirect() {
     window.location.href = `/a`
 }
 
+// TODO error refreshing
+// TODO redirect to auth if error with refreshing tokens
 function refreshAccessToken() {
     axios.post("/api/refresh-token")
     .then(response => {
         console.log(response);
+        resetTimer()
     })
     .catch(error => {
         console.error(error);
     })
 }
 
+function resetTimer() {
+    clearInterval(refreshInterval);
+    refreshInterval = setInterval(refreshAccessToken,refreshTime);
+    console.log("refreshed");
+}
+
+const tokenExpiry = 60 * 60 * 1000 // Every Hour
+const refreshBuffer = 5 * 60 * 1000; // 5 mins before expiry
+const refreshTime = tokenExpiry - refreshBuffer;
+let refreshInterval;
+
 function HomePage() {
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [hasLoaded, setLoaded] = useState(false);
-    const tokenExpiry = 60 * 60 * 1000 // Every Hour
-    const refreshBuffer = 5 * 60 * 1000; // 5 mins before expiry
-    const refreshTime = tokenExpiry - refreshBuffer;
-
-
+    const [hasLoaded, setLoaded] = useState(false);    
 
     // Calls API to check if user is logged in
     useEffect(() => {
@@ -30,7 +39,11 @@ function HomePage() {
             .then(response => {
                 setLoggedIn(response.data.loggedIn);
                 setLoaded(true);
-                console.log(response);
+                console.log(response.data.loggedIn)
+
+                if(response.data.loggedIn) {
+                    refreshInterval = setInterval(refreshAccessToken,refreshTime);
+                }
             })
             .catch(error => {
                 setLoaded(true);
