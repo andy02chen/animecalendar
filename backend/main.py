@@ -29,14 +29,26 @@ cipher_suite = Fernet(encryption_key)
 def is_expired():
     # Get user using session id
     session_id = request.cookies.get("session")
-    user = User.query.filter_by(session_id=hash_text(session_id, session_salt))
+    found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
 
     # Check if it has expired
-
+    curr_time = int(time.time())
 
     # Refresh if expired
+    if curr_time >= found_user.expires_in:
+        result = refreshUsersTokens()
+        _, code = result
+
+        if code == 201:
+            return True
 
     return False
+
+@app.route('/test', methods=["GET"])
+def test():
+    is_expired()
+
+    return 'a'
 
 # Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):
