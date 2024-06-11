@@ -24,6 +24,18 @@ client_secret = os.getenv('CLIENT_SECRET')
 
 cipher_suite = Fernet(encryption_key)
 
+# Function for deleting user from the database
+@app.route('/api/delete-user', methods=["DELETE"])
+def delete_user():
+    session_id = request.cookies.get("session")
+    found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+
+    db.session.delete(found_user)
+    db.session.commit()
+
+    return jsonify({"redirect_url": "/"}), 200
+
+
 # Function for checking expiry time
 # Calls function for refreshing if expired
 def is_expired():
@@ -79,8 +91,9 @@ def protectedRoute():
     return jsonify({'loggedIn':False})
 
 # Endpoint for refreshing the user's access token
-@app.route('/api/refresh-token', methods=["POST"])
+@app.route('/api/refresh-token', methods=["PUT"])
 def refreshUsersTokens():
+    return 'Error verifying your login, Please try logging in again.', 401
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
@@ -91,14 +104,14 @@ def refreshUsersTokens():
             user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
 
             if refreshTokens(user_to_refresh):
-                return '', 201
+                return '', 204
 
             else:
-                return '', 403
+                return 'Error from MAL server, Please try logging in again later.', 403
 
-        return '', 401
+        return 'Error finding your username, Please try logging in again.', 401
 
-    return '', 401
+    return 'Error verifying your login, Please try logging in again.', 401
 
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()

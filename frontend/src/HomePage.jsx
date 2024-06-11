@@ -5,23 +5,24 @@ function loginRedirect() {
     window.location.href = `/a`
 }
 
-// TODO error refreshing
-// TODO redirect to auth if error with refreshing tokens
 function refreshAccessToken() {
-    axios.post("/api/refresh-token")
+    axios.put("/api/refresh-token")
     .then(response => {
-        console.log(response);
         resetTimer()
     })
     .catch(error => {
-        console.error(error);
+        axios.delete('/api/delete-user')
+        .then(response => {
+            document.cookie = 'session=; Max-Age=-99999999;';
+            alert(error.response.data);
+            window.location.href = response.data.redirect_url;
+        })
     })
 }
 
 function resetTimer() {
     clearInterval(refreshInterval);
     refreshInterval = setInterval(refreshAccessToken,refreshTime);
-    console.log("refreshed");
 }
 
 const tokenExpiry = 60 * 60 * 1000 // Every Hour
@@ -39,7 +40,6 @@ function HomePage() {
             .then(response => {
                 setLoggedIn(response.data.loggedIn);
                 setLoaded(true);
-                console.log(response.data.loggedIn)
 
                 if(response.data.loggedIn) {
                     refreshInterval = setInterval(refreshAccessToken,refreshTime);
