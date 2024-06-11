@@ -93,7 +93,6 @@ def protectedRoute():
 # Endpoint for refreshing the user's access token
 @app.route('/api/refresh-token', methods=["PUT"])
 def refreshUsersTokens():
-    return 'Error verifying your login, Please try logging in again.', 401
     user_session_id = request.cookies.get('session')
 
     if user_session_id:

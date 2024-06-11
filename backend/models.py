@@ -6,8 +6,6 @@ def get_uid():
     return uuid4().hex
 
 class Auth(db.Model):
-    user_id = db.Column(db.String(), db.ForeignKey('user.user_id'), nullable=True)
-    user = db.relationship('User', backref='auth', uselist=False)
     session_id = db.Column(db.String(), db.ForeignKey('sessions.session_id'), unique=True)
     oauth_state = db.Column(db.String(), nullable=False, unique=True, primary_key=True)
     code_challenge = db.Column(db.BLOB(), nullable=False)
