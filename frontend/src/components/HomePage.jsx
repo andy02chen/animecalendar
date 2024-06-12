@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
+import MainComponent from './MainComponent'
 
 function loginRedirect() {
     window.location.href = `/a`
@@ -57,9 +58,7 @@ function HomePage() {
                 <>
                     {isLoggedIn ?
                         <>
-                            <h1>Home Page</h1>
-                            <p>User is logged in.</p>
-                            <button onClick={() => refreshAccessToken()}>Refresh Token</button>
+                            <MainComponent/>
                         </>
                         :
                         <>

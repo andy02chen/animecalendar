@@ -1,0 +1,12 @@
+.main-div {
+    height: 95vh;
+    width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid black;
+}
+
+.settings-div{
+    margin-left: auto;
+}

@@ -279,10 +279,6 @@ def oauth():
                     user_data = response.json()
                     user_username = user_data['name']
 
-                    # Assign username to session id
-                    find_auth.user_id = user_username
-                    db.session.commit()
-
                     # Check if user already exists
                     find_user = User.query.filter_by(user_id=user_username).first()
 
