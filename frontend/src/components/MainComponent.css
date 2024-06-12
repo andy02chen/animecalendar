@@ -22,6 +22,10 @@
     margin-right: auto;
 }
 
+.title {
+    font-family: "Merriweather", serif;
+}
+
 .anime-progress-div {
     width: 25%;
     height: 100%;
