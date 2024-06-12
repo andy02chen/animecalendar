@@ -2,7 +2,7 @@
 function AnimeProgress() {
     return(
         <>
-            <p>Anime Progress</p>
+            <p>Weekly Anime Progress</p>
         </>
     );
 }
