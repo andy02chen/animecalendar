@@ -8,11 +8,11 @@ function AnimeProgress() {
             </div>
 
             <div className='progress-div'>
-                <uL className='anime-list'>
+                <ul className='anime-list'>
                     <li className='weekly-anime'>Anime</li>
                     <li className='weekly-anime'>Anime</li>
                     <li className='weekly-anime'>Anime</li>
-                </uL>
+                </ul>
             </div>
         </>
     );

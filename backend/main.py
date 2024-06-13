@@ -68,6 +68,47 @@ def is_rate_limited(ip, endpoint, limit, period):
     recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
     return recent_requests >= limit
 
+# Functions gets user's weekly watching anime
+@app.route('/api/get-weekly-anime', methods=["GET"])
+def weekly_anime():
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+        return jsonify({"error": "rate limit exceeded"}), 429
+
+    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
+    db.session.add(new_request)
+    db.session.commit()
+
+    user_session_id = request.cookies.get('session')
+
+    if user_session_id:
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
+        if find_user:
+            # TODO check if expired
+            mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
+            sort=anime_start_date&fields=start_date,end_date'''
+            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+            headers = {
+                'Authorization': f'Bearer {mal_access_token}'
+            }
+
+            response = requests.get(mal_get_anime, headers=headers)
+            
+            # TODO not 200
+            if response.status_code == 200:
+                data = response.json()
+                
+                for anime in data['data']:
+                    if 'end_date' not in anime:
+                        # TODO return weekly airing anime
+                        print(anime)
+
+            return 'a'
+
+        # TODO cannot find user
+
+    # TODO cannot find session
+
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():
@@ -122,11 +163,12 @@ def refreshTokens(user_to_refresh):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
+
     data = {
         'client_id': client_id,
         'client_secret': client_secret,
         'grant_type': 'refresh_token',
-        'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token.decode())
+        'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token).decode()
     }
     
     response = requests.post(url, headers=headers, data=data)
@@ -140,6 +182,8 @@ def refreshTokens(user_to_refresh):
         db.session.commit()
 
         return True
+    
+    return False
 
 @app.route('/')
 def checkSession():
@@ -242,7 +286,7 @@ def oauth():
 
         if find_auth_state == hash_text(returned_state, auth_salt):
             # Post Request for access tokens
-            code_verifier = cipher_suite.decrypt(find_auth.code_challenge)
+            code_verifier = cipher_suite.decrypt(find_auth.code_challenge).decode()
             authorization_code = request.args.get('code')
 
             url = 'https://myanimelist.net/v1/oauth2/token'
