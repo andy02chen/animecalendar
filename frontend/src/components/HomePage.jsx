@@ -50,15 +50,6 @@ function HomePage() {
             .catch(error => {
                 setLoaded(true);
             });
-
-        // Get users weekly anime
-        axios.get('/api/get-weekly-anime')
-        .then(response => {
-            console.log(response)
-        })
-        .catch (error => {
-            console.error(error)
-        });
     }, []);
 
     // Redirects to login page if not logged in
