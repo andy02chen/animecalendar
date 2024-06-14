@@ -38,7 +38,7 @@ def delete_user():
 
 # Function for checking expiry time
 # Calls function for refreshing if expired
-def is_expired():
+def check_expiry():
     # Get user using session id
     session_id = request.cookies.get("session")
     found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
@@ -48,19 +48,15 @@ def is_expired():
 
     # Refresh if expired
     if curr_time >= found_user.expires_in:
-        result = refreshUsersTokens()
-        _, code = result
+        return refreshUsersTokens()
 
-        if code == 201:
-            return True
+    return '',100
 
-    return False
+# @app.route('/test', methods=["GET"])
+# def test():
+#     is_expired()
 
-@app.route('/test', methods=["GET"])
-def test():
-    is_expired()
-
-    return 'a'
+#     return 'a'
 
 # Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):
@@ -71,6 +67,7 @@ def is_rate_limited(ip, endpoint, limit, period):
 # Functions gets user's weekly watching anime
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
+    # Check limit
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
@@ -78,13 +75,18 @@ def weekly_anime():
     db.session.add(new_request)
     db.session.commit()
 
+    # Find user using session id
     user_session_id = request.cookies.get('session')
-
     if user_session_id:
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
-            # TODO check if expired
+            msg, code = check_expiry()
+
+            # Login again
+            if code == 401 or code == 403:
+                return msg, code
+            
             mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
             sort=anime_start_date&fields=start_date,end_date'''
             mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
@@ -94,20 +96,32 @@ def weekly_anime():
 
             response = requests.get(mal_get_anime, headers=headers)
             
-            # TODO not 200
             if response.status_code == 200:
                 data = response.json()
                 
+                data_to_return = {'anime':[]}
                 for anime in data['data']:
-                    if 'end_date' not in anime:
-                        # TODO return weekly airing anime
-                        print(anime)
+                    if 'end_date' not in anime['node']:
+                        # TODO maybe need to add/change details
+                        details = {}
+                        details['title'] = anime['node']['title']
+                        details['id'] = anime['node']['id']
+                        details['start_date'] = anime['node']['start_date']
+                        details['img'] = anime['node']['main_picture']['medium']
+                        data_to_return['anime'].append(details)
 
-            return 'a'
+                return data_to_return
 
-        # TODO cannot find user
+            # TODO error message on frontend
+            return 'Unable to get weekly watching anime please refresh or try again later.',500
 
-    # TODO cannot find session
+        # User not found
+        response = redirect("/")
+        response.set_cookie('session', '', expires=0)
+        return response
+
+    # User not logged in
+    return redirect('/')
 
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
@@ -147,11 +161,11 @@ def refreshUsersTokens():
                 return '', 204
 
             else:
-                return 'Error from MAL server, Please try logging in again later.', 403
+                return 'Error from MAL server, please try logging in again later. If this error persists, please report bug.', 403
 
-        return 'Error finding your username, Please try logging in again.', 401
+        return 'Error finding your username, please try logging in again. If this error persists, please report bug.', 401
 
-    return 'Error verifying your login, Please try logging in again.', 401
+    return 'Error verifying your login, please try logging in again. If this error persists, please report bug.', 401
 
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
@@ -202,19 +216,19 @@ def checkSession():
             user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
 
             if refreshTokens(user_to_refresh):
-                return redirect("http://localhost:5173/home")
+                return redirect("/home")
 
             else:
                 return "Error with refreshing token"
 
         else:
-            response = redirect("http://localhost:5173/a")
+            response = redirect("/a")
             response.set_cookie('session', '', expires=0)
             return response
         
     # Login the user for the first time
     else:
-        return redirect("http://localhost:5173/a")
+        return redirect("/a")
 
 # Generates a random state
 def generateRandomState(length = 32):
@@ -247,10 +261,10 @@ def auth():
         user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if user:
-            return redirect("http://localhost:5173/home")
+            return redirect("/home")
 
-        # Delete cookie if not present
-        response = redirect("http://localhost:5173/")
+        # Delete cookie
+        response = redirect("/")
         response.set_cookie('session', '', expires=0)
         return response
 

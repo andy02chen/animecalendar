@@ -29,6 +29,7 @@ function resetTimer() {
 const tokenExpiry = 60 * 60 * 1000 // Every Hour
 const refreshBuffer = 5 * 60 * 1000; // 5 mins before expiry
 const refreshTime = tokenExpiry - refreshBuffer;
+// const refreshTime = 5000;
 let refreshInterval;
 
 function HomePage() {
