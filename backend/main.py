@@ -88,7 +88,7 @@ def weekly_anime():
                 return msg, code
             
             mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
-            sort=anime_start_date&fields=start_date,end_date,status,list_status,num_episodes'''
+            sort=anime_start_date&fields=start_date,end_date,status,list_status,num_episodes,broadcast'''
             mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
             headers = {
                 'Authorization': f'Bearer {mal_access_token}'
@@ -100,6 +100,7 @@ def weekly_anime():
                 data = response.json()
                 data_to_return = {'anime':[]}
                 for anime in data['data']:
+                    print(anime)
                     if anime['node']['status'] == 'currently_airing':
                         # TODO maybe need to add/change details
                         details = {}

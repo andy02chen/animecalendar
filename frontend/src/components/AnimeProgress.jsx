@@ -1,6 +1,8 @@
 import './AnimeProgress.css'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import AnimeProgressBar from './AnimeProgressBar';
+import AnimeAvailableDate from './AnimeAvailableDate';
 
 function AnimeProgress() {
     const [weeklyAnime, setWeeklyAnime] = useState([]);
@@ -9,7 +11,7 @@ function AnimeProgress() {
         // Get users weekly anime
         axios.get('/api/get-weekly-anime')
         .then(response => {
-            console.log(response.data.anime);
+            console.log(response.data.anime)
             setWeeklyAnime(response.data.anime);
         })
         .catch (error => {
@@ -26,10 +28,23 @@ function AnimeProgress() {
             <div className='progress-div'>
                 <ul className='anime-list'>
                     {
-                        weeklyAnime.map((anime,index) => 
+                        weeklyAnime.map((anime,index) =>
                             <li key={index} className='weekly-anime'>
-                                <h1>{anime.title}</h1>
-                                <img src={anime.img} alt={`Image of ${anime.title}`}></img>
+                                <div className='anime'>
+                                    <div className='anime-top-div'>
+                                        <h1>{anime.title}</h1>
+                                    </div>
+                                    <div className='anime-bot-div'>
+                                        <div>
+                                            <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
+                                        </div>
+                                        <div className='anime-bot-ep'>
+                                            <AnimeProgressBar anime={anime}/>
+                                            <AnimeAvailableDate anime={anime}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                {index === weeklyAnime.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
                             </li>
                         )
                     }
