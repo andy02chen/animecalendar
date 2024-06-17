@@ -52,12 +52,13 @@
     width: 100%;
 }
 
-.loading-div {
+.message-div {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    word-break: break-word;
 }
 
 .loading-spinner {
@@ -71,9 +72,20 @@
     100% {transform:rotate(360deg);}
 }
 
-.loading-text {
+.message-text {
     margin: 10px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
     font-size: 1.5rem;
     font-style: normal;
+    width: 70%;
+}
+
+#search-value {
+    font-family: 'Lato', sans-serif;
+}
+
+.refresh-button {
+    padding: 10px;
+    cursor: pointer;
 }

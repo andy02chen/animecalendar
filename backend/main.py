@@ -121,8 +121,7 @@ def weekly_anime():
 
                 return data_to_return
 
-            # TODO error message on frontend
-            return 'Unable to get weekly watching anime please refresh or try again later.',500
+            return '',500
 
         # User not found
         response = redirect("/")

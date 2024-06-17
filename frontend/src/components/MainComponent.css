@@ -23,7 +23,8 @@
 }
 
 .title {
-    font-family: "Merriweather", serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
 }
 
 .anime-progress-div {
@@ -39,4 +40,9 @@
     width: 75%;
     height: 100%;
     border: 3px solid green;
+}
+
+button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
 }
