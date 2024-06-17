@@ -1,4 +1,4 @@
-import settings from "./imgs/settings.png"
+import settings from "./imgs/gear-solid.svg"
 
 function Settings() {
 

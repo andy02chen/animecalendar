@@ -4,7 +4,7 @@
 
 .progress-div {
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .anime-list {
@@ -50,4 +50,30 @@
 
 .search-anime-div {
     width: 100%;
+}
+
+.loading-div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    height: auto;
+    width: 75px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {transform:rotate(0deg);}
+    100% {transform:rotate(360deg);}
+}
+
+.loading-text {
+    margin: 10px;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.5rem;
+    font-style: normal;
 }
