@@ -60,7 +60,6 @@ function HomePage() {
                     {isLoggedIn ?
                         <>
                             <MainComponent/>
-                            <button onClick={() => refreshAccessToken()}>Refresh</button>
                         </>
                         :
                         <>

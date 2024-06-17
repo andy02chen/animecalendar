@@ -41,3 +41,13 @@
     border: 1px solid #666666;
     border-radius: 100%;
 }
+
+.search-weekly-anime {
+    width: 100%;
+    height: auto;
+    padding: 5px;
+}
+
+.search-anime-div {
+    width: 100%;
+}

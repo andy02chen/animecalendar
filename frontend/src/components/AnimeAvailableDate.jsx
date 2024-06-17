@@ -8,7 +8,7 @@ function formatTime(timeRemaining) {
     hours = String(hours).padStart(2, '0')
     mins = String(mins).padStart(2, '0')
     sec = String(sec).padStart(2, '0')
-    return `${hours > 0 ? hours : ""}:${mins > 0 ? mins : ""}:${sec}`;
+    return `${hours >= 1 ? hours+":" : ""}${mins >= 1 || hours >= 0 ? mins+":" : ""}${sec}`;
 }
 
 function AnimeAvailableDate({anime}) {
@@ -38,7 +38,7 @@ function AnimeAvailableDate({anime}) {
     const nextEpInfo = nextEpDate.toString().trim().split(' ');
     if(days >= 1) {
         return(
-            <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo.splice(0,4).join(' ')}`}</p>
+            <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
         );
     } else if (days < 1 && days >= 0) {
         const [countdown, setCountdown] = useState(diffMs);
@@ -56,7 +56,7 @@ function AnimeAvailableDate({anime}) {
         return(
             <p>
                 {countdown > 0 ? 
-                `Ep. ${anime.eps_watched + 1} will be avaiable at ${formatTime(countdown)} time` :
+                `Ep. ${anime.eps_watched + 1} will be avaliable to watch in ${formatTime(countdown)}` :
                 `Ep. ${anime.eps_watched + 1} available to watch now`
                 }
             </p>
