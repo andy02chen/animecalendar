@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from random import randrange
 import requests
 from models import db, User, Auth, RateLimit
-import urllib.parse
 import base64
 import time
 import hashlib
@@ -23,6 +22,43 @@ client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
 
 cipher_suite = Fernet(encryption_key)
+
+# Function for updating the number of episodes watched on MyAnimeList
+@app.route('/api/update-anime', methods=["POST"])
+def updateStatus():
+
+    # Find user using session id
+    user_session_id = request.cookies.get('session')
+    if user_session_id: #TODO session not found
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
+        if find_user: #TODO user not found
+            msg, code = check_expiry()
+
+            # Login again # TODO handle in frontend
+            if code == 401 or code == 403:
+                return msg, code
+
+            # TODO when user finsihed the anime
+            data = request.get_json()
+            anime_id = data['anime-id']
+            eps_watched = int(data['eps-watched']) + 1
+
+            mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
+            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+            headers = {
+                'Authorization': f'Bearer {mal_access_token}',
+            }
+            body = {
+                "num_watched_episodes": eps_watched
+            }
+            response = requests.patch(mal_update_anime, headers=headers, data=body)
+            
+            #TODO response not ok
+            if response.status_code == 200:
+                return '',200
+    
+    return '', 400
 
 # Function for deleting user from the database
 @app.route('/api/logout', methods=["DELETE"])

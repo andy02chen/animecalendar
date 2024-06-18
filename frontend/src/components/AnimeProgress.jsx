@@ -50,7 +50,7 @@ const renderContent = (displayAnime, failedRequest, setWeeklyAnime, setDisplayAn
                                         <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
                                     </div>
                                     <div className='anime-bot-ep'>
-                                        <AnimeProgressBar anime={anime}/>
+                                        {/* <AnimeProgressBar anime={anime}/> */}
                                         <AnimeAvailableDate anime={anime}/>
                                     </div>
                                 </div>
