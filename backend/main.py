@@ -25,12 +25,12 @@ client_secret = os.getenv('CLIENT_SECRET')
 cipher_suite = Fernet(encryption_key)
 
 # Function for deleting user from the database
-@app.route('/api/delete-user', methods=["DELETE"])
-def delete_user():
+@app.route('/api/logout', methods=["DELETE"])
+def delete_user_session():
     session_id = request.cookies.get("session")
     found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
 
-    db.session.delete(found_user)
+    found_user.session_id = None
     db.session.commit()
 
     return jsonify({"redirect_url": "/"}), 200
@@ -51,12 +51,6 @@ def check_expiry():
         return refreshUsersTokens()
 
     return '',100
-
-# @app.route('/test', methods=["GET"])
-# def test():
-#     is_expired()
-
-#     return 'a'
 
 # Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):

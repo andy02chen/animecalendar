@@ -12,7 +12,7 @@ function refreshAccessToken() {
         resetTimer()
     })
     .catch(error => {
-        axios.delete('/api/delete-user')
+        axios.delete('/api/logout')
         .then(response => {
             document.cookie = 'session=; Max-Age=-99999999;';
             alert(error.response.data);
