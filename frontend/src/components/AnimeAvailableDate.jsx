@@ -1,6 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// Updates the number of episodes watched on MyAnimeList
+function updateStatus(anime, setWatchedNewEp) {
+    axios.post('/api/update-anime',
+        {
+            'anime-id': anime.id,
+            'eps-watched': anime.eps_watched
+        }
+    )
+    .then(response => {
+        anime.eps_watched++;
+        console.log(anime.eps_watched);
+        setWatchedNewEp(true);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
 // Formats the time into HH:MM:SS
 function formatTime(timeRemaining) {
     let hours = Math.floor(timeRemaining / (1000*60*60));
@@ -12,24 +30,8 @@ function formatTime(timeRemaining) {
     return `${hours >= 1 ? hours+":" : ""}${mins >= 1 || hours >= 0 ? mins+":" : ""}${sec}`;
 }
 
-// Updates the number of episodes watched on MyAnimeList
-function updateStatus(anime, episodesWatched, setEpisodesWatched) {
-    axios.post('/api/update-anime',
-        {
-            'anime-id': anime,
-            'eps-watched': episodesWatched
-        }
-    )
-    .then(response => {
-        setEpisodesWatched(e => e + 1);
-    })
-    .catch(error => {
-        console.log(error);
-    });
-}
-
 function AnimeAvailableDate({anime}) {
-    const [episodesWatched, setEpisodesWatched] = useState(anime.eps_watched);
+    const [watchedNewEp, setWatchedNewEp] = useState(false);
 
     // Get anime broadcast date and time
     // Then convert it to local time
@@ -45,7 +47,7 @@ function AnimeAvailableDate({anime}) {
     
     // Get next episode date
     let nextEpDate = new Date(isoTime);
-    let daysToAdd = 7 * episodesWatched;
+    let daysToAdd = 7 * anime.eps_watched;
     nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
     
     // Gets days until next episode release
@@ -57,7 +59,7 @@ function AnimeAvailableDate({anime}) {
     let nextEpInfo = nextEpDate.toString().trim().split(' ');
 
     // Progress Bar style
-    let progress = anime.eps === 0 ? 60: (episodesWatched / anime.eps) * 100;
+    let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
     let styles = {
         width: "100%",
         border: "2px solid #666666",
@@ -72,7 +74,7 @@ function AnimeAvailableDate({anime}) {
     // When user watches an episode, it will update
     useEffect(() => {
         nextEpDate = new Date(isoTime);
-        daysToAdd = 7 * episodesWatched;
+        daysToAdd = 7 * anime.eps_watched;
         nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
 
         diffMs = nextEpDate - Date.now();
@@ -80,7 +82,7 @@ function AnimeAvailableDate({anime}) {
         
         nextEpInfo = nextEpDate.toString().trim().split(' ');
 
-        progress = anime.eps === 0 ? 60: (episodesWatched / anime.eps) * 100;
+        progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
         styles = {
             width: "100%",
             border: "2px solid #666666",
@@ -91,16 +93,16 @@ function AnimeAvailableDate({anime}) {
                             hsla(0, 0%, 0%, 0.35) ${String(progress) + "%"},
                             hsla(0, 0%, 0%, 0.35) 100%)`
         }
-    }, [episodesWatched]);
+    }, [watchedNewEp]);
 
     // Displays next episode status
     if(days >= 1) {
         return(
             <>
                 <div style={styles}>
-                    <p>{episodesWatched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
+                    <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
-                <p>{`Ep. ${episodesWatched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
+                <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
             </>
         );
     // Countdown if within 24 hours
@@ -120,12 +122,12 @@ function AnimeAvailableDate({anime}) {
         return(
             <>
                 <div style={styles}>
-                    <p>{episodesWatched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
+                    <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
                 <p>
                     {countdown > 0 ? 
-                    `Ep. ${episodesWatched + 1} will be avaliable to watch in ${formatTime(countdown)}` :
-                    `Ep. ${episodesWatched + 1} available to watch now`
+                    `Ep. ${anime.eps_watched + 1} will be avaliable to watch in ${formatTime(countdown)}` :
+                    `Ep. ${anime.eps_watched + 1} available to watch now`
                     }
                 </p>
             </>
@@ -134,11 +136,11 @@ function AnimeAvailableDate({anime}) {
         return(
             <>
                 <div style={styles}>
-                    <p>{episodesWatched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
+                    <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
-                <p>{`Ep. ${episodesWatched + 1} available to watch now`}</p>
+                <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
                 <button>Delayed</button>
-                <button onClick={() => updateStatus(anime.id, episodesWatched, setEpisodesWatched)}>Watched</button>
+                <button onClick={() => updateStatus(anime, setWatchedNewEp)}>Watched</button>
             </>
         );
     }

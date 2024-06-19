@@ -1,7 +1,6 @@
 import './AnimeProgress.css'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import AnimeProgressBar from './AnimeProgressBar';
 import AnimeAvailableDate from './AnimeAvailableDate';
 import loading from './imgs/circle-notch-solid.svg';
 
