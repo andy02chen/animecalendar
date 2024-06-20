@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import AnimeDelayEpConfirmation from "./AnimeDelayEpConfirmation";
 
 // Updates the number of episodes watched on MyAnimeList
 function updateStatus(anime, setRefreshAnimeDisplay) {
@@ -19,17 +20,6 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
     });
 }
 
-// Delays this week's episode
-function delayAnime(anime, setRefreshAnimeDisplay) {
-    if(localStorage.getItem(anime.id) !== null) {
-        localStorage.setItem(anime.id, Number(localStorage.getItem(anime.id)) + 1) 
-    } else {
-        localStorage.setItem(anime.id, 1);
-    }
-    anime.delayed_eps = Number(localStorage.getItem(anime.id));
-    setRefreshAnimeDisplay(prevFlag => !prevFlag);
-}
-
 // Formats the time into HH:MM:SS
 function formatTime(timeRemaining) {
     let hours = Math.floor(timeRemaining / (1000*60*60));
@@ -43,6 +33,7 @@ function formatTime(timeRemaining) {
 
 function AnimeAvailableDate({anime}) {
     const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     if(localStorage.getItem(anime.id) !== null) {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));
@@ -95,9 +86,9 @@ function AnimeAvailableDate({anime}) {
 
     // When user watches an episode, it will update
     useEffect(() => {
+        anime.delayed_eps = Number(localStorage.getItem(anime.id));
         nextEpDate = new Date(isoTime);
         daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-        console.log(anime.title, daysToAdd);
         nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
 
         diffMs = nextEpDate - Date.now();
@@ -161,9 +152,23 @@ function AnimeAvailableDate({anime}) {
                 <div style={styles}>
                     <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
-                <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
-                <button onClick={() => delayAnime(anime, setRefreshAnimeDisplay)}>Delayed</button>
-                <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                <div className={anime.id}>
+                    <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
+                    <button onClick={() => {
+                        const parents = document.getElementsByClassName(anime.id);
+                        for(let i = 0; i < parents.length; i++) {
+                            if (parents[i].style.display === 'none') {
+                                parents[i].style.display = 'block';
+                            } else {
+                                parents[i].style.display = 'none';
+                            }
+                        }
+
+                        // delayAnime(anime, setRefreshAnimeDisplay);
+                        }}>Delayed</button>
+                    <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                </div>
+                <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay}/>
             </>
         );
     }
