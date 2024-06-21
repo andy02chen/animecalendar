@@ -1,23 +1,51 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import AnimeDelayEpConfirmation from "./AnimeDelayEpConfirmation";
+import RateAnime from "./RateAnime";
+
+// Displays div with classname
+function displayDiv(divClassName, anime) {
+    let parents = document.getElementsByClassName(divClassName+anime);
+    for(let i = 0; i < parents.length; i++) {
+        if (parents[i].style.display === 'none') {
+            parents[i].style.display = 'block';
+        } else {
+            parents[i].style.display = 'none';
+        }
+    }
+
+    parents = document.getElementsByClassName(anime);
+    for(let i = 0; i < parents.length; i++) {
+        if (parents[i].style.display === 'none') {
+            parents[i].style.display = 'block';
+        } else {
+            parents[i].style.display = 'none';
+        }
+    }
+}
 
 // Updates the number of episodes watched on MyAnimeList
 function updateStatus(anime, setRefreshAnimeDisplay) {
-    axios.post('/api/update-anime',
-        {
-            'anime-id': anime.id,
-            'eps-watched': anime.eps_watched
-        }
-    )
-    .then(response => {
-        anime.eps_watched++;
-        setRefreshAnimeDisplay(prevFlag => !prevFlag);
-    })
-    .catch(error => {
-        // TODO Display error
-        console.log(error);
-    });
+
+    // Display rating div if last episode
+    if(anime.eps_watched === (anime.eps - 1) || anime.eps !== 0) {
+        displayDiv('rating', anime.id);
+    } else {
+        axios.post('/api/update-anime',
+            {
+                'anime-id': anime.id,
+                'eps-watched': anime.eps_watched
+            }
+        )
+        .then(response => {
+            anime.eps_watched++;
+            setRefreshAnimeDisplay(prevFlag => !prevFlag);
+        })
+        .catch(error => {
+            // TODO Display error
+            console.log(error);
+        });
+    }
 }
 
 // Formats the time into HH:MM:SS
@@ -108,7 +136,7 @@ function AnimeAvailableDate({anime}) {
                             hsla(0, 0%, 0%, 0.35) 100%)`
         }
     }, [refreshAnimeDisplay]);
-    
+
     // Displays next episode status
     if(days >= 1) {
         return(
@@ -138,6 +166,8 @@ function AnimeAvailableDate({anime}) {
                 <div style={styles}>
                     <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
+
+                {/* TODO button for watched and delayed */}
                 <p>
                     {countdown > 0 ? 
                     `Ep. ${anime.eps_watched + 1} will be avaliable to watch in ${formatTime(countdown)}` :
@@ -154,21 +184,11 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className={anime.id}>
                     <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
-                    <button onClick={() => {
-                        const parents = document.getElementsByClassName(anime.id);
-                        for(let i = 0; i < parents.length; i++) {
-                            if (parents[i].style.display === 'none') {
-                                parents[i].style.display = 'block';
-                            } else {
-                                parents[i].style.display = 'none';
-                            }
-                        }
-
-                        // delayAnime(anime, setRefreshAnimeDisplay);
-                        }}>Delayed</button>
+                    <button onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                     <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
                 </div>
-                <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay}/>
+                <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
             </>
         );
     }

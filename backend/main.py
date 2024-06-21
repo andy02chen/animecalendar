@@ -47,11 +47,22 @@ def updateStatus():
             mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
             mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
             headers = {
-                'Authorization': f'Bearer {mal_access_token}',
+                'Authorization': f'Bearer {mal_access_token}'
             }
-            body = {
-                "num_watched_episodes": eps_watched
-            }
+
+            body = {}
+            if 'score' in data:
+                body = {
+                    'score': data['score'],
+                    "num_watched_episodes": eps_watched,
+                    "status" : "completed"
+                }
+
+            else:
+                body = {
+                    "num_watched_episodes": eps_watched
+                }
+
             response = requests.patch(mal_update_anime, headers=headers, data=body)
             
             #TODO response not ok
