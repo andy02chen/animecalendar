@@ -22,7 +22,8 @@ function searchAnime(event, weeklyAnime, setDisplayAnime) {
     }
 }
 
-const renderContent = (displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest) => {
+// Displays weekly anime
+const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest) => {
     // Returns error message if failed get request
     if(failedRequest) {
         return(
@@ -58,6 +59,12 @@ const renderContent = (displayAnime, failedRequest, setWeeklyAnime, setDisplayAn
                     )}
                 </ul>
             )
+        } else if(weeklyAnime.length == 0) {
+            return(
+                <div className='message-div'>
+                    <p className='message-text'>Please add currently airing anime to watch list on <a href='https://myanimelist.net/' target="_blank">MyAnimeList</a> then refresh this page.</p>
+                </div>
+            );
         } else {
             // Returns message if unable to find anime with keywords
             return(
@@ -108,7 +115,7 @@ function AnimeProgress() {
             </div>
             <div className='progress-div'>
                     {gotRequest ?
-                        renderContent(displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest)
+                        renderContent(weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest)
                         :
                         <div className='message-div'>
                             <img className='loading-spinner' alt="Loading..." src={loading}/>

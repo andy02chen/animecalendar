@@ -149,7 +149,7 @@ function AnimeAvailableDate({anime}) {
         );
     // Countdown if within 24 hours
     } else if (days < 1 && days >= 0) {
-        const [countdown, setCountdown] = useState(diffMs);
+        const [countdown, setCountdown] = useState(5000);
 
         useEffect(() => {
             if(countdown <= 0) return;
@@ -171,7 +171,15 @@ function AnimeAvailableDate({anime}) {
                 <p>
                     {countdown > 0 ? 
                     `Ep. ${anime.eps_watched + 1} will be avaliable to watch in ${formatTime(countdown)}` :
-                    `Ep. ${anime.eps_watched + 1} available to watch now`
+                    <>
+                        <div className={anime.id}>
+                            <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
+                            <button onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                            <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                        </div>
+                        <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                        <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                    </>
                     }
                 </p>
             </>
