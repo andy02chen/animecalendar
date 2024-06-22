@@ -137,7 +137,18 @@ function AnimeAvailableDate({anime}) {
         }
     }, [refreshAnimeDisplay]);
 
-    console.log(anime.eps_watched, anime.eps)
+    const [countdown, setCountdown] = useState(5000);
+
+    useEffect(() => {
+        if(countdown <= 0) return;
+
+        const intervalId = setInterval(() => {
+            setCountdown(c => c - 1000);
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, [countdown]);
+
     // Displays next episode status
     if(days >= 1) {
         return(
@@ -150,17 +161,6 @@ function AnimeAvailableDate({anime}) {
         );
     // Countdown if within 24 hours
     } else if (days < 1 && days >= 0) {
-        const [countdown, setCountdown] = useState(5000);
-
-        useEffect(() => {
-            if(countdown <= 0) return;
-
-            const intervalId = setInterval(() => {
-                setCountdown(c => c - 1000);
-            }, 1000);
-
-            return () => clearInterval(intervalId);
-        }, [countdown]);
 
         return(
             <>
