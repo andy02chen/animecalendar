@@ -28,7 +28,7 @@ function displayDiv(divClassName, anime) {
 function updateStatus(anime, setRefreshAnimeDisplay) {
 
     // Display rating div if last episode
-    if(anime.eps_watched === (anime.eps - 1) || anime.eps !== 0) {
+    if(anime.eps_watched === (anime.eps - 1) && anime.eps !== 0) {
         displayDiv('rating', anime.id);
     } else {
         axios.post('/api/update-anime',
@@ -137,6 +137,7 @@ function AnimeAvailableDate({anime}) {
         }
     }, [refreshAnimeDisplay]);
 
+    console.log(anime.eps_watched, anime.eps)
     // Displays next episode status
     if(days >= 1) {
         return(
@@ -167,10 +168,10 @@ function AnimeAvailableDate({anime}) {
                     <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
 
-                {/* TODO button for watched and delayed */}
-                <p>
+                {/* TODO button for watched and delayed needs fixing */}
+                
                     {countdown > 0 ? 
-                    `Ep. ${anime.eps_watched + 1} will be avaliable to watch in ${formatTime(countdown)}` :
+                    <p>Ep. {anime.eps_watched + 1} will be avaliable to watch in {formatTime(countdown)}</p> :
                     <>
                         <div className={anime.id}>
                             <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
@@ -181,7 +182,7 @@ function AnimeAvailableDate({anime}) {
                         <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                     </>
                     }
-                </p>
+                
             </>
         );
     } else {

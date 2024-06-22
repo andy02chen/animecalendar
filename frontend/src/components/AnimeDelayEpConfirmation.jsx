@@ -13,7 +13,7 @@ function setDelay(anime, setRefreshAnimeDisplay, displayDiv) {
 function AnimeDelayEpConfirmation({anime, setRefreshAnimeDisplay, displayDiv}) {
     return(
         <div className={'delay'+anime} style={{display:'none'}}>
-            <h1>Are you sure?</h1>
+            <p>Are you sure?</p>
             <p>Is this episode really delayed? Please confirm</p>
             <button onClick={() => setDelay(anime, setRefreshAnimeDisplay, displayDiv)}>Yes</button>
             <button onClick={() => displayDiv('delay',anime)}>No</button>

@@ -33,7 +33,7 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
 function RateAnime({anime, setRefreshAnimeDisplay, displayDiv}) {
     return(
         <div className={'rating'+anime.id} style={{display:'none'}}>
-            <h3>Would you like to leave a rating?</h3>
+            <p>Would you like to leave a rating?</p>
             <div>
                 <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay, 1, displayDiv)}>1</button>
                 <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay, 2, displayDiv)}>2</button>
