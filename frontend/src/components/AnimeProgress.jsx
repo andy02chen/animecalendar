@@ -118,7 +118,7 @@ function AnimeProgress() {
                         renderContent(weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest)
                         :
                         <div className='message-div'>
-                            <img className='loading-spinner' alt="Loading..." src={loading}/>
+                            <img className='loading-spinner' src={loading}/>
                             <p className='message-text'>Loading...</p>
                         </div>
                     }

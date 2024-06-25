@@ -137,7 +137,7 @@ function AnimeAvailableDate({anime}) {
         }
     }, [refreshAnimeDisplay]);
 
-    const [countdown, setCountdown] = useState(5000);
+    const [countdown, setCountdown] = useState(diffMs);
 
     useEffect(() => {
         if(countdown <= 0) return;
@@ -167,9 +167,6 @@ function AnimeAvailableDate({anime}) {
                 <div style={styles}>
                     <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
                 </div>
-
-                {/* TODO button for watched and delayed needs fixing */}
-                
                     {countdown > 0 ? 
                     <p>Ep. {anime.eps_watched + 1} will be avaliable to watch in {formatTime(countdown)}</p> :
                     <>

@@ -1,3 +1,13 @@
+:root {
+    --text: #E9E9EC;
+    --background: #121212;
+    --background-light: #121212bb;
+    --primary: #275fce;
+    --secondary: #533de1;
+    --accent: #8196df;
+    --accent-light: #8195df1a;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -10,4 +20,9 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: Lato;
+    background-color: var(--background);
+}
+
+p,h1 {
+    color: var(--text);
 }
