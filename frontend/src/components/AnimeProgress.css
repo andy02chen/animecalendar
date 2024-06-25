@@ -33,12 +33,19 @@
     height: auto;
     width: 60%;
     border: 2px solid #666666;
+    
+    -webkit-user-drag: none;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .anime-div-bar {
     margin-inline: auto;
     width: 90%;
-    border: 1px solid #666666;
+    border: 1px solid var(--accent);
     border-radius: 100%;
 }
 
@@ -92,4 +99,8 @@
 .refresh-button {
     padding: 10px;
     cursor: pointer;
+}
+
+.heading {
+    padding-bottom: 10px;
 }
