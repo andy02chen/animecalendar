@@ -102,22 +102,22 @@ function AnimeAvailableDate({anime}) {
 
     // Progress Bar style
     let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
-    let styles = {
-        height: "25px",
+    let outerProgress = {
+        height: "30px",
         width: "100%",
+        backgroundColor: "#363636",
+        borderRadius: "5px",
+        overflow: "hidden",
+        position: "relative",
         border: "2px solid #666666",
-        // borderRadius: "25px",
-        background: `linear-gradient(90deg, 
-                        var(--accent) 0%,
-                        hsla(120, 100%, 39%, 0.95) ${String(progress) + "%"},
-                        #363636 ${String(progress) + "%"},
-                        #363636 100%)`
-        // background: `linear-gradient(to right, 
-        //                 var(--accent) 0%,
-        //                 hsla(120, 100%, 39%, 0.95) ${String(progress) + "%"},
-        //                 #363636 ${String(progress) + "%"},
-        //                 #363636 100%)`
-    }
+    };
+
+    let innerProgress = {
+        height: "100%",
+        width: `${String(Math.round(progress * 10) / 10) + "%"}`,
+        background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
+        borderRadius: "5px 0 0 5px"
+    };
 
     // When user watches an episode, it will update
     useEffect(() => {
@@ -132,17 +132,12 @@ function AnimeAvailableDate({anime}) {
         nextEpInfo = nextEpDate.toString().trim().split(' ');
 
         progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
-        styles = {
-            height: "25px",
-            width: "100%",
-            border: "2px solid #666666",
-            borderRadius: "25px",
-            background: `linear-gradient(to right, 
-                            var(--accent) 0%,
-                            hsla(120, 100%, 39%, 0.95) ${String(progress) + "%"},
-                            #363636 ${String(progress) + "%"},
-                            #363636 100%)`
-        }
+        innerProgress = {
+            height: "100%",
+            width: `${String(Math.round(progress * 10) / 10) + "%"}`,
+            background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
+            borderRadius: "5px 0 0 5px"
+        };
     }, [refreshAnimeDisplay]);
 
     const [countdown, setCountdown] = useState(diffMs);
@@ -163,7 +158,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={styles}></div>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
@@ -177,7 +172,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={styles}></div>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
@@ -202,7 +197,7 @@ function AnimeAvailableDate({anime}) {
             <>  
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={styles}></div>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
