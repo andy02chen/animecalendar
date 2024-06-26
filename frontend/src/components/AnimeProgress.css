@@ -12,13 +12,18 @@
 }
 
 .anime {
+    height: 100%;
     display: flex;
     flex-direction: column;
     margin: 30px;
 }
 
+.anime-top-div {
+    padding: 20px;
+}
+
 .anime-bot-div {
-    height: auto;
+    height: 80%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -31,7 +36,7 @@
 
 .weekly-anime-img {
     height: auto;
-    width: 60%;
+    width: 85%;
     border: 2px solid #666666;
     
     -webkit-user-drag: none;

@@ -1,3 +1,4 @@
+
 // Delays this week's episode
 function setDelay(anime, setRefreshAnimeDisplay, displayDiv) {
     if(localStorage.getItem(anime) !== null) {
@@ -11,12 +12,15 @@ function setDelay(anime, setRefreshAnimeDisplay, displayDiv) {
 }
 
 function AnimeDelayEpConfirmation({anime, setRefreshAnimeDisplay, displayDiv}) {
+
     return(
         <div className={'delay'+anime} style={{display:'none'}}>
-            <p>Are you sure?</p>
-            <p>Is this episode really delayed? Please confirm</p>
-            <button onClick={() => setDelay(anime, setRefreshAnimeDisplay, displayDiv)}>Yes</button>
-            <button onClick={() => displayDiv('delay',anime)}>No</button>
+            <p>Is this episode really delayed? </p>
+            <p>Please confirm</p>
+            <div className="button-choice-div">
+                <button className="negative-button" onClick={() => displayDiv('delay',anime)}>No</button>
+                <button className="positive-button" onClick={() => setDelay(anime, setRefreshAnimeDisplay, displayDiv)}>Yes</button>
+            </div>
         </div>
     );
 }

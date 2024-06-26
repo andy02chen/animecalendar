@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import AnimeDelayEpConfirmation from "./AnimeDelayEpConfirmation";
 import RateAnime from "./RateAnime";
+import "./AnimeAvailableDate.css"
 
 // Displays div with classname
 function displayDiv(divClassName, anime) {
@@ -102,14 +103,20 @@ function AnimeAvailableDate({anime}) {
     // Progress Bar style
     let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
     let styles = {
+        height: "25px",
         width: "100%",
         border: "2px solid #666666",
-        borderRadius: "25px",
-        background: `linear-gradient(to right, 
-                        hsla(120, 100%, 39%, 0.95) 0%,
+        // borderRadius: "25px",
+        background: `linear-gradient(90deg, 
+                        var(--accent) 0%,
                         hsla(120, 100%, 39%, 0.95) ${String(progress) + "%"},
-                        hsla(0, 0%, 0%, 0.35) ${String(progress) + "%"},
-                        hsla(0, 0%, 0%, 0.35) 100%)`
+                        #363636 ${String(progress) + "%"},
+                        #363636 100%)`
+        // background: `linear-gradient(to right, 
+        //                 var(--accent) 0%,
+        //                 hsla(120, 100%, 39%, 0.95) ${String(progress) + "%"},
+        //                 #363636 ${String(progress) + "%"},
+        //                 #363636 100%)`
     }
 
     // When user watches an episode, it will update
@@ -126,14 +133,15 @@ function AnimeAvailableDate({anime}) {
 
         progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
         styles = {
+            height: "25px",
             width: "100%",
             border: "2px solid #666666",
             borderRadius: "25px",
             background: `linear-gradient(to right, 
-                            hsla(120, 100%, 39%, 0.95) 0%,
+                            var(--accent) 0%,
                             hsla(120, 100%, 39%, 0.95) ${String(progress) + "%"},
-                            hsla(0, 0%, 0%, 0.35) ${String(progress) + "%"},
-                            hsla(0, 0%, 0%, 0.35) 100%)`
+                            #363636 ${String(progress) + "%"},
+                            #363636 100%)`
         }
     }, [refreshAnimeDisplay]);
 
@@ -153,10 +161,13 @@ function AnimeAvailableDate({anime}) {
     if(days >= 1) {
         return(
             <>
-                <div style={styles}>
-                    <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={styles}></div>
                 </div>
-                <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
+                <div className="progress-info-div">
+                    <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
+                </div>
             </>
         );
     // Countdown if within 24 hours
@@ -164,37 +175,46 @@ function AnimeAvailableDate({anime}) {
 
         return(
             <>
-                <div style={styles}>
-                    <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={styles}></div>
                 </div>
+                <div className="progress-info-div">
                     {countdown > 0 ? 
                     <p>Ep. {anime.eps_watched + 1} will be avaliable to watch in {formatTime(countdown)}</p> :
                     <>
                         <div className={anime.id}>
                             <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
-                            <button onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                            <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                            <div className="button-choice-div">
+                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                                <button className="positive-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                            </div>
                         </div>
                         <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                         <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                     </>
                     }
-                
+                </div>
             </>
         );
     } else {
         return(
-            <>
-                <div style={styles}>
-                    <p>{anime.eps_watched}/{anime.eps === 0 ? '?' : anime.eps}</p>                                    
+            <>  
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={styles}></div>
                 </div>
-                <div className={anime.id}>
-                    <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
-                    <button onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                    <button onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                <div className="progress-info-div">
+                    <div className={anime.id}>
+                        <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
+                        <div className="button-choice-div">
+                            <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                            <button className="positive-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
+                        </div>
+                    </div>
+                    <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                    <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                 </div>
-                <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
-                <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
             </>
         );
     }
