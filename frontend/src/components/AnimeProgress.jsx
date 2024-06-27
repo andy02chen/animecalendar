@@ -106,11 +106,11 @@ function AnimeProgress() {
     return(
         <>
             <div className='heading'>
-                <h1 className='title'>Weekly Anime Progress</h1>
+                <h1 className='weekly-title'>WEEKLY ANIME PROGRESS</h1>
                 <div className='search-anime-div'>
                     <input id='search-value' onChange={(event) => 
                         searchAnime(event,weeklyAnime,setDisplayAnime)
-                    } className='search-weekly-anime' type='text' placeholder='Enter Anime title'/>
+                    } className='search-weekly-anime' type='text' placeholder='Enter Anime title to search'/>
                 </div>
             </div>
             <div className='progress-div'>

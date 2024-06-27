@@ -23,7 +23,7 @@
 }
 
 .progress-bar-text {
-    font-size: 1.25rem;
+    font-size: 2rem;
     font-weight: 700;
 }
 
@@ -37,4 +37,8 @@
     justify-content: center;
     gap: 5%;
     margin: 5%;
+}
+
+.episode-status {
+    font-size: 1.1rem;
 }

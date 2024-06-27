@@ -161,7 +161,7 @@ function AnimeAvailableDate({anime}) {
                     <div style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
-                    <p>{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
+                    <p className="episode-status">{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
                 </div>
             </>
         );
@@ -176,7 +176,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
-                    <p>Ep. {anime.eps_watched + 1} will be avaliable to watch in {formatTime(countdown)}</p> :
+                    <p className="episode-status">Ep. {anime.eps_watched + 1} will be avaliable to watch in {formatTime(countdown)}</p> :
                     <>
                         <div className={anime.id}>
                             <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
@@ -201,7 +201,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
-                        <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
+                        <p className="episode-status">{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
                         <div className="button-choice-div">
                             <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                             <button className="positive-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
