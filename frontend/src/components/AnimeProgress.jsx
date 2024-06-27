@@ -43,7 +43,7 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
                         <li key={index} className='weekly-anime'>
                             <div className='anime'>
                                 <div className='anime-top-div'>
-                                    <h1>{anime.title}</h1>
+                                    <h1 className='anime-list-title'>{anime.title}</h1>
                                 </div>
                                 <div className='anime-bot-div'>
                                     <div>
