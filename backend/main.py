@@ -141,29 +141,24 @@ def weekly_anime():
                 data = response.json()
                 data_to_return = {'anime':[]}
                 for anime in data['data']:
-                    if anime['node']['status'] == 'currently_airing':
-                        # TODO maybe need to add/change details
-                        details = {}
-                        details['title'] = anime['node']['title']
-                        details['id'] = anime['node']['id']
-                        details['start_date'] = anime['node']['start_date']
-                        details['img'] = anime['node']['main_picture']['medium']
-                        details['eps_watched'] = anime['list_status']['num_episodes_watched']
-                        details['eps'] = anime['node']['num_episodes']
-                        details['broadcast_time'] = anime['node']['broadcast']['start_time']
-                        details['delayed_eps'] = 0
+                    # TODO maybe need to add/change details
+                    details = {}
+                    details['title'] = anime['node']['title']
+                    details['id'] = anime['node']['id']
+                    details['start_date'] = anime['node']['start_date']
+                    details['img'] = anime['node']['main_picture']['medium']
+                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
+                    details['eps'] = anime['node']['num_episodes']
+                    details['broadcast_time'] = anime['node']['broadcast']['start_time']
+                    details['delayed_eps'] = 0
 
-                        try:
-                            details['end_date'] = anime['node']['end_date']
+                    try:
+                        details['end_date'] = anime['node']['end_date']
 
-                        except KeyError:
-                            if details['eps'] == 0:
-                                details['end_date'] = None
-
-                            else:
-                                details['end_date'] = 0
-                        
-                        data_to_return['anime'].append(details)
+                    except KeyError:
+                        details['end_date'] = None
+                    
+                    data_to_return['anime'].append(details)
 
                 return data_to_return
 

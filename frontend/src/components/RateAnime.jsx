@@ -17,12 +17,21 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         }
     }
 
+    let updateFeedback = document.getElementById(anime.id+"update-spinner");
+    updateFeedback.style.display = "inline";
+
+    let updateFeedback2 = document.getElementById(anime.id+'ep-details-div');
+    updateFeedback2.style.display = "none";
+
     axios.post('/api/update-anime', data)
     .then(response => {
-        anime.eps_watched++;
-        setRefreshAnimeDisplay(prevFlag => !prevFlag);
+        updateFeedback.style.display = "none";
+        updateFeedback2.style.display = "flex";
+        anime.eps_watched = anime.eps;
         displayDiv('rating',anime.id);
+        setRefreshAnimeDisplay(prevFlag => !prevFlag);
         localStorage.removeItem(anime.id);
+        console.log('a',anime);
     })
     .catch(error => {
         // TODO Display error

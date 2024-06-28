@@ -8,7 +8,7 @@
 }
 
 .anime {
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     margin: 30px;
@@ -74,6 +74,17 @@
     height: auto;
     width: 75px;
     animation: spin 0.8s linear infinite;
+}
+
+.update-div {
+    display: none;
+}
+
+.update-spinner {
+    height: auto;
+    width: 10%;
+    animation: spin 0.8s linear infinite;
+    fill: var(--text);
 }
 
 .loading-svg {

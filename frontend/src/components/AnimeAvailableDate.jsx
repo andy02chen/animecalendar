@@ -32,6 +32,12 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
     if(anime.eps_watched === (anime.eps - 1) && anime.eps !== 0) {
         displayDiv('rating', anime.id);
     } else {
+        let updateFeedback = document.getElementById(anime.id+"update-spinner");
+        updateFeedback.style.display = "inline";
+
+        let updateFeedback2 = document.getElementById(anime.id+'ep-details-div');
+        updateFeedback2.style.display = "none";
+
         axios.post('/api/update-anime',
             {
                 'anime-id': anime.id,
@@ -41,6 +47,8 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
         .then(response => {
             anime.eps_watched++;
             setRefreshAnimeDisplay(prevFlag => !prevFlag);
+            updateFeedback.style.display = "none";
+            updateFeedback2.style.display = "flex";
         })
         .catch(error => {
             // TODO Display error
@@ -62,7 +70,6 @@ function formatTime(timeRemaining) {
 
 function AnimeAvailableDate({anime}) {
     const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(false);
-    const [showModal, setShowModal] = useState(false);
 
     if(localStorage.getItem(anime.id) !== null) {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));
@@ -100,25 +107,6 @@ function AnimeAvailableDate({anime}) {
         anime.end_date = estEndDate.setDate(estEndDate.getDate() + daysToAdd);
     }
 
-    // Progress Bar style
-    let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
-    let outerProgress = {
-        height: "30px",
-        width: "100%",
-        backgroundColor: "#363636",
-        borderRadius: "5px",
-        overflow: "hidden",
-        position: "relative",
-        border: "2px solid #666666",
-    };
-
-    let innerProgress = {
-        height: "100%",
-        width: `${String(Math.round(progress * 10) / 10) + "%"}`,
-        background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
-        borderRadius: "5px 0 0 5px"
-    };
-
     // When user watches an episode, it will update
     useEffect(() => {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));
@@ -151,6 +139,42 @@ function AnimeAvailableDate({anime}) {
 
         return () => clearInterval(intervalId);
     }, [countdown]);
+
+    // Progress Bar style
+    let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
+    let outerProgress = {
+        height: "30px",
+        width: "100%",
+        backgroundColor: "#363636",
+        borderRadius: "5px",
+        overflow: "hidden",
+        position: "relative",
+        border: "2px solid #666666",
+    };
+
+    let innerProgress = {
+        height: "100%",
+        width: `${String(Math.round(progress * 10) / 10) + "%"}`,
+        background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
+        borderRadius: "5px 0 0 5px"
+    };
+
+    // If user completed the anime display completed until log back in
+    if(anime.eps_watched === anime.eps) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <p className="episode-status">
+                        Completed
+                    </p>
+                </div>
+            </>
+        );
+    }
 
     // Displays next episode status
     if(days >= 1) {

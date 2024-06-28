@@ -42,6 +42,7 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
                     {displayAnime.map((anime,index) =>
                         <li key={index} className='weekly-anime'>
                             <div className='anime'>
+
                                 <div className='anime-top-div'>
                                     <h1 className='anime-list-title'>{anime.title}</h1>
                                 </div>
@@ -49,8 +50,15 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
                                     <div>
                                         <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
                                     </div>
-                                    <div className='anime-bot-ep'>
+
+                                    <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>
                                         <AnimeAvailableDate anime={anime}/>
+                                    </div>
+
+                                    <div id={anime.id+'update-spinner'} className='update-div'>
+                                        <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path  d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
+                                        <p>Updating...</p>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +114,7 @@ function AnimeProgress() {
     return(
         <>
             <div className='heading'>
-                <h1 className='weekly-title'>WEEKLY ANIME PROGRESS</h1>
+                <h1 className='weekly-title'>YOUR ANIME PROGRESS</h1>
                 <div className='search-anime-div'>
                     <input id='search-value' onChange={(event) => 
                         searchAnime(event,weeklyAnime,setDisplayAnime)
