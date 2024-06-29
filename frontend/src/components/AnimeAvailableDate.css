@@ -1,0 +1,50 @@
+.negative-button {
+    border: none;
+    background-color: var(--no-button);
+    transition: transform ease 0.5s;
+}
+
+.positive-button {
+    border: none;
+    background-color: var(--primary);
+    color: var(--text);
+    transition: transform ease 0.5s;
+}
+
+.anime-bot-ep button {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 5%;
+    flex: 1;
+}
+
+.negative-button:hover, .positive-button:hover {
+    transform: translate(0, -3px);
+}
+
+.progress-bar-text {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.anime-bot-ep {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-choice-div {
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+    margin: 5%;
+}
+
+.episode-status {
+    font-size: 1.1rem;
+    margin: 3%;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

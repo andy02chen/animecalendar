@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import './App.css'
 import axios from "axios"
 
 function authRedirect() {
@@ -54,14 +53,6 @@ function Auth() {
             }
         </>
     );
-
-    return (
-        <>
-            <button onClick={authRedirect} className='login-button'>Login with MAL</button>
-            <br></br>
-            <button>Continue as Guest</button>
-        </>
-    )
 }
 
 export default Auth

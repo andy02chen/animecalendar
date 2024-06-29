@@ -1,0 +1,31 @@
+:root {
+    --text: #E9E9EC;
+    --background: #121212;
+    --background-div: #191919;
+    --primary: #1E90FF;
+    --primary-dark: #1e8fff7a;
+    --primary-darker: #1e8fff3b;
+    --secondary: #6835e0;
+    --accent: #E1E12C;
+    --accent-light: #ebdd9d7c;
+    --no-button: var(--accent);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Lato;
+    background-color: var(--background);
+}
+
+p,h1 {
+    color: var(--text);
+}

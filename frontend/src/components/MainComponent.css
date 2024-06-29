@@ -1,0 +1,57 @@
+.main-div {
+    height: 95vh;
+    width: 98vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.settings-div{
+    display: flex;
+}
+
+.left {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.right {
+    margin-right: auto;
+}
+
+.title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.settings-div {
+    background-color: var(--primary);
+    height: 10%;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.anime-progress-div {
+    width: 25%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-div);
+    border-radius: 15px;
+    margin-right: 20px;
+}
+
+.calendar-div {
+    width: 75%;
+    height: 100%;
+}
+
+button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}

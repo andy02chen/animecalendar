@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from random import randrange
 import requests
 from models import db, User, Auth, RateLimit
-import urllib.parse
 import base64
 import time
 import hashlib
@@ -24,13 +23,61 @@ client_secret = os.getenv('CLIENT_SECRET')
 
 cipher_suite = Fernet(encryption_key)
 
+# Function for updating the number of episodes watched on MyAnimeList
+@app.route('/api/update-anime', methods=["POST"])
+def updateStatus():
+
+    # Find user using session id
+    user_session_id = request.cookies.get('session')
+    if user_session_id: #TODO session not found
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
+        if find_user: #TODO user not found
+            msg, code = check_expiry()
+
+            # Login again # TODO handle in frontend
+            if code == 401 or code == 403:
+                return msg, code
+
+            # TODO when user finsihed the anime
+            data = request.get_json()
+            anime_id = data['anime-id']
+            eps_watched = int(data['eps-watched']) + 1
+
+            mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
+            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+            headers = {
+                'Authorization': f'Bearer {mal_access_token}'
+            }
+
+            body = {}
+            if 'score' in data:
+                body = {
+                    'score': data['score'],
+                    "num_watched_episodes": eps_watched,
+                    "status" : "completed"
+                }
+
+            else:
+                body = {
+                    "num_watched_episodes": eps_watched
+                }
+
+            response = requests.patch(mal_update_anime, headers=headers, data=body)
+            
+            #TODO response not ok
+            if response.status_code == 200:
+                return '',200
+    
+    return '', 400
+
 # Function for deleting user from the database
-@app.route('/api/delete-user', methods=["DELETE"])
-def delete_user():
+@app.route('/api/logout', methods=["DELETE"])
+def delete_user_session():
     session_id = request.cookies.get("session")
     found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
 
-    db.session.delete(found_user)
+    found_user.session_id = None
     db.session.commit()
 
     return jsonify({"redirect_url": "/"}), 200
@@ -38,7 +85,7 @@ def delete_user():
 
 # Function for checking expiry time
 # Calls function for refreshing if expired
-def is_expired():
+def check_expiry():
     # Get user using session id
     session_id = request.cookies.get("session")
     found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
@@ -48,25 +95,82 @@ def is_expired():
 
     # Refresh if expired
     if curr_time >= found_user.expires_in:
-        result = refreshUsersTokens()
-        _, code = result
+        return refreshUsersTokens()
 
-        if code == 201:
-            return True
-
-    return False
-
-@app.route('/test', methods=["GET"])
-def test():
-    is_expired()
-
-    return 'a'
+    return '',100
 
 # Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):
     period_start = int(time.time()) - period
     recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
     return recent_requests >= limit
+
+# Functions gets user's weekly watching anime
+@app.route('/api/get-weekly-anime', methods=["GET"])
+def weekly_anime():
+    # Check limit
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+        return jsonify({"error": "rate limit exceeded"}), 429
+
+    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
+    db.session.add(new_request)
+    db.session.commit()
+
+    # Find user using session id
+    user_session_id = request.cookies.get('session')
+    if user_session_id:
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
+        if find_user:
+            msg, code = check_expiry()
+
+            # Login again
+            if code == 401 or code == 403:
+                return msg, code
+            
+            mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
+            sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true'''
+            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+            headers = {
+                'Authorization': f'Bearer {mal_access_token}'
+            }
+
+            response = requests.get(mal_get_anime, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                data_to_return = {'anime':[]}
+                for anime in data['data']:
+                    # TODO maybe need to add/change details
+                    details = {}
+                    details['title'] = anime['node']['title']
+                    details['id'] = anime['node']['id']
+                    details['start_date'] = anime['node']['start_date']
+                    details['img'] = anime['node']['main_picture']['medium']
+                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
+                    details['eps'] = anime['node']['num_episodes']
+                    details['broadcast_time'] = anime['node']['broadcast']['start_time']
+                    details['delayed_eps'] = 0
+
+                    try:
+                        details['end_date'] = anime['node']['end_date']
+
+                    except KeyError:
+                        details['end_date'] = None
+                    
+                    data_to_return['anime'].append(details)
+
+                return data_to_return
+
+            return '',500
+
+        # User not found
+        response = redirect("/")
+        response.set_cookie('session', '', expires=0)
+        return response
+
+    # User not logged in
+    return redirect('/')
 
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
@@ -106,11 +210,11 @@ def refreshUsersTokens():
                 return '', 204
 
             else:
-                return 'Error from MAL server, Please try logging in again later.', 403
+                return 'Error from MAL server, please try logging in again later. If this error persists, please report bug.', 403
 
-        return 'Error finding your username, Please try logging in again.', 401
+        return 'Error finding your username, please try logging in again. If this error persists, please report bug.', 401
 
-    return 'Error verifying your login, Please try logging in again.', 401
+    return 'Error verifying your login, please try logging in again. If this error persists, please report bug.', 401
 
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
@@ -122,11 +226,12 @@ def refreshTokens(user_to_refresh):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
+
     data = {
         'client_id': client_id,
         'client_secret': client_secret,
         'grant_type': 'refresh_token',
-        'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token.decode())
+        'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token).decode()
     }
     
     response = requests.post(url, headers=headers, data=data)
@@ -140,6 +245,8 @@ def refreshTokens(user_to_refresh):
         db.session.commit()
 
         return True
+    
+    return False
 
 @app.route('/')
 def checkSession():
@@ -158,19 +265,19 @@ def checkSession():
             user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
 
             if refreshTokens(user_to_refresh):
-                return redirect("http://localhost:5173/home")
+                return redirect("/home")
 
             else:
                 return "Error with refreshing token"
 
         else:
-            response = redirect("http://localhost:5173/a")
+            response = redirect("/a")
             response.set_cookie('session', '', expires=0)
             return response
         
     # Login the user for the first time
     else:
-        return redirect("http://localhost:5173/a")
+        return redirect("/a")
 
 # Generates a random state
 def generateRandomState(length = 32):
@@ -203,10 +310,10 @@ def auth():
         user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if user:
-            return redirect("http://localhost:5173/home")
+            return redirect("/home")
 
-        # Delete cookie if not present
-        response = redirect("http://localhost:5173/")
+        # Delete cookie
+        response = redirect("/")
         response.set_cookie('session', '', expires=0)
         return response
 
@@ -242,7 +349,7 @@ def oauth():
 
         if find_auth_state == hash_text(returned_state, auth_salt):
             # Post Request for access tokens
-            code_verifier = cipher_suite.decrypt(find_auth.code_challenge)
+            code_verifier = cipher_suite.decrypt(find_auth.code_challenge).decode()
             authorization_code = request.args.get('code')
 
             url = 'https://myanimelist.net/v1/oauth2/token'
@@ -278,10 +385,6 @@ def oauth():
                     # Check if the user already exist in the database
                     user_data = response.json()
                     user_username = user_data['name']
-
-                    # Assign username to session id
-                    find_auth.user_id = user_username
-                    db.session.commit()
 
                     # Check if user already exists
                     find_user = User.query.filter_by(user_id=user_username).first()

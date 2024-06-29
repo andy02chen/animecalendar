@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
+import MainComponent from './MainComponent'
 
 function loginRedirect() {
     window.location.href = `/a`
@@ -8,10 +9,10 @@ function loginRedirect() {
 function refreshAccessToken() {
     axios.put("/api/refresh-token")
     .then(response => {
-        resetTimer()
+        resetTimer();
     })
     .catch(error => {
-        axios.delete('/api/delete-user')
+        axios.delete('/api/logout')
         .then(response => {
             document.cookie = 'session=; Max-Age=-99999999;';
             alert(error.response.data);
@@ -28,6 +29,7 @@ function resetTimer() {
 const tokenExpiry = 60 * 60 * 1000 // Every Hour
 const refreshBuffer = 5 * 60 * 1000; // 5 mins before expiry
 const refreshTime = tokenExpiry - refreshBuffer;
+// const refreshTime = 5000;
 let refreshInterval;
 
 function HomePage() {
@@ -57,9 +59,7 @@ function HomePage() {
                 <>
                     {isLoggedIn ?
                         <>
-                            <h1>Home Page</h1>
-                            <p>User is logged in.</p>
-                            <button onClick={() => refreshAccessToken()}>Refresh Token</button>
+                            <MainComponent/>
                         </>
                         :
                         <>

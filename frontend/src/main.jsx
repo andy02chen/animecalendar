@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Auth from './Auth.jsx'
-import HomePage from './HomePage.jsx'
+import Auth from './components/Auth.jsx'
+import HomePage from './components/HomePage.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
