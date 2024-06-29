@@ -101,7 +101,7 @@ function AnimeAvailableDate({anime}) {
     let nextEpInfo = nextEpDate.toString().trim().split(' ');
 
     // Store the estimated end date if number of episodes is known
-    if(anime.end_date === 0) {
+    if(anime.end_date === 0 && anime.eps) {
         let estEndDate = new Date(isoTime);
         const addDays = 7 * anime.eps;
         anime.end_date = estEndDate.setDate(estEndDate.getDate() + daysToAdd);
@@ -200,7 +200,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
-                    <p className="episode-status">Ep. {anime.eps_watched + 1} will be avaliable to watch in {formatTime(countdown)}</p> :
+                    <p className="episode-status">Ep. {anime.eps_watched + 1} will be available to watch in <span style={{color: "var(--secondary)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> :
                     <>
                         <div className={anime.id}>
                             <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
@@ -217,6 +217,15 @@ function AnimeAvailableDate({anime}) {
             </>
         );
     } else {
+        let displayDelay = true;
+        if(anime.end_date !== null) {
+            const animeEndDateCompare = new Date(anime.end_date);
+            const dateNow = Date.now();
+            if(animeEndDateCompare < dateNow) {
+                displayDelay = false;
+            }
+        }
+
         return(
             <>  
                 <div className="progress-bar-text-div">
@@ -227,7 +236,11 @@ function AnimeAvailableDate({anime}) {
                     <div className={anime.id}>
                         <p className="episode-status">{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
                         <div className="button-choice-div">
-                            <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                            {displayDelay ?
+                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                                :
+                                <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
+                            }
                             <button className="positive-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay)}>Watched</button>
                         </div>
                     </div>

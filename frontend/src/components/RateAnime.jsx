@@ -32,7 +32,6 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         displayDiv('rating',anime.id);
         setRefreshAnimeDisplay(prevFlag => !prevFlag);
         localStorage.removeItem(anime.id);
-        console.log('a',anime);
     })
     .catch(error => {
         // TODO Display error

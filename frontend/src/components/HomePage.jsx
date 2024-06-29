@@ -9,7 +9,7 @@ function loginRedirect() {
 function refreshAccessToken() {
     axios.put("/api/refresh-token")
     .then(response => {
-        resetTimer()
+        resetTimer();
     })
     .catch(error => {
         axios.delete('/api/logout')

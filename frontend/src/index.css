@@ -8,7 +8,7 @@
     --secondary: #A435E0;
     --accent: #E1E12C;
     --accent-light: #ebdd9d7c;
-    --no-button: #667b8f;
+    --no-button: var(--accent);
 }
 
 * {
