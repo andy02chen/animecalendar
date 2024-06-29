@@ -57,7 +57,7 @@ function RateAnime({anime, setRefreshAnimeDisplay, displayDiv}) {
                     min="1" 
                     max="10" 
                     defaultValue={rating}/>
-                <p style={{fontSize: "1.5rem"}} id="rating-output">{rating}</p>
+                <p style={{fontSize: "1.5rem", color: "var(--secondary)"}} id="rating-output">{rating}</p>
             </div>
             <div className="button-choice-div">
                 <button className="negative-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay, 0, displayDiv)}>Skip</button>

@@ -110,8 +110,17 @@
 }
 
 .refresh-button {
-    padding: 10px;
+    border: none;
+    padding: 2%;
     cursor: pointer;
+    border-radius: 10px;
+    background-color: var(--primary);
+    color: var(--text);
+    transition: transform ease 0.5s;
+}
+
+.refresh-button:hover {
+    transform: translate(0, -3px);
 }
 
 .heading {
