@@ -8,13 +8,15 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
     if(score === 0) {
         data = {
             'anime-id': anime.id,
-            'eps-watched': anime.eps_watched
+            'eps-watched': anime.eps_watched,
+            'completed': true
         }
     } else {
         data = {
             'anime-id': anime.id,
             'eps-watched': anime.eps_watched,
-            'score': score
+            'score': score,
+            'completed': true
         }
     }
 

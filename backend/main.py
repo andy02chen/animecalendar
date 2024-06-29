@@ -51,12 +51,19 @@ def updateStatus():
             }
 
             body = {}
-            if 'score' in data:
-                body = {
-                    'score': data['score'],
-                    "num_watched_episodes": eps_watched,
-                    "status" : "completed"
-                }
+            if data['completed']:
+                if 'score' in data:
+                    body = {
+                        'score': data['score'],
+                        "num_watched_episodes": eps_watched,
+                        "status" : "completed"
+                    }
+
+                else:
+                    body = {
+                        "num_watched_episodes": eps_watched,
+                        "status" : "completed"
+                    }
 
             else:
                 body = {

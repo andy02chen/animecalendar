@@ -41,7 +41,8 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
         axios.post('/api/update-anime',
             {
                 'anime-id': anime.id,
-                'eps-watched': anime.eps_watched
+                'eps-watched': anime.eps_watched,
+                'completed': false
             }
         )
         .then(response => {

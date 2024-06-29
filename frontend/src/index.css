@@ -8,7 +8,8 @@
     --secondary: #6835e0;
     --accent: #E1E12C;
     --accent-light: #ebdd9d7c;
-    --no-button: var(--accent);
+    /* --no-button: var(--accent); */
+    --no-button: gray;
 }
 
 * {
