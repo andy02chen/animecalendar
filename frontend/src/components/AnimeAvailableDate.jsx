@@ -52,8 +52,17 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
             updateFeedback2.style.display = "flex";
         })
         .catch(error => {
-            // TODO Display error
-            console.log(error);
+            //TODO pop up message for error
+            if(error.response.status === 502) {
+                console.log('bruh');
+            } else {
+                axios.delete('/api/logout')
+                .then(response => {
+                    document.cookie = 'session=; Max-Age=-99999999;';
+                    alert(error.response.data);
+                    window.location.href = response.data.redirect_url;
+                });
+            }
         });
     }
 }

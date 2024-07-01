@@ -27,22 +27,21 @@ cipher_suite = Fernet(encryption_key)
 @app.route('/api/update-anime', methods=["POST"])
 def updateStatus():
     # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     # Find user using session id
     user_session_id = request.cookies.get('session')
-    if user_session_id: #TODO session not found
+    if user_session_id:
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
-        if find_user: #TODO user not found
+        if find_user:
             msg, code = check_expiry()
 
-            # Login again # TODO handle in frontend
+            # Login again
             if code == 401 or code == 403:
                 return msg, code
 
-            # TODO when user finsihed the anime
             data = request.get_json()
             anime_id = data['anime-id']
             eps_watched = int(data['eps-watched']) + 1
@@ -74,16 +73,25 @@ def updateStatus():
                 }
 
             response = requests.patch(mal_update_anime, headers=headers, data=body)
+            response.status_code = 200
             
-            #TODO response not ok
             if response.status_code == 200:
-                return '',200
+                return '', 200
+
+            else:
+                return 'There was an error updating on MAL servers. Please try again.', 502
+
+        return 'There was an error finding your username. Please try logging in again. If this error persists, please report bug.', 401
     
-    return '', 400
+    return 'There was error verifying your login details. Please try logging in again. If this error persists, please report bug.', 400
 
 # Function for deleting user from the database
 @app.route('/api/logout', methods=["DELETE"])
 def delete_user_session():
+    # Check limit
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=5, period=60):
+        return jsonify({"error": "rate limit exceeded"}), 429
+
     session_id = request.cookies.get("session")
     found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
 
@@ -119,7 +127,7 @@ def is_rate_limited(ip, endpoint, limit, period):
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
     # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
@@ -185,7 +193,7 @@ def weekly_anime():
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
@@ -208,7 +216,7 @@ def protectedRoute():
 @app.route('/api/refresh-token', methods=["PUT"])
 def refreshUsersTokens():
     # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=2, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     user_session_id = request.cookies.get('session')
@@ -224,11 +232,11 @@ def refreshUsersTokens():
                 return '', 204
 
             else:
-                return 'Error from MAL server, please try logging in again later. If this error persists, please report bug.', 403
+                return 'There was an error from MAL servers. Please try logging in again later. If this error persists, please report bug.', 403
 
-        return 'Error finding your username, please try logging in again. If this error persists, please report bug.', 401
+        return 'There was an error finding your username. Please try logging in again. If this error persists, please report bug.', 401
 
-    return 'Error verifying your login, please try logging in again. If this error persists, please report bug.', 401
+    return 'There was error verifying your login details. Please try logging in again. If this error persists, please report bug.', 401
 
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
