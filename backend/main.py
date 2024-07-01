@@ -26,6 +26,9 @@ cipher_suite = Fernet(encryption_key)
 # Function for updating the number of episodes watched on MyAnimeList
 @app.route('/api/update-anime', methods=["POST"])
 def updateStatus():
+    # Check limit
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+        return jsonify({"error": "rate limit exceeded"}), 429
 
     # Find user using session id
     user_session_id = request.cookies.get('session')
@@ -204,6 +207,10 @@ def protectedRoute():
 # Endpoint for refreshing the user's access token
 @app.route('/api/refresh-token', methods=["PUT"])
 def refreshUsersTokens():
+    # Check limit
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+        return jsonify({"error": "rate limit exceeded"}), 429
+
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
