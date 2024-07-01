@@ -48,3 +48,13 @@
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+.bounce {
+    animation: ease-out bounce 1s 1;
+}
+
+@keyframes bounce {
+    0% {transform: translateY(0);}
+    75% {transform: translateY(-3px);}
+    /* 100% {transform: translateY(0);} */
+}
