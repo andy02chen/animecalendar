@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
 import MainComponent from './MainComponent'
-
 function loginRedirect() {
     window.location.href = `/a`
 }
@@ -12,6 +11,7 @@ function refreshAccessToken() {
         resetTimer();
     })
     .catch(error => {
+        //TODO pop up message for error
         axios.delete('/api/logout')
         .then(response => {
             document.cookie = 'session=; Max-Age=-99999999;';
@@ -54,7 +54,7 @@ function HomePage() {
 
     // Redirects to login page if not logged in
     return(
-        <>
+        <> 
             {hasLoaded ?
                 <>
                     {isLoggedIn ?

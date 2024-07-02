@@ -52,14 +52,18 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
             updateFeedback2.style.display = "flex";
         })
         .catch(error => {
-            //TODO pop up message for error
             if(error.response.status === 502) {
-                console.log('bruh');
+                document.getElementById('popup-error-message').textContent = error.response.data;
+                const popup = document.getElementById("error-popup");
+                popup.classList.add("show-error");
+                popup.classList.remove("hide-error");
+                updateFeedback.style.display = "none";
+                updateFeedback2.style.display = "flex";
             } else {
                 axios.delete('/api/logout')
                 .then(response => {
+                    localStorage.setItem('errorMsgDiv', true);
                     document.cookie = 'session=; Max-Age=-99999999;';
-                    alert(error.response.data);
                     window.location.href = response.data.redirect_url;
                 });
             }

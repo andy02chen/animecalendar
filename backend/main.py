@@ -81,9 +81,9 @@ def updateStatus():
             else:
                 return 'There was an error updating on MAL servers. Please try again.', 502
 
-        return 'There was an error finding your username. Please try logging in again. If this error persists, please report bug.', 401
+        return '', 401
     
-    return 'There was error verifying your login details. Please try logging in again. If this error persists, please report bug.', 400
+    return '', 400
 
 # Function for deleting user from the database
 @app.route('/api/logout', methods=["DELETE"])
@@ -234,9 +234,9 @@ def refreshUsersTokens():
             else:
                 return 'There was an error from MAL servers. Please try logging in again later. If this error persists, please report bug.', 403
 
-        return 'There was an error finding your username. Please try logging in again. If this error persists, please report bug.', 401
+        return '', 401
 
-    return 'There was error verifying your login details. Please try logging in again. If this error persists, please report bug.', 401
+    return '', 401
 
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()

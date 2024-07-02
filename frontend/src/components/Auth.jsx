@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from "axios"
+import './Auth.css'
 
 function authRedirect() {
     window.location.href = `/auth`;
@@ -19,16 +20,15 @@ function Auth() {
             .then(response => {
                 setLoggedIn(response.data.loggedIn);
                 setLoaded(true);
-                console.log(response);
             })
             .catch(error => {
                 setLoaded(true);
             });
     }, []);
 
-    // Redirects to login page if not logged in
+    // Redirects to home page if logged in
     return(
-        <>
+        <div className='login-page'>
             {hasLoaded ?
                 <>
                     {isLoggedIn ?
@@ -51,7 +51,7 @@ function Auth() {
                     <p>Loading...</p>
                 </>
             }
-        </>
+        </div>
     );
 }
 
