@@ -4,8 +4,8 @@ import './Alert.css'
 function Alert() {
     function closePopup() {
         const popup = document.getElementById("error-popup");
-        popup.classList.add("hide-error");
         popup.classList.remove("show-error");
+        popup.classList.add("hide-error");
         localStorage.removeItem('errorMsgDiv');
     }
 
@@ -25,13 +25,13 @@ function Alert() {
     }
 
     return(
-        <div className="custom-popup" id="error-popup">
+        <div className="custom-popup hide-error" id="error-popup">
             <div className="popup-header">
                 <h2 className="popup-title">Error</h2>
                 <span className="close-button-popup" onClick={() => closePopup()}>&times;</span>
             </div>
             <div className="popup-content">
-                <p id="popup-error-message" className='popup-text'>There was error verifying your login details. Please try logging in again. If this error persists, please report bug.</p>
+                <p id="popup-error-message" className='popup-text'></p>
             </div>
         </div>
     );

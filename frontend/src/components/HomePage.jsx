@@ -11,11 +11,10 @@ function refreshAccessToken() {
         resetTimer();
     })
     .catch(error => {
-        //TODO pop up message for error
         axios.delete('/api/logout')
         .then(response => {
+            localStorage.setItem('errorMsgDiv', true);
             document.cookie = 'session=; Max-Age=-99999999;';
-            alert(error.response.data);
             window.location.href = response.data.redirect_url;
         })
     })

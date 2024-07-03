@@ -36,8 +36,22 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         localStorage.removeItem(anime.id);
     })
     .catch(error => {
-        // TODO Display error
-        console.log(error);
+        if(error.response.status === 502) {
+            document.getElementById('popup-error-message').textContent = error.response.data;
+            const popup = document.getElementById("error-popup");
+            popup.classList.remove("hide-error");
+            popup.classList.add("show-error");
+            updateFeedback.style.display = "none";
+            updateFeedback2.style.display = "flex";
+            displayDiv('rating',anime.id);
+        } else {
+            axios.delete('/api/logout')
+            .then(response => {
+                localStorage.setItem('errorMsgDiv', true);
+                document.cookie = 'session=; Max-Age=-99999999;';
+                window.location.href = response.data.redirect_url;
+            });
+        }
     });
 }
 
