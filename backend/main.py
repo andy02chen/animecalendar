@@ -127,7 +127,7 @@ def is_rate_limited(ip, endpoint, limit, period):
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
     # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
@@ -193,7 +193,7 @@ def weekly_anime():
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
     new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)

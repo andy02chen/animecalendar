@@ -47,6 +47,7 @@ function HomePage() {
                 }
             })
             .catch(error => {
+                localStorage.setItem('errorMsgDiv', '3');
                 setLoaded(true);
             });
     }, []);

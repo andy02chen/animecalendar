@@ -34,6 +34,18 @@ function Alert() {
                 </div>
             </div>
         );
+    } else if (showErrorMsg === '3') {
+        return(
+            <div className="custom-popup show-error" id="error-popup">
+                <div className="popup-header">
+                    <h2 className="popup-title">Error</h2>
+                    <span className="close-button-popup" onClick={() => closePopup()}>&times;</span>
+                </div>
+                <div className="popup-content">
+                    <p id="popup-error-message" className='popup-text'>Rate Limit Exceeded. Please stop spamming and try again later.</p>
+                </div>
+            </div>
+        );
     } else if(showErrorMsg) {
         return(
             <div className="custom-popup show-error" id="error-popup">
