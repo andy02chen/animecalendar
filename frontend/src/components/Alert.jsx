@@ -10,7 +10,31 @@ function Alert() {
     }
 
     const showErrorMsg = localStorage.getItem('errorMsgDiv');
-    if(showErrorMsg) {
+    if(showErrorMsg === '1') {
+        return(
+            <div className="custom-popup show-error" id="error-popup">
+                <div className="popup-header">
+                    <h2 className="popup-title">Error</h2>
+                    <span className="close-button-popup" onClick={() => closePopup()}>&times;</span>
+                </div>
+                <div className="popup-content">
+                    <p id="popup-error-message" className='popup-text'>There was error with fetching data from MAL servers. Please try logging in again later.</p>
+                </div>
+            </div>
+        );
+    } else if (showErrorMsg === '2') {
+        return(
+            <div className="custom-popup show-error" id="error-popup">
+                <div className="popup-header">
+                    <h2 className="popup-title">Error</h2>
+                    <span className="close-button-popup" onClick={() => closePopup()}>&times;</span>
+                </div>
+                <div className="popup-content">
+                    <p id="popup-error-message" className='popup-text'>OAuth state did not match the one stored on the server. This is likely not an issue on the server side and you may be the target of a CSRF attack.</p>
+                </div>
+            </div>
+        );
+    } else if(showErrorMsg) {
         return(
             <div className="custom-popup show-error" id="error-popup">
                 <div className="popup-header">

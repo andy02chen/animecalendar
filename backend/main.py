@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, session, make_response, url_for
+from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string
 from cryptography.fernet import Fernet
 from config import app, db
 from flask_session import Session
@@ -79,7 +79,7 @@ def updateStatus():
                 return '', 200
 
             else:
-                return 'There was an error updating on MAL servers. Please try again.', 502
+                return 'There was an error updating on MAL servers. Please try again later.', 502
 
         return '', 401
     
@@ -427,16 +427,52 @@ def oauth():
                     db.session.commit()
 
                 else:
-                    return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
+                    return render_template_string('''
+                        <html>
+                            <head>
+                                <script type="text/javascript">
+                                    localStorage.setItem('errorMsgDiv', '1');
+                                    window.location.href = "/a";
+                                </script>
+                            </head>
+                            <body>
+                                <h1>Redirecting...</h1>
+                            </body>
+                        </html>
+                    ''')
 
             else:
-                return jsonify({'error': 'Failed to fetch data from external API'}), response.status_code
+                return render_template_string('''
+                    <html>
+                        <head>
+                            <script type="text/javascript">
+                                localStorage.setItem('errorMsgDiv', '1');
+                                window.location.href = "/a";
+                            </script>
+                        </head>
+                        <body>
+                            <h1>Redirecting...</h1>
+                        </body>
+                    </html>
+                ''')
             
             resp = make_response(redirect('/home'))
             return resp
 
         else:
-            return "State did not match. Please Try again or something idk"
+            return render_template_string('''
+                    <html>
+                        <head>
+                            <script type="text/javascript">
+                                localStorage.setItem('errorMsgDiv', '2');
+                                window.location.href = "/a";
+                            </script>
+                        </head>
+                        <body>
+                            <h1>Redirecting...</h1>
+                        </body>
+                    </html>
+                ''')
 
     return redirect('/')
 
