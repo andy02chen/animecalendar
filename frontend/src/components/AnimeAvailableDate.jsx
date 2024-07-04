@@ -199,7 +199,35 @@ function AnimeAvailableDate({anime}) {
                     <div style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
-                    <p className="episode-status">{`Ep. ${anime.eps_watched + 1} will be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
+                    <div className={anime.id}>
+                        <p className="episode-status">{`Ep. ${anime.eps_watched + 1} is estimated to be available in ${Math.ceil(days)} days on ${nextEpInfo[0]}, ${nextEpInfo.splice(1,3).join(' ')}`}</p>
+                        <div className="button-choice-div">
+                            <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                onClick={(event) => {
+                                    clearTimeout(event.target.timeoutId);
+                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                    event.target.style.display = "none";
+                                }}>Confirm?</button>
+                            <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                onClick={(event) => {
+                                    event.target.style.display = "none";
+                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                    confirmButton.style.display = "block";
+
+                                    const timeoutId = setTimeout(() => {
+                                        confirmButton.style.display = "none";
+                                        event.target.classList.add('bounce');
+                                        event.target.style.display = "block";
+                                    }, 3000);
+
+                                    confirmButton.timeoutId = timeoutId;
+                                }
+                            }>Watched</button>
+                        </div>
+                    </div>
+                    <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                 </div>
             </>
         );
@@ -213,7 +241,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
-                    <p className="episode-status">Ep. {anime.eps_watched + 1} will be available to watch in <span style={{color: "var(--secondary)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> :
+                    <p className="episode-status">Ep. {anime.eps_watched + 1} is estimated to be available to watch in <span style={{color: "var(--secondary)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> :
                     <>
                         <div className={anime.id}>
                             <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>

@@ -126,6 +126,7 @@ function AnimeProgress() {
                     } className='search-weekly-anime' type='text' placeholder='Enter Anime title to search'/>
                 </div>
             </div>
+            <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>
             <div className='progress-div'>
                     {gotRequest ?
                         renderContent(weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest)

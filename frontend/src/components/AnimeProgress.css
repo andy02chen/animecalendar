@@ -141,3 +141,7 @@
 .anime-list-title {
     color: var(--secondary);
 }
+
+.release-note {
+    padding: 2%;
+}
