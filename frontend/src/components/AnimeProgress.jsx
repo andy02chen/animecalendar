@@ -74,7 +74,7 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
         } else if(weeklyAnime.length == 0) {
             return(
                 <div className='message-div'>
-                    <p className='message-text'>Please add currently airing anime to watch list on <a href='https://myanimelist.net/' target="_blank">MyAnimeList</a> then refresh this page.</p>
+                    <p className='message-text'>Please add anime to watch list on <a href='https://myanimelist.net/' target="_blank">MyAnimeList</a> then refresh this page.</p>
                 </div>
             );
         } else {
@@ -123,7 +123,7 @@ function AnimeProgress() {
                 <div className='search-anime-div'>
                     <input id='search-value' onChange={(event) => 
                         searchAnime(event,weeklyAnime,setDisplayAnime)
-                    } className='search-weekly-anime' type='text' placeholder='Enter Anime title to search'/>
+                    } className='search-weekly-anime' type='text' placeholder='Search for an anime title'/>
                 </div>
             </div>
             <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>

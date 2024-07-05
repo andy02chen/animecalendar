@@ -49,6 +49,7 @@
 .calendar-div {
     width: 75%;
     height: 100%;
+    border-radius: 15px;
 }
 
 button {

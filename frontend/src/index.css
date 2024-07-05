@@ -50,6 +50,10 @@ p,h1 {
     .episode-status {
         font-size: 1rem;
     }
+
+    .search-weekly-anime {
+        font-size: 1rem;
+    }
 }
 
 @media screen and (min-width: 1280px) and (max-width: 1439px) {
