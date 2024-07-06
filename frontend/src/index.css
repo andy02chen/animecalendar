@@ -34,6 +34,26 @@ p,h1 {
     color: var(--text);
 }
 
+::-webkit-scrollbar {
+    width: 0.7em;
+}
+
+::-webkit-scrollbar-track {
+    background: #333333;
+    margin-block: 1em;
+    border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 100vw;
+    border: 0.2em solid #333333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 @media screen and (max-width: 1440px) {
     .weekly-title {
         font-size: 2rem;
