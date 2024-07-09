@@ -119,14 +119,14 @@ function AnimeProgress() {
     return(
         <>
             <div className='heading'>
-                <h1 className='weekly-title'>YOUR ANIME PROGRESS</h1>
+                <h1 className='weekly-title'>ANIME<br/>PROGRESS</h1>
                 <div className='search-anime-div'>
                     <input id='search-value' onChange={(event) => 
                         searchAnime(event,weeklyAnime,setDisplayAnime)
-                    } className='search-weekly-anime' type='text' placeholder='Search for an anime title'/>
+                    } className='search-weekly-anime' type='text' placeholder='Search for an anime title from your watchlist'/>
                 </div>
+                <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>
             </div>
-            <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>
             <div className='progress-div'>
                     {gotRequest ?
                         renderContent(weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest)

@@ -9,10 +9,11 @@
     --secondary: #6835e0;
     --accent: #E1E12C;
     --accent-light: #ebdd9d7c;
-    --no-button: gray;
+    --no-button: #808080;
     --no-button-small-hover: rgba(128, 128, 128, 0.733);
     --scroll-track: #6b6b6b;
     --scroll-track-hover: rgba(163, 163, 163, 0.459);
+    --primary-light: rgb(69, 218, 255);
 }
 
 * {
@@ -40,7 +41,7 @@ p,h1 {
 
 ::-webkit-scrollbar-track {
     background: #333333;
-    margin-block: 1em;
+    margin-block: 3rem;
     border-radius: 100vw;
 }
 
