@@ -51,7 +51,7 @@
 }
 
 .search-weekly-anime {
-    width: calc(100% - 90px);
+    width: 95%;
     height: auto;
     padding: 5px;
     text-align: center;
@@ -126,12 +126,66 @@
     border-bottom: 2px solid var(--primary);
 }
 
+.heading-top{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    right: 5%;
+    top: 5px;
+    width: auto;
+    background-color: white;
+    height: 2rem;
+    padding: 5px;
+    border: 2px solid var(--primary);
+    user-select: none; 
+    transition: background-color ease 0.5s;
+}
+
+.user-div-pfp {
+    height: 2rem;
+    width: 2rem;
+}
+
+.user-div:hover {
+    cursor: pointer;
+    background-color: rgb(193, 237, 248);
+}
+
+.user-div-text {
+    color: var(--primary);
+    font-family: 'Lato', sans-serif;
+}
+
+#dropdown-div {
+    display: none;
+    margin-top: 5px;
+    width: 100%;
+    height: 2rem;
+}
+
+.button-style {
+    height: 2rem;
+    width: 100%;
+}
+
+.button-img {
+    max-width: 100%;
+    height: 100%;
+}
+
 .weekly-title {
     font-family: "Montserrat", sans-serif;
     font-size: 2.75rem;
     word-wrap: break-word;
     text-align: left;
-    padding-left: 50px;
+    padding-left: 5%;
     color: var(--primary-light);
 }
 
