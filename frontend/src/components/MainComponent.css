@@ -7,20 +7,6 @@
     gap: 60px;
 }
 
-.settings-div{
-    display: flex;
-}
-
-.left {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-}
-
-.right {
-    margin-right: auto;
-}
-
 .title {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
