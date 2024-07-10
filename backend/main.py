@@ -206,7 +206,11 @@ def protectedRoute():
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
-            return jsonify({'loggedIn':True})
+            return jsonify({
+                'loggedIn':True,
+                'username': find_user.user_id,
+                'picture': find_user.pfp
+            })
 
         return jsonify({'loggedIn':False})
     
@@ -407,6 +411,10 @@ def oauth():
                     # Check if the user already exist in the database
                     user_data = response.json()
                     user_username = user_data['name']
+                    user_image = None
+
+                    if 'picture' in user_data:
+                        user_image = user_data['picture']
 
                     # Check if user already exists
                     find_user = User.query.filter_by(user_id=user_username).first()
@@ -421,7 +429,8 @@ def oauth():
                         # Store new user data
                         new_user = User(user_id=user_username,access_token=cipher_suite.encrypt(mal_access_token.encode()),
                                         refresh_token=cipher_suite.encrypt(token_data["refresh_token"].encode()),
-                                        expires_in=token_expiration_time,session_id=hash_text(session_id,session_salt))
+                                        expires_in=token_expiration_time,session_id=hash_text(session_id,session_salt),
+                                        pfp=user_image)
                         db.session.add(new_user)
                     
                     db.session.commit()

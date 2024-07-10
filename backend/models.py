@@ -13,6 +13,7 @@ class Auth(db.Model):
 
 class User(db.Model):
     user_id = db.Column(db.String(), primary_key=True, nullable=False)
+    pfp = db.Column(db.String(), nullable=True)
     access_token = db.Column(db.BLOB())
     refresh_token = db.Column(db.BLOB())
     expires_in = db.Column(db.Integer())

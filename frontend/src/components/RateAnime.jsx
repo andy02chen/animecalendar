@@ -47,6 +47,8 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         } else {
             axios.delete('/api/logout')
             .then(response => {
+                localStorage.removeItem('username');
+                localStorage.removeItem('pfp');
                 localStorage.setItem('errorMsgDiv', true);
                 document.cookie = 'session=; Max-Age=-99999999;';
                 window.location.href = response.data.redirect_url;

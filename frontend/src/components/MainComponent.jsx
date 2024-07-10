@@ -1,4 +1,3 @@
-import Settings from "./Settings";
 import Calendar from "./Calendar";
 import AnimeProgress from "./AnimeProgress";
 import "./MainComponent.css"
@@ -13,14 +12,9 @@ function MainComponent() {
 
                 <div className="calendar-div">
                     <div className="settings-div">
-                        <div className="left">
-                            <h1 className="title">Month</h1>
-                            <button>Prev Month</button>
-                            <button>Next Month</button>
-                        </div>
-                        <div className="right">
-                            <Settings/>
-                        </div>
+                        <button>◀️</button>
+                        <h1 className="title">Month</h1>
+                        <button>▶️</button>
                     </div>
                     <Calendar/>
                 </div>
