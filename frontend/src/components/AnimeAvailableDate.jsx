@@ -202,7 +202,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
-                        <p className="episode-status">{`Ep. ${anime.eps_watched + 1} is estimated to air in ${Math.ceil(days)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo[0]}, {nextEpInfo.splice(1,3).join(' ')}</span></p>
+                        <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` is estimated to air in ${Math.ceil(days)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo[0]}, {nextEpInfo.splice(1,3).join(' ')}</span></p>
                         <div className="button-choice-div">
                             <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                             <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
@@ -243,10 +243,10 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
-                    <p className="episode-status">Ep. {anime.eps_watched + 1} is estimated to air in <span style={{color: "var(--text)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> :
+                    <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> is estimated to air in <span style={{color: "var(--text)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> :
                     <>
                         <div className={anime.id}>
-                            <p>{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
+                            <p><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
                             <div className="button-choice-div">
                                 <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                                 <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
@@ -298,7 +298,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
-                        <p className="episode-status">{`Ep. ${anime.eps_watched + 1} available to watch now`}</p>
+                        <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` available to watch now`}</p>
                         <div className="button-choice-div">
                             {displayDelay ?
                                 <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
