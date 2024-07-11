@@ -2,7 +2,7 @@ import './AnimeProgress.css'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AnimeAvailableDate from './AnimeAvailableDate';
-import defaultpfp from './imgs/defaultpfp.png';
+import defaultpfp from '../imgs/defaultpfp.png';
 
 // Searches weekly anime and displays them
 function searchAnime(event, weeklyAnime, setDisplayAnime) {
@@ -154,7 +154,7 @@ function AnimeProgress() {
                     <h1 className='weekly-title'>
                         ANIME
                         <br/>
-                        PROGRESS</h1>
+                        WATCHLIST</h1>
 
                     <div className='settings-dropdown'>
                         <button className='dropdown-btn' id='settings-div-show-btn' onClick={() => displaySettings()}>

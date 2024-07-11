@@ -12,13 +12,18 @@
     font-weight: 700;
 }
 
-.settings-div {
+.month-div {
     background-color: var(--primary);
     height: 10%;
     display: flex;
     align-items: center;
+    justify-content: space-around;
     padding: 20px;
     border-radius: 30px;
+}
+
+.month-div > div {
+    width: calc(100%/3);
 }
 
 .anime-progress-div {

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import axios from "axios"
-import MainComponent from './MainComponent'
+import MainComponent from '../MainComponent'
 function loginRedirect() {
     window.location.href = `/a`
 }
