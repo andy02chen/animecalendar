@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Auth from './components/Auth.jsx'
-import HomePage from './components/HomePage.jsx'
+import Auth from './components/Pages/Auth.jsx'
+import HomePage from './components/Pages/HomePage.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Alert from './components/Alert.jsx'
+import Alert from './components/Alert/Alert.jsx'
 
 const router = createBrowserRouter([
   {

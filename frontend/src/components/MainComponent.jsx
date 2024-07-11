@@ -1,6 +1,7 @@
-import Calendar from "./Calendar";
-import AnimeProgress from "./AnimeProgress";
+import Calendar from "./Calendar/Calendar";
+import AnimeProgress from "./Anime/AnimeProgress";
 import "./MainComponent.css"
+import Month from './Calendar/Month';
 
 function MainComponent() {
     return(
@@ -11,10 +12,10 @@ function MainComponent() {
                 </div>
 
                 <div className="calendar-div">
-                    <div className="settings-div">
-                        <button>◀️</button>
-                        <h1 className="title">Month</h1>
-                        <button>▶️</button>
+                    <div className="month-div">
+                        <div></div>
+                        <Month/>
+                        <div></div>
                     </div>
                     <Calendar/>
                 </div>
