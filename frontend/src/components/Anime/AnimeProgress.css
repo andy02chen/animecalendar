@@ -231,3 +231,14 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
 }
+
+.curr-airing-checkbox {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    font-family: 'Lato', sans-serif;
+    color: var(--text);
+    font-size: 1em;
+}

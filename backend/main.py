@@ -216,6 +216,7 @@ def weekly_anime():
                     details['eps'] = anime['node']['num_episodes']
                     details['broadcast_time'] = anime['node']['broadcast']['start_time']
                     details['delayed_eps'] = 0
+                    details['air_status'] = anime['node']['status']
 
                     try:
                         details['end_date'] = anime['node']['end_date']

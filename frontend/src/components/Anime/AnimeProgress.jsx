@@ -22,6 +22,23 @@ function searchAnime(event, weeklyAnime, setDisplayAnime) {
     }
 }
 
+// Displays curr airing anime
+const displayCurrAiring = (event, weeklyAnime, setDisplayAnime) => {
+    if(event.target.checked) {
+        const returnAnimes = [];
+
+        for(let anime of weeklyAnime) {
+            if(anime.air_status === "currently_airing") {
+                returnAnimes.push(anime)
+            }
+        }
+
+        setDisplayAnime(returnAnimes);
+    } else {
+        setDisplayAnime(weeklyAnime);
+    }
+}
+
 // Displays weekly anime
 const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest) => {
     // Returns error message if failed get request
@@ -45,6 +62,8 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
                 <>
                     <div className='progress-section-div'>
                         <p className='progress-section-heading'>Watching</p>
+                        <input onChange={(event) => displayCurrAiring(event, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
+                        <label htmlFor="currently-airing" className='curr-airing-checkbox'> Show Currently Airing Only</label>
                     </div>
                     <ul className='anime-list'>
                         {displayAnime.map((anime,index) =>
@@ -144,11 +163,13 @@ function AnimeProgress() {
     const [weeklyAnime, setWeeklyAnime] = useState([]);
     const [gotRequest, setGotRequest] = useState(false);
     const [failedRequest, setFailedRequest] = useState(false);
+    const [currAiringAnime, setCurrAiringAnime] = useState([]);
 
     useEffect(() => {
         getWeeklyAnime(setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest);
     },[]);
 
+    // When settings div is expanded but user clicks elsewhere
     document.addEventListener("click", function(event) {
         const div = document.getElementById('settings-options-div');
         const username = document.getElementById('settings-div-show-btn')
