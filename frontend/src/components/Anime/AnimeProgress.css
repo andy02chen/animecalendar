@@ -4,6 +4,8 @@
     background-color: var(--primary-darker);
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .anime-list {
@@ -14,7 +16,7 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    margin: 30px;
+    margin: 20px;
 }
 
 .anime-top-div {
@@ -133,7 +135,6 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    /* padding: 0 5%; */
 }
 
 .dropdown-btn {
@@ -202,4 +203,25 @@
 
 .release-note {
     padding: 2%;
+}
+
+.progress-section-div {
+    top: 0;
+    position: -webkit-sticky;
+    position: sticky;
+    width: 100%;
+    padding: 3%;
+    background-color: black;
+    align-content: center;
+    z-index: 10;
+}
+
+.progress-section-div:hover {
+    cursor: pointer;
+}
+
+.progress-section-heading {
+    font-size: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
 }
