@@ -26,7 +26,6 @@ function searchAnime(event, weeklyAnime, setDisplayAnime) {
 const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest) => {
     // Returns error message if failed get request
     if(failedRequest) {
-        document.getElementById('popup-error-message').textContent = "Rate Limit Exceeded. Please stop spamming and try refreshing later.";
         const popup = document.getElementById("error-popup");
         popup.classList.remove("hide-error");
         popup.classList.add("show-error");
@@ -105,9 +104,18 @@ function getWeeklyAnime(setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRe
         setGotRequest(true);
     })
     .catch (error => {
-        localStorage.setItem('errorMsgDiv', '3');
-        setFailedRequest(true);
-        setGotRequest(true);
+        if(error.response.status === 429) {
+            localStorage.setItem('errorMsgDiv', '3');
+            setFailedRequest(true);
+            setGotRequest(true);
+        } else if (error.response.status === 500) {
+            document.getElementById('popup-error-message').textContent = error.response.data;
+            const popup = document.getElementById("error-popup");
+            popup.classList.add("show-error");
+            popup.classList.remove("hide-error");
+            setFailedRequest(true);
+            setGotRequest(true);
+        }
     });
 }
 
