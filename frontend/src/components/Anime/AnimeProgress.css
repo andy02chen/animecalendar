@@ -1,4 +1,5 @@
 .progress-div {
+    height: 100%;
     overflow-y: auto;
     background-color: var(--primary-darker);
     border-bottom-left-radius: 15px;
