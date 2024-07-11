@@ -14,6 +14,8 @@
     --scroll-track: #6b6b6b;
     --scroll-track-hover: rgba(163, 163, 163, 0.459);
     --primary-light: rgb(69, 218, 255);
+    --text-light-gray: rgb(194, 194, 194);
+    --text-gray: rgb(168, 168, 168);
 }
 
 * {
