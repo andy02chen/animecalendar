@@ -84,6 +84,9 @@ const renderContent = (currAiringAnime, weeklyAnime, displayAnime, failedRequest
                             </li>
                         )}
                     </ul>
+                    <div className='progress-section-div'>
+                        <p className='progress-section-heading'>Plan To Watch</p>
+                    </div>
                 </>
             )
         } else if(weeklyAnime.length == 0) {

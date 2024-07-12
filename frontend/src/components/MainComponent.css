@@ -1,10 +1,9 @@
 .main-div {
-    height: 95vh;
-    width: 98vw;
+    height: 100vh;
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 60px;
 }
 
 .title {
@@ -19,7 +18,8 @@
     align-items: center;
     justify-content: space-around;
     padding: 20px;
-    border-radius: 30px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
 
 .month-div > div {
@@ -27,19 +27,29 @@
 }
 
 .anime-progress-div {
-    width: 25%;
+    flex: 0 0 25%;
     height: 100%;
     text-align: center;
     display: flex;
     flex-direction: column;
     background-color: var(--background-div);
-    border-radius: 20px;
     border: 2px solid var(--primary);
 }
 
 .calendar-div {
-    width: 75%;
+    flex: 0 0 75%;
     height: 100%;
+    width: 100%;
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-div > div {
+    width: 95%;
+    height: 95%;
+    border-radius: 20px;
 }
 
 button {

@@ -2,8 +2,6 @@
     height: 100%;
     overflow-y: auto;
     background-color: var(--primary-darker);
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
     display: flex;
     flex-direction: column;
 }
