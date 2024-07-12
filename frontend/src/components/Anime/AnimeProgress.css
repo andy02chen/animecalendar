@@ -165,6 +165,7 @@
 
 .settings-dropdown {
     padding: 1px;
+    margin: 1px;
     width: auto;
     display: flex;
     flex-direction: column;
@@ -243,4 +244,8 @@
     color: var(--text);
     font-size: 1em;
     color: var(--text-gray);
+}
+
+.curr-airing-checkbox:hover {
+    color: var(--text);
 }

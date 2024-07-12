@@ -148,7 +148,7 @@ def plan_to_watch():
             
 
             mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=plan_to_watch&
-            sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true
+            sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast,start_season&nsfw=true
             &limit=1000'''
             mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
             headers = {
@@ -157,9 +157,34 @@ def plan_to_watch():
 
             response = requests.get(mal_get_anime, headers=headers)
 
-            # TODO maybe filter the fields before returning
             if response.status_code == 200:
-                return response.json()
+                data = response.json()
+                data_to_return = {'plan_to_watch':[]}
+
+                for anime in data['data']:
+                    details = {}
+                    details['title'] = anime['node']['title']
+                    details['id'] = anime['node']['id']
+                    details['img'] = anime['node']['main_picture']['medium']
+                    details['air_status'] = anime['node']['status']
+
+                    # Get anime season
+                    if 'start_season' in anime['node']:
+                        details['season'] = anime['node']['start_season']['season'] + str(anime['node']['start_season']['year'])
+
+                    else:
+                        details['season'] = None
+
+                    # Get anime start date
+                    if 'start_date' in anime:
+                        details['start_date'] = anime['node']['start_date']
+
+                    else:
+                        details['start_date'] = None
+
+                    data_to_return['plan_to_watch'].append(details)
+
+                return data_to_return
 
             return 'Unable to get plan to watch anime from MAL',500
 
