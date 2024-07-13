@@ -46,13 +46,26 @@ const expandCurrWatchingDiv = () => {
     const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
 
     if(currWatchingList.style.display === "none") {
-        currWatchingList.style.display = "block";
+        planToWatchList.style.height = "0px";
         planToWatchBar.style.borderTop = "2px solid var(--primary)";
-        planToWatchList.style.display = "none";
+        setTimeout(() => {
+            planToWatchList.style.display = "none";
+        }, 500);
+
+        currWatchingList.style.display = "block";
+        currWatchingList.style.height = "100%";
+
+        
+        // planToWatchList.style.display = "none";
     } else {
-        currWatchingList.style.display = "none";
+        currWatchingList.style.height = "0px";
+        setTimeout(() => {
+            currWatchingList.style.display = "none";
+        }, 500);
+        
         planToWatchBar.style.borderTop = "none";
         planToWatchList.style.display = "block";
+        planToWatchList.style.height = "100%";
     }
 }
 
