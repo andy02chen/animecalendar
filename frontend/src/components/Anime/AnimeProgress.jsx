@@ -29,13 +29,24 @@ const expandPlanToWatchDiv = () => {
     const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
 
     if(planToWatchList.style.display === "none") {
-        planToWatchBar.style.borderTop = "none";
+        watchingList.style.height = "0px";
+        setTimeout(() => {
+            watchingList.style.display = "none";
+            planToWatchBar.style.borderTop = "none";
+        }, 500);
+
         planToWatchList.style.display = "block";
-        watchingList.style.display = "none";
+        planToWatchList.style.height = "100%";
     } else {
-        planToWatchList.style.display = "none";
-        watchingList.style.display = "block";
+        planToWatchList.style.height = "0px";
         planToWatchBar.style.borderTop = "2px solid var(--primary)";
+
+        setTimeout(() => {
+            planToWatchList.style.display = "none";
+        }, 500);
+
+        watchingList.style.display = "block";
+        watchingList.style.height = "100%";
     }
 }
 
@@ -54,16 +65,13 @@ const expandCurrWatchingDiv = () => {
 
         currWatchingList.style.display = "block";
         currWatchingList.style.height = "100%";
-
-        
-        // planToWatchList.style.display = "none";
     } else {
         currWatchingList.style.height = "0px";
         setTimeout(() => {
             currWatchingList.style.display = "none";
+            planToWatchBar.style.borderTop = "none";
         }, 500);
         
-        planToWatchBar.style.borderTop = "none";
         planToWatchList.style.display = "block";
         planToWatchList.style.height = "100%";
     }
