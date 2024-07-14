@@ -9,15 +9,13 @@
 #anime-list-div-watching {
     height: 100%;
     overflow-y: scroll;
-    transition: height 0.5s ease;
-    transition: opacity 0.4s ease-in-out;
+    transition: height 0.5s ease, opacity 0.5s ease-in-out;
 }
 
 #anime-list-div-plan-to-watch {
     height: 100%;
     overflow-y: scroll;
-    transition: height 0.5s ease;
-    transition: opacity 0.4s ease-in-out;
+    transition: height 0.5s ease, opacity 0.5s ease-in-out;
 }
 
 .checkbox-selected-transition {
@@ -249,6 +247,10 @@
 
 .progress-section-div:hover {
     cursor: pointer;
+}
+
+.progress-section-div:hover > p {
+    text-decoration: underline;
 }
 
 .progress-section-heading {
