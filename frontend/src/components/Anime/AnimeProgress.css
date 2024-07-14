@@ -228,6 +228,9 @@
     align-content: center;
     z-index: 10;
     border-bottom: 2px solid var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .watching-div {
@@ -255,7 +258,7 @@
     font-weight: bold;
 }
 
-.anime-progress-checkbox {
+/* .anime-progress-checkbox {
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
@@ -269,8 +272,55 @@
 
 .anime-progress-checkbox:hover {
     color: var(--text);
-}
+} */
 
 #plan-to-watch-animes-div {
     border-top: 2px solid var(--primary);
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    color: var(--text-gray);
+}
+
+.checkbox-container label {
+    display: flex;
+    cursor: pointer;
+}
+
+.checkbox-container input[type='checkbox'] {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-container label::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: .05em solid white;
+    border-radius: .15em;
+    margin-right: .3em;
+}
+
+.checkbox-container label:hover::before,
+.checkbox-container input[type='checkbox']:hover + label::before {
+    background-color: var(--primary-small-hover);
+}
+
+.checkbox-container input[type='checkbox']:hover + label {
+    color: var(--text);
+}
+
+.checkbox-container input[type='checkbox']:focus + label:before {
+    box-shadow: 0 0 8px var(--text);
+}
+
+.checkbox-container input[type='checkbox']:checked + label::before {
+    content: '\002714';
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
