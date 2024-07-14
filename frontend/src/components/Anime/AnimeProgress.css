@@ -10,12 +10,18 @@
     height: 100%;
     overflow-y: scroll;
     transition: height 0.5s ease;
+    transition: opacity 0.4s ease-in-out;
 }
 
 #anime-list-div-plan-to-watch {
     height: 100%;
     overflow-y: scroll;
     transition: height 0.5s ease;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.checkbox-selected-transition {
+    opacity: 0;
 }
 
 .anime-list {

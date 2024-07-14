@@ -79,19 +79,38 @@ const expandCurrWatchingDiv = () => {
 
 // Displays curr airing anime
 const displayCurrAiring = (event, currAiringAnime,weeklyAnime, setDisplayAnime) => {
+    const div = document.getElementById("anime-list-div-watching");
+
     if(event.target.checked) {
-        setDisplayAnime(currAiringAnime);
+        div.classList.add("checkbox-selected-transition");
+        setTimeout(() => {
+            setDisplayAnime(currAiringAnime);
+            div.classList.remove("checkbox-selected-transition");
+        }, 500);
     } else {
-        setDisplayAnime(weeklyAnime);
+        div.classList.add("checkbox-selected-transition");
+        setTimeout(() => {
+            setDisplayAnime(weeklyAnime);
+            div.classList.remove("checkbox-selected-transition");
+        }, 500);
     }
 }
 
 // Displays Not Yet Aired Anime
 const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
+    const div = document.getElementById("anime-list-div-plan-to-watch");
     if(event.target.checked) {
-        setPlanToWatch(notYetAiredList);
+        div.classList.add("checkbox-selected-transition");
+        setTimeout(() => {
+            setPlanToWatch(notYetAiredList);
+            div.classList.remove("checkbox-selected-transition");
+        }, 500);
     } else {
-        setPlanToWatch(planToWatchAnimeList);
+        div.classList.add("checkbox-selected-transition");
+        setTimeout(() => {
+            setPlanToWatch(planToWatchAnimeList);
+            div.classList.remove("checkbox-selected-transition");
+        }, 500);
     }
 }
 
