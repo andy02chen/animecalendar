@@ -258,22 +258,6 @@
     font-weight: bold;
 }
 
-/* .anime-progress-checkbox {
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none; 
-    font-family: 'Lato', sans-serif;
-    color: var(--text);
-    font-size: 1em;
-    color: var(--text-gray);
-}
-
-.anime-progress-checkbox:hover {
-    color: var(--text);
-} */
-
 #plan-to-watch-animes-div {
     border-top: 2px solid var(--primary);
 }
@@ -314,7 +298,7 @@
 }
 
 .checkbox-container input[type='checkbox']:focus + label:before {
-    box-shadow: 0 0 8px var(--text);
+    box-shadow: 0 0 3px var(--text);
 }
 
 .checkbox-container input[type='checkbox']:checked + label::before {

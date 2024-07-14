@@ -142,6 +142,7 @@ function AnimeAvailableDate({anime}) {
             background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
             borderRadius: "5px 0 0 5px"
         };
+        setCountdown(diffMs);
     }, [refreshAnimeDisplay]);
 
     const [countdown, setCountdown] = useState(diffMs);
@@ -176,7 +177,7 @@ function AnimeAvailableDate({anime}) {
     };
 
     // If user completed the anime display completed until log back in
-    if(anime.eps_watched === anime.eps) {
+    if(anime.eps_watched === anime.eps && anime.eps_watched !== 0) {
         return(
             <>
                 <div className="progress-bar-text-div">
@@ -243,7 +244,35 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
-                    <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> is estimated to air in <span style={{color: "var(--text)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> :
+                    <>
+                        <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> is estimated to air in <span style={{color: "var(--text)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> 
+                        <div className="button-choice-div">
+                            <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                onClick={(event) => {
+                                    clearTimeout(event.target.timeoutId);
+                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                    event.target.style.display = "none";
+                                }}>Confirm?</button>
+                            <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                onClick={(event) => {
+                                    event.target.style.display = "none";
+                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                    confirmButton.style.display = "block";
+
+                                    const timeoutId = setTimeout(() => {
+                                        confirmButton.style.display = "none";
+                                        event.target.classList.add('bounce');
+                                        event.target.style.display = "block";
+                                    }, 3000);
+
+                                    confirmButton.timeoutId = timeoutId;
+                                }
+                            }>Watched</button>
+                        </div>
+                    </>
+                    :
                     <>
                         <div className={anime.id}>
                             <p><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
