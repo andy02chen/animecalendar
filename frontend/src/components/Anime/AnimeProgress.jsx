@@ -164,7 +164,7 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
 }
 
 // Displays weekly anime
-const renderContent = (divForWatchingAnime,notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
+const renderContent = (divForPlanToWatchAnime,divForWatchingAnime,notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
     // Returns error message if failed get request
     if(failedRequest) {
         const popup = document.getElementById("error-popup");
@@ -229,7 +229,7 @@ const renderContent = (divForWatchingAnime,notYetAiredList,planToWatchAnimeList,
                                     <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
                                 </div>
                             </div>
-                            <div id='anime-list-div-plan-to-watch' style={{display: 'none'}}>
+                            <div ref={divForPlanToWatchAnime} id='anime-list-div-plan-to-watch' style={{display: 'none'}}>
                                 <ul className='anime-list' >
                                     {displayPlanToWatch.map((anime,index) =>
                                         <li key={index} className='weekly-anime'>
@@ -391,7 +391,7 @@ function AnimeProgress() {
             if (currentElement) {
                 const { scrollTop, scrollHeight, clientHeight } = currentElement;
                 if (scrollHeight - scrollTop === clientHeight) {
-                    console.log('You have reached the bottom of the scrollable element!');
+                    console.log('You have reached the bottom of the watching div!');
                     // Call your function or execute your code here
                 }
             }
@@ -409,6 +409,31 @@ function AnimeProgress() {
             }
         };
     }, [divForWatchingAnime.current]);
+
+    useEffect(() => {    
+        const handleScroll = () => {
+            const currentElement = divForPlanToWatchAnime.current;
+            if (currentElement) {
+                const { scrollTop, scrollHeight, clientHeight } = currentElement;
+                if (scrollTop === 0) {
+                    console.log('You have reached the top of the plan to watch div!');
+                    // Call your function or execute your code here
+                }
+            }
+        };
+    
+        const currentElement = divForPlanToWatchAnime.current;
+        if (currentElement) {
+            currentElement.addEventListener('scroll', handleScroll);
+        }
+    
+        // Cleanup function
+        return () => {
+            if (currentElement) {
+                currentElement.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [divForPlanToWatchAnime.current]);
 
     return(
         <>
@@ -447,7 +472,7 @@ function AnimeProgress() {
             </div>
             <div className='progress-div'>
                     {gotRequest ?
-                        renderContent(divForWatchingAnime,notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
+                        renderContent(divForPlanToWatchAnime,divForWatchingAnime,notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
                         :
                         <div className='message-div'>
                             <svg className='loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
