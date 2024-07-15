@@ -83,8 +83,6 @@ const expandCurrWatchingDiv = () => {
 
 // Displays curr airing anime
 const displayCurrAiring = (event, currAiringAnime,weeklyAnime, setDisplayAnime) => {
-    const div = document.getElementById("anime-list-div-watching");
-
     const currWatchingList = document.getElementById('anime-list-div-watching');
     const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
     const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
@@ -107,16 +105,16 @@ const displayCurrAiring = (event, currAiringAnime,weeklyAnime, setDisplayAnime) 
         currWatchingList.style.height = "100%";
     } else {
         if(event.target.checked) {
-            div.classList.add("checkbox-selected-transition");
+            currWatchingList.classList.add("checkbox-selected-transition");
             setTimeout(() => {
                 setDisplayAnime(currAiringAnime);
-                div.classList.remove("checkbox-selected-transition");
+                currWatchingList.classList.remove("checkbox-selected-transition");
             }, 500);
         } else {
-            div.classList.add("checkbox-selected-transition");
+            currWatchingList.classList.add("checkbox-selected-transition");
             setTimeout(() => {
                 setDisplayAnime(weeklyAnime);
-                div.classList.remove("checkbox-selected-transition");
+                currWatchingList.classList.remove("checkbox-selected-transition");
             }, 500);
         }
     }
@@ -124,8 +122,6 @@ const displayCurrAiring = (event, currAiringAnime,weeklyAnime, setDisplayAnime) 
 
 // Displays Not Yet Aired Anime
 const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
-    const div = document.getElementById("anime-list-div-plan-to-watch");
-
     const watchingList = document.getElementById('anime-list-div-watching');
     const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
     const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
@@ -148,16 +144,16 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
         planToWatchBar.style.borderBottom = "1px solid var(--primary)";
     } else {
         if(event.target.checked) {
-            div.classList.add("checkbox-selected-transition");
+            planToWatchList.classList.add("checkbox-selected-transition");
             setTimeout(() => {
                 setPlanToWatch(notYetAiredList);
-                div.classList.remove("checkbox-selected-transition");
+                planToWatchList.classList.remove("checkbox-selected-transition");
             }, 500);
         } else {
-            div.classList.add("checkbox-selected-transition");
+            planToWatchList.classList.add("checkbox-selected-transition");
             setTimeout(() => {
                 setPlanToWatch(planToWatchAnimeList);
-                div.classList.remove("checkbox-selected-transition");
+                planToWatchList.classList.remove("checkbox-selected-transition");
             }, 500);
         }
     }
@@ -393,7 +389,7 @@ function AnimeProgress() {
                 if (scrollHeight - scrollTop === clientHeight && event.deltaY > 0) {
                     console.log('expand plan to watch div');
                     // Call your function or execute your code here
-                    
+                    expandPlanToWatchDiv();
                 }
             }
         };
@@ -419,6 +415,7 @@ function AnimeProgress() {
                 if (scrollTop === 0 && event.deltaY < 0) {
                     console.log('expand watching div');
                     // Call your function or execute your code here
+                    expandCurrWatchingDiv();
                 }
             }
         };
