@@ -386,37 +386,38 @@ function AnimeProgress() {
     const divForPlanToWatchAnime = useRef(null);
 
     useEffect(() => {    
-        const handleScroll = () => {
+        const handleScroll = (event) => {
             const currentElement = divForWatchingAnime.current;
             if (currentElement) {
                 const { scrollTop, scrollHeight, clientHeight } = currentElement;
-                if (scrollHeight - scrollTop === clientHeight) {
-                    console.log('You have reached the bottom of the watching div!');
+                if (scrollHeight - scrollTop === clientHeight && event.deltaY > 0) {
+                    console.log('expand plan to watch div');
                     // Call your function or execute your code here
+                    
                 }
             }
         };
     
         const currentElement = divForWatchingAnime.current;
         if (currentElement) {
-            currentElement.addEventListener('scroll', handleScroll);
+            currentElement.addEventListener('wheel', handleScroll);
         }
     
         // Cleanup function
         return () => {
             if (currentElement) {
-                currentElement.removeEventListener('scroll', handleScroll);
+                currentElement.removeEventListener('wheel', handleScroll);
             }
         };
     }, [divForWatchingAnime.current]);
 
     useEffect(() => {    
-        const handleScroll = () => {
+        const handleScroll = (event) => {
             const currentElement = divForPlanToWatchAnime.current;
             if (currentElement) {
                 const { scrollTop, scrollHeight, clientHeight } = currentElement;
-                if (scrollTop === 0) {
-                    console.log('You have reached the top of the plan to watch div!');
+                if (scrollTop === 0 && event.deltaY < 0) {
+                    console.log('expand watching div');
                     // Call your function or execute your code here
                 }
             }
@@ -424,13 +425,13 @@ function AnimeProgress() {
     
         const currentElement = divForPlanToWatchAnime.current;
         if (currentElement) {
-            currentElement.addEventListener('scroll', handleScroll);
+            currentElement.addEventListener('wheel', handleScroll);
         }
     
         // Cleanup function
         return () => {
             if (currentElement) {
-                currentElement.removeEventListener('scroll', handleScroll);
+                currentElement.removeEventListener('wheel', handleScroll);
             }
         };
     }, [divForPlanToWatchAnime.current]);
