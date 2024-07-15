@@ -2,7 +2,7 @@
     background-color: var(--background-div);
     height: 90%;
     width: 100%;
-    border: 2px solid var(--primary);
+    border: 1px solid var(--primary);
     align-content: center;
     text-align: center;
     border-bottom-left-radius: 20px;

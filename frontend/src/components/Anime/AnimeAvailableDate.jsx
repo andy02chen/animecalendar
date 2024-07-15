@@ -166,7 +166,7 @@ function AnimeAvailableDate({anime}) {
         borderRadius: "5px",
         overflow: "hidden",
         position: "relative",
-        border: "2px solid #666666",
+        border: "1px solid #666666",
     };
 
     let innerProgress = {

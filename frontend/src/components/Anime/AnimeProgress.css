@@ -16,6 +16,7 @@
     height: 100%;
     overflow-y: scroll;
     transition: height 0.5s ease, opacity 0.5s ease-in-out;
+    border-bottom: none;
 }
 
 .checkbox-selected-transition {
@@ -52,7 +53,7 @@
 .weekly-anime-img {
     height: auto;
     width: 85%;
-    border: 2px solid #666666;
+    border: 1px solid #666666;
     
     -webkit-user-drag: none;
     pointer-events: none;
@@ -146,7 +147,7 @@
 
 .heading {
     width: 100%;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 1px solid var(--primary);
 }
 
 .heading-top{
@@ -231,7 +232,7 @@
     background-color: black;
     align-content: center;
     z-index: 10;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 1px solid var(--primary);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -267,7 +268,8 @@
 }
 
 #plan-to-watch-animes-div {
-    border-top: 2px solid var(--primary);
+    border-top: 1px solid var(--primary);
+    border-bottom: none;
 }
 
 .checkbox-container {

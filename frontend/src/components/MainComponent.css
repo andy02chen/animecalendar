@@ -33,7 +33,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--background-div);
-    border: 2px solid var(--primary);
+    border: 1px solid var(--primary);
 }
 
 .calendar-div {

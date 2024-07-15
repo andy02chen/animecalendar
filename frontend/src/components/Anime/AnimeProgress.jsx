@@ -37,11 +37,13 @@ const expandPlanToWatchDiv = () => {
 
         planToWatchList.style.display = "block";
         planToWatchList.style.height = "100%";
+        planToWatchBar.style.borderBottom = "1px solid var(--primary)";
     } else {
         planToWatchList.style.height = "0px";
-        planToWatchBar.style.borderTop = "2px solid var(--primary)";
+        planToWatchBar.style.borderTop = "1px solid var(--primary)";
 
         setTimeout(() => {
+            planToWatchBar.style.borderBottom = "none";
             planToWatchList.style.display = "none";
         }, 500);
 
@@ -58,14 +60,16 @@ const expandCurrWatchingDiv = () => {
 
     if(currWatchingList.style.display === "none") {
         planToWatchList.style.height = "0px";
-        planToWatchBar.style.borderTop = "2px solid var(--primary)";
+        planToWatchBar.style.borderTop = "1px solid var(--primary)";
         setTimeout(() => {
+            planToWatchBar.style.borderBottom = "none";
             planToWatchList.style.display = "none";
         }, 500);
 
         currWatchingList.style.display = "block";
         currWatchingList.style.height = "100%";
     } else {
+        planToWatchBar.style.borderBottom = "1px solid var(--primary)";
         currWatchingList.style.height = "0px";
         setTimeout(() => {
             currWatchingList.style.display = "none";
