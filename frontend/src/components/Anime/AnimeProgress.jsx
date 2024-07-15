@@ -1,6 +1,6 @@
 import './AnimeProgress.css'
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import AnimeAvailableDate from './AnimeAvailableDate';
 import defaultpfp from '../imgs/defaultpfp.png';
 
@@ -164,7 +164,7 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
 }
 
 // Displays weekly anime
-const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
+const renderContent = (divForWatchingAnime,notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
     // Returns error message if failed get request
     if(failedRequest) {
         const popup = document.getElementById("error-popup");
@@ -180,8 +180,6 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
             </div>
         );
     } else {
-        const scrollableDiv = document.getElementById('anime-list-div-watching');
-
         // Displays list of anime
         if(displayAnime.length > 0) {
             return(
@@ -193,7 +191,7 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
                             <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
                         </div>
                     </div>
-                    <div id='anime-list-div-watching'>
+                    <div ref={divForWatchingAnime} id='anime-list-div-watching'>
                         <ul className='anime-list'>
                             {displayAnime.map((anime,index) =>
                                 <li key={index} className='weekly-anime'>
@@ -384,6 +382,34 @@ function AnimeProgress() {
         }
     });
 
+    const divForWatchingAnime = useRef(null);
+    const divForPlanToWatchAnime = useRef(null);
+
+    useEffect(() => {    
+        const handleScroll = () => {
+            const currentElement = divForWatchingAnime.current;
+            if (currentElement) {
+                const { scrollTop, scrollHeight, clientHeight } = currentElement;
+                if (scrollHeight - scrollTop === clientHeight) {
+                    console.log('You have reached the bottom of the scrollable element!');
+                    // Call your function or execute your code here
+                }
+            }
+        };
+    
+        const currentElement = divForWatchingAnime.current;
+        if (currentElement) {
+            currentElement.addEventListener('scroll', handleScroll);
+        }
+    
+        // Cleanup function
+        return () => {
+            if (currentElement) {
+                currentElement.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [divForWatchingAnime.current]);
+
     return(
         <>
             <div className='heading'>
@@ -421,7 +447,7 @@ function AnimeProgress() {
             </div>
             <div className='progress-div'>
                     {gotRequest ?
-                        renderContent(notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
+                        renderContent(divForWatchingAnime,notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
                         :
                         <div className='message-div'>
                             <svg className='loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
