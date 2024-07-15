@@ -85,36 +85,81 @@ const expandCurrWatchingDiv = () => {
 const displayCurrAiring = (event, currAiringAnime,weeklyAnime, setDisplayAnime) => {
     const div = document.getElementById("anime-list-div-watching");
 
-    if(event.target.checked) {
-        div.classList.add("checkbox-selected-transition");
-        setTimeout(() => {
+    const currWatchingList = document.getElementById('anime-list-div-watching');
+    const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
+    const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
+
+    if(currWatchingList.style.display === "none") {
+        if(event.target.checked) {
             setDisplayAnime(currAiringAnime);
-            div.classList.remove("checkbox-selected-transition");
-        }, 500);
-    } else {
-        div.classList.add("checkbox-selected-transition");
-        setTimeout(() => {
+        } else {
             setDisplayAnime(weeklyAnime);
-            div.classList.remove("checkbox-selected-transition");
+        }
+
+        planToWatchList.style.height = "0px";
+        planToWatchBar.style.borderTop = "1px solid var(--primary)";
+        setTimeout(() => {
+            planToWatchBar.style.borderBottom = "none";
+            planToWatchList.style.display = "none";
         }, 500);
+
+        currWatchingList.style.display = "block";
+        currWatchingList.style.height = "100%";
+    } else {
+        if(event.target.checked) {
+            div.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setDisplayAnime(currAiringAnime);
+                div.classList.remove("checkbox-selected-transition");
+            }, 500);
+        } else {
+            div.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setDisplayAnime(weeklyAnime);
+                div.classList.remove("checkbox-selected-transition");
+            }, 500);
+        }
     }
 }
 
 // Displays Not Yet Aired Anime
 const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
     const div = document.getElementById("anime-list-div-plan-to-watch");
-    if(event.target.checked) {
-        div.classList.add("checkbox-selected-transition");
-        setTimeout(() => {
+
+    const watchingList = document.getElementById('anime-list-div-watching');
+    const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
+    const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
+
+    if(planToWatchList.style.display === "none") {
+        if(event.target.checked) {
             setPlanToWatch(notYetAiredList);
-            div.classList.remove("checkbox-selected-transition");
-        }, 500);
-    } else {
-        div.classList.add("checkbox-selected-transition");
-        setTimeout(() => {
+        } else {
             setPlanToWatch(planToWatchAnimeList);
-            div.classList.remove("checkbox-selected-transition");
+        }
+
+        watchingList.style.height = "0px";
+        setTimeout(() => {
+            watchingList.style.display = "none";
+            planToWatchBar.style.borderTop = "none";
         }, 500);
+
+        planToWatchList.style.display = "block";
+        planToWatchList.style.height = "100%";
+        planToWatchBar.style.borderBottom = "1px solid var(--primary)";
+    } else {
+        if(event.target.checked) {
+            div.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setPlanToWatch(notYetAiredList);
+                div.classList.remove("checkbox-selected-transition");
+            }, 500);
+        } else {
+            div.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setPlanToWatch(planToWatchAnimeList);
+                div.classList.remove("checkbox-selected-transition");
+            }, 500);
+        }
     }
 }
 
