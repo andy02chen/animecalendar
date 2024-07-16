@@ -202,8 +202,8 @@ const renderContent = (divForPlanToWatchAnime,divForWatchingAnime,notYetAiredLis
             return(
                 <>
                     <div onClick={() => expandCurrWatchingDiv()} id='curr-watching-animes-div' className='progress-section-div watching-div'>
-                        <p className='progress-section-heading'>Watching</p>
-                        <div className='checkbox-container'>
+                        <p className='progress-section-heading unselectable'>Watching</p>
+                        <div className='checkbox-container unselectable'>
                             <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayCurrAiring(event, currAiringAnime, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
                             <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
                         </div>
@@ -240,8 +240,8 @@ const renderContent = (divForPlanToWatchAnime,divForWatchingAnime,notYetAiredLis
                     {displayPlanToWatch.length > 0 ?
                         <>
                             <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' onClick={() => expandPlanToWatchDiv()}>
-                                <p className='progress-section-heading'>Plan To Watch</p>
-                                <div className='checkbox-container'>
+                                <p className='progress-section-heading unselectable'>Plan To Watch</p>
+                                <div className='checkbox-container unselectable'>
                                     <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
                                     <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
                                 </div>
