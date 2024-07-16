@@ -28,11 +28,20 @@ const expandPlanToWatchDiv = () => {
     const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
     const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
 
+    const disableCurrWatchingDiv = document.getElementById('curr-watching-animes-div');
+    const disablePlanWatchDiv = document.getElementById('plan-to-watch-animes-div');
+
+    disableCurrWatchingDiv.style.pointerEvents = "none";
+    disablePlanWatchDiv.style.pointerEvents = "none";
+
     if(planToWatchList.style.display === "none") {
         watchingList.style.height = "0px";
         setTimeout(() => {
             watchingList.style.display = "none";
             planToWatchBar.style.borderTop = "none";
+
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
         }, 500);
 
         planToWatchList.style.display = "block";
@@ -45,6 +54,8 @@ const expandPlanToWatchDiv = () => {
         setTimeout(() => {
             planToWatchBar.style.borderBottom = "none";
             planToWatchList.style.display = "none";
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
         }, 500);
 
         watchingList.style.display = "block";
@@ -58,12 +69,20 @@ const expandCurrWatchingDiv = () => {
     const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
     const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
 
+    const disableCurrWatchingDiv = document.getElementById('curr-watching-animes-div');
+    const disablePlanWatchDiv = document.getElementById('plan-to-watch-animes-div');
+
+    disableCurrWatchingDiv.style.pointerEvents = "none";
+    disablePlanWatchDiv.style.pointerEvents = "none";
+
     if(currWatchingList.style.display === "none") {
         planToWatchList.style.height = "0px";
         planToWatchBar.style.borderTop = "1px solid var(--primary)";
         setTimeout(() => {
             planToWatchBar.style.borderBottom = "none";
             planToWatchList.style.display = "none";
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
         }, 500);
 
         currWatchingList.style.display = "block";
@@ -74,6 +93,8 @@ const expandCurrWatchingDiv = () => {
         setTimeout(() => {
             currWatchingList.style.display = "none";
             planToWatchBar.style.borderTop = "none";
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
         }, 500);
         
         planToWatchList.style.display = "block";
@@ -387,8 +408,6 @@ function AnimeProgress() {
             if (currentElement) {
                 const { scrollTop, scrollHeight, clientHeight } = currentElement;
                 if (scrollHeight - scrollTop === clientHeight && event.deltaY > 0) {
-                    console.log('expand plan to watch div');
-                    // Call your function or execute your code here
                     expandPlanToWatchDiv();
                 }
             }
@@ -413,8 +432,6 @@ function AnimeProgress() {
             if (currentElement) {
                 const { scrollTop, scrollHeight, clientHeight } = currentElement;
                 if (scrollTop === 0 && event.deltaY < 0) {
-                    console.log('expand watching div');
-                    // Call your function or execute your code here
                     expandCurrWatchingDiv();
                 }
             }
