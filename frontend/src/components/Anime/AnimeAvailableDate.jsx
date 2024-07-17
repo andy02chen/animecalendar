@@ -121,8 +121,21 @@ function AnimeAvailableDate({anime}) {
                 </div>
             </>
         );
+    } else if (anime.start_date === null) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <p className="episode-status">
+                        No info on start date available
+                    </p>
+                </div>
+            </>
+        );
     }
-    
 
     if(localStorage.getItem(anime.id) !== null) {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));

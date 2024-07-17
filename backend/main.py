@@ -251,6 +251,7 @@ def weekly_anime():
                     details['eps_watched'] = anime['list_status']['num_episodes_watched']
                     details['eps'] = anime['node']['num_episodes']
 
+                    # TODO test
                     if 'broadcast' in anime['node']:
                         if 'start_time' in anime['node']['broadcast']:
                             details['broadcast_time'] = anime['node']['broadcast']['start_time']

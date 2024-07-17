@@ -214,7 +214,9 @@ const planToWatchDivHTML = ((unclickable, hideCheckBox, displayPlanToWatch, notY
                                 </div>
                                 <div className='anime-bot-div'>
                                     <div>
-                                        <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
+                                        <img className='weekly-anime-img' 
+                                        src={anime.img === null ? defaultpfp : anime.img} 
+                                        alt={`Image of ${anime.title}`}></img>
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +250,7 @@ const watchingDivHTML = ((unclickable, hideCheckBox, displayAnime, currAiringAni
                                 </div>
                                 <div className='anime-bot-div'>
                                     <div>
-                                        <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
+                                        <img className='weekly-anime-img' src={anime.img === null ? defaultpfp : anime.img}  alt={`Image of ${anime.title}`}></img>
                                     </div>
 
                                     <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>

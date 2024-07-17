@@ -42,6 +42,10 @@ p,h1 {
     color: var(--text);
 }
 
+img {
+    color: var(--text);
+}
+
 ::-webkit-scrollbar {
     width: 0.7em;
 }
