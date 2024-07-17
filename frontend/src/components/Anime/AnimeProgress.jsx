@@ -193,155 +193,82 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
 }
 
 const planToWatchDivHTML = ((unclickable, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
-    if(unclickable) {
-        return(
-            <>
-                <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div'>
-                    <p className='progress-section-heading unselectable'>Plan To Watch</p>
-                    <div className='checkbox-container unselectable' style={{display: 'none'}}>
-                        <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
-                        <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
-                    </div>
+    return(
+        <>
+            <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' 
+            onClick={unclickable ? undefined :() => expandPlanToWatchDiv()}>
+                <p className='progress-section-heading unselectable'>Plan To Watch</p>
+                <div className='checkbox-container unselectable'
+                style={unclickable ? {display: 'none'} : {}}>
+                    <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
+                    <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
                 </div>
-                <div id='anime-list-div-plan-to-watch' style={{height: "100%"}}>
-                    <ul className='anime-list' >
-                        {displayPlanToWatch.map((anime,index) =>
-                            <li key={index} className='weekly-anime'>
-                                <div className='anime'>
-                                    <div className='anime-top-div'>
-                                        <h1 className='anime-list-title'>{anime.title}</h1>
-                                    </div>
-                                    <div className='anime-bot-div'>
-                                        <div>
-                                            <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
-                                        </div>
+            </div>
+            <div id='anime-list-div-plan-to-watch' style={unclickable ? {height: "100%"} : {display: 'none'}}>
+                <ul className='anime-list' >
+                    {displayPlanToWatch.map((anime,index) =>
+                        <li key={index} className='weekly-anime'>
+                            <div className='anime'>
+                                <div className='anime-top-div'>
+                                    <h1 className='anime-list-title'>{anime.title}</h1>
+                                </div>
+                                <div className='anime-bot-div'>
+                                    <div>
+                                        <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
                                     </div>
                                 </div>
-                                {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
-                            </li>
-                        )}
-                    </ul>
-                </div>
-            </>
-        );
-    } else {
-        return(
-            <>
-                <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' onClick={() => expandPlanToWatchDiv()}>
-                    <p className='progress-section-heading unselectable'>Plan To Watch</p>
-                    <div className='checkbox-container unselectable'>
-                        <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
-                        <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
-                    </div>
-                </div>
-                <div id='anime-list-div-plan-to-watch' style={{display: 'none'}}>
-                    <ul className='anime-list' >
-                        {displayPlanToWatch.map((anime,index) =>
-                            <li key={index} className='weekly-anime'>
-                                <div className='anime'>
-                                    <div className='anime-top-div'>
-                                        <h1 className='anime-list-title'>{anime.title}</h1>
-                                    </div>
-                                    <div className='anime-bot-div'>
-                                        <div>
-                                            <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
-                                        </div>
-                                    </div>
-                                </div>
-                                {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
-                            </li>
-                        )}
-                    </ul>
-                </div>
-            </>
-        );
-    }
+                            </div>
+                            {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
+                        </li>
+                    )}
+                </ul>
+            </div>
+        </>
+    );
 });
 
 const watchingDivHTML = ((unclickable, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
-    if(unclickable) {
-        return(
-            <>
-                <div id='curr-watching-animes-div' className='progress-section-div watching-div'>
-                    <p className='progress-section-heading unselectable'>Watching</p>
-                    <div className='checkbox-container unselectable' style={{display: 'none'}}>
-                        <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayCurrAiring(event, currAiringAnime, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
-                        <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
-                    </div>
+    return(
+        <>
+            <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' className='progress-section-div watching-div'>
+                <p className='progress-section-heading unselectable'>Watching</p>
+                <div className='checkbox-container unselectable'
+                style={unclickable ? {display: 'none'} : {}}>
+                    <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayCurrAiring(event, currAiringAnime, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
+                    <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
                 </div>
-                <div id='anime-list-div-watching'>
-                    <ul className='anime-list'>
-                        {displayAnime.map((anime,index) =>
-                            <li key={index} className='weekly-anime'>
-                                <div className='anime'>
-                                    <div className='anime-top-div'>
-                                        <h1 className='anime-list-title'>{anime.title}</h1>
+            </div>
+            <div id='anime-list-div-watching'>
+                <ul className='anime-list'>
+                    {displayAnime.map((anime,index) =>
+                        <li key={index} className='weekly-anime'>
+                            <div className='anime'>
+                                <div className='anime-top-div'>
+                                    <h1 className='anime-list-title'>{anime.title}</h1>
+                                </div>
+                                <div className='anime-bot-div'>
+                                    <div>
+                                        <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
                                     </div>
-                                    <div className='anime-bot-div'>
-                                        <div>
-                                            <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
-                                        </div>
 
-                                        <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>
-                                            <AnimeAvailableDate anime={anime}/>
-                                        </div>
+                                    <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>
+                                        <AnimeAvailableDate anime={anime}/>
+                                    </div>
 
-                                        <div id={anime.id+'update-spinner'} className='update-div'>
-                                            <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                            <path  d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
-                                            <p>Updating...</p>
-                                        </div>
+                                    <div id={anime.id+'update-spinner'} className='update-div'>
+                                        <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path  d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
+                                        <p>Updating...</p>
                                     </div>
                                 </div>
-                                {index === displayAnime.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
-                            </li>
-                        )}
-                    </ul>
-                </div>
-            </>
-        );
-    } else {
-        return(
-            <>
-                <div onClick={() => expandCurrWatchingDiv()} id='curr-watching-animes-div' className='progress-section-div watching-div'>
-                    <p className='progress-section-heading unselectable'>Watching</p>
-                    <div className='checkbox-container unselectable'>
-                        <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayCurrAiring(event, currAiringAnime, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
-                        <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
-                    </div>
-                </div>
-                <div id='anime-list-div-watching'>
-                    <ul className='anime-list'>
-                        {displayAnime.map((anime,index) =>
-                            <li key={index} className='weekly-anime'>
-                                <div className='anime'>
-                                    <div className='anime-top-div'>
-                                        <h1 className='anime-list-title'>{anime.title}</h1>
-                                    </div>
-                                    <div className='anime-bot-div'>
-                                        <div>
-                                            <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
-                                        </div>
-
-                                        <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>
-                                            <AnimeAvailableDate anime={anime}/>
-                                        </div>
-
-                                        <div id={anime.id+'update-spinner'} className='update-div'>
-                                            <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                            <path  d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
-                                            <p>Updating...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                {index === displayAnime.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
-                            </li>
-                        )}
-                    </ul>
-                </div>
-            </>
-        );
-    }
+                            </div>
+                            {index === displayAnime.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
+                        </li>
+                    )}
+                </ul>
+            </div>
+        </>
+    );
 });
 
 // Displays weekly anime
@@ -398,14 +325,14 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
                 }
                 // TODO fix when search matches both divs
                 // Match in Both div
-                else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
-                    return(
-                        <>
-                            {displayAnime.length > 0 ? watchingDivHTML(true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
-                        </>
-                    );
-                }
+                // else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
+                //     return(
+                //         <>
+                //             {displayAnime.length > 0 ? watchingDivHTML(true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                //             {displayPlanToWatch.length > 0 ? planToWatchDivHTML(true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                //         </>
+                //     );
+                // }
             }
 
             // Displays list of anime
