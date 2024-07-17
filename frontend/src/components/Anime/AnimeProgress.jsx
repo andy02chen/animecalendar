@@ -192,14 +192,14 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
     }
 }
 
-const planToWatchDivHTML = ((unclickable, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
+const planToWatchDivHTML = ((unclickable, hideCheckBox, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
     return(
         <>
             <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' 
             onClick={unclickable ? undefined :() => expandPlanToWatchDiv()}>
                 <p className='progress-section-heading unselectable'>Plan To Watch</p>
                 <div className='checkbox-container unselectable'
-                style={unclickable ? {display: 'none'} : {}}>
+                style={hideCheckBox ? {display: 'none'} : {}}>
                     <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
                     <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
                 </div>
@@ -227,13 +227,13 @@ const planToWatchDivHTML = ((unclickable, displayPlanToWatch, notYetAiredList, p
     );
 });
 
-const watchingDivHTML = ((unclickable, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
+const watchingDivHTML = ((unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
     return(
         <>
             <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' className='progress-section-div watching-div'>
                 <p className='progress-section-heading unselectable'>Watching</p>
                 <div className='checkbox-container unselectable'
-                style={unclickable ? {display: 'none'} : {}}>
+                style={hideCheckBox ? {display: 'none'} : {}}>
                     <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayCurrAiring(event, currAiringAnime, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
                     <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
                 </div>
@@ -302,7 +302,7 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
                 if(displayAnime.length > 0 && displayPlanToWatch.length === 0) {
                     return(
                         <>
-                            {displayAnime.length > 0 ? watchingDivHTML(true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                            {displayAnime.length > 0 ? watchingDivHTML(true, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
                         </>
                     );
                 }
@@ -310,7 +310,7 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
                 else if (displayAnime.length === 0 && displayPlanToWatch.length > 0) {
                     return(
                         <>
-                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(true, true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                         </>
                     );
                 }
@@ -325,21 +325,21 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
                 }
                 // TODO fix when search matches both divs
                 // Match in Both div
-                // else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
-                //     return(
-                //         <>
-                //             {displayAnime.length > 0 ? watchingDivHTML(true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                //             {displayPlanToWatch.length > 0 ? planToWatchDivHTML(true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
-                //         </>
-                //     );
-                // }
+                else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
+                    return(
+                        <>
+                            {displayAnime.length > 0 ? watchingDivHTML(false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                        </>
+                    );
+                }
             }
 
             // Displays list of anime
             return(
                 <>
-                    {displayAnime.length > 0 ? watchingDivHTML(false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                    {displayPlanToWatch.length > 0 ? planToWatchDivHTML(false, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                    {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                    {displayPlanToWatch.length > 0 ? planToWatchDivHTML(false, false, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                 </>
             );
         }
