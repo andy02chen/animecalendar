@@ -344,14 +344,7 @@ function AnimeAvailableDate({anime}) {
             </>
         );
     } else {
-        let displayDelay = true;
-        if(anime.end_date !== null) {
-            const animeEndDateCompare = new Date(anime.end_date);
-            const dateNow = Date.now();
-            if(animeEndDateCompare < dateNow) {
-                displayDelay = false;
-            }
-        }
+        let finishedAiring = (anime.air_status === 'finished_airing');
 
         return(
             <>  
@@ -361,12 +354,16 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
-                        <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` available to watch now`}</p>
+                        {finishedAiring ?
+                            <p className="episode-status"><span style={{color: "var(--text)"}}>All Eps. available to watch now</span></p>
+                        :
+                            <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` available to watch now`}</p>
+                        }
                         <div className="button-choice-div">
-                            {displayDelay ?
-                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                                :
+                            {finishedAiring ?
                                 <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
+                                :
+                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                             }
                             <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
                                 onClick={(event) => {

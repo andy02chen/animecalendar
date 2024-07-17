@@ -161,6 +161,7 @@ def plan_to_watch():
                 data = response.json()
                 data_to_return = {'plan_to_watch':[]}
 
+                # TODO when data not available
                 for anime in data['data']:
                     details = {}
                     details['title'] = anime['node']['title']
