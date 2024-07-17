@@ -192,6 +192,37 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
     }
 }
 
+const planToWatchDivHTML = ((displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => (
+    <>
+        <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' onClick={() => expandPlanToWatchDiv()}>
+            <p className='progress-section-heading unselectable'>Plan To Watch</p>
+            <div className='checkbox-container unselectable'>
+                <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
+                <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
+            </div>
+        </div>
+        <div id='anime-list-div-plan-to-watch' style={{display: 'none'}}>
+            <ul className='anime-list' >
+                {displayPlanToWatch.map((anime,index) =>
+                    <li key={index} className='weekly-anime'>
+                        <div className='anime'>
+                            <div className='anime-top-div'>
+                                <h1 className='anime-list-title'>{anime.title}</h1>
+                            </div>
+                            <div className='anime-bot-div'>
+                                <div>
+                                    <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
+                                </div>
+                            </div>
+                        </div>
+                        {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
+                    </li>
+                )}
+            </ul>
+        </div>
+    </>
+));
+
 const watchingDivHTML = ((displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => 
     (
         <>
@@ -265,43 +296,12 @@ const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,c
             if(document.getElementById('search-value').value !== "") {
                 console.log('fdsa');
             } else {
+                console.log(displayPlanToWatch.length);
                 // Displays list of anime
                     return(
                         <>
                             {displayAnime.length > 0 ? watchingDivHTML(displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                            {displayPlanToWatch.length > 0 ?
-                                <>
-                                    <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' onClick={() => expandPlanToWatchDiv()}>
-                                        <p className='progress-section-heading unselectable'>Plan To Watch</p>
-                                        <div className='checkbox-container unselectable'>
-                                            <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
-                                            <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
-                                        </div>
-                                    </div>
-                                    <div id='anime-list-div-plan-to-watch' style={{display: 'none'}}>
-                                        <ul className='anime-list' >
-                                            {displayPlanToWatch.map((anime,index) =>
-                                                <li key={index} className='weekly-anime'>
-                                                    <div className='anime'>
-                                                        <div className='anime-top-div'>
-                                                            <h1 className='anime-list-title'>{anime.title}</h1>
-                                                        </div>
-                                                        <div className='anime-bot-div'>
-                                                            <div>
-                                                                <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                </>
-                                :
-                                null
-                            }
-                            
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                         </>
                     );
                 }

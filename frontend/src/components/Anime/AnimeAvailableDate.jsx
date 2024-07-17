@@ -6,7 +6,6 @@ import "./AnimeAvailableDate.css"
 
 // Displays div with classname
 function displayDiv(divClassName, anime) {
-    console.log('a');
     let parents = document.getElementsByClassName(divClassName+anime);
     for(let i = 0; i < parents.length; i++) {
         if (parents[i].style.display === 'none') {
