@@ -176,7 +176,7 @@ def plan_to_watch():
                         details['season'] = None
 
                     # Get anime start date
-                    if 'start_date' in anime:
+                    if 'start_date' in anime['node']:
                         details['start_date'] = anime['node']['start_date']
 
                     else:
@@ -235,18 +235,39 @@ def weekly_anime():
                     details = {}
                     details['title'] = anime['node']['title']
                     details['id'] = anime['node']['id']
-                    details['start_date'] = anime['node']['start_date']
-                    details['img'] = anime['node']['main_picture']['medium']
+
+                    if 'start_date' in anime['node']:
+                        details['start_date'] = anime['node']['start_date']
+
+                    else:
+                        details['start_date'] = None
+
+                    if 'main_picture' in anime['node']:
+                        details['img'] = anime['node']['main_picture']['medium']
+
+                    else:
+                        details['img'] = None
+
                     details['eps_watched'] = anime['list_status']['num_episodes_watched']
                     details['eps'] = anime['node']['num_episodes']
-                    details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                    if 'broadcast' in anime['node']:
+                        if 'start_time' in anime['node']['broadcast']:
+                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                        else:
+                            details['broadcast_time'] = None
+
+                    else:
+                        details['broadcast_time'] = None
+
                     details['delayed_eps'] = 0
                     details['air_status'] = anime['node']['status']
 
-                    try:
+                    if 'end_date' in anime['node']:
                         details['end_date'] = anime['node']['end_date']
 
-                    except KeyError:
+                    else:
                         details['end_date'] = None
                     
                     data_to_return['anime'].append(details)

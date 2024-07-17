@@ -87,6 +87,43 @@ function formatTime(timeRemaining) {
 function AnimeAvailableDate({anime}) {
     const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(false);
 
+    // Progress Bar style
+    let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
+    let outerProgress = {
+        height: "30px",
+        width: "100%",
+        backgroundColor: "#363636",
+        borderRadius: "5px",
+        overflow: "hidden",
+        position: "relative",
+        border: "1px solid #666666",
+    };
+
+    let innerProgress = {
+        height: "100%",
+        width: `${String(Math.round(progress * 10) / 10) + "%"}`,
+        background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
+        borderRadius: "5px 0 0 5px"
+    };
+
+    // If no information about time is available
+    if(anime.broadcast_time === null) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <p className="episode-status">
+                        No Info on broadcast time available
+                    </p>
+                </div>
+            </>
+        );
+    }
+    
+
     if(localStorage.getItem(anime.id) !== null) {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));
     }
@@ -156,25 +193,6 @@ function AnimeAvailableDate({anime}) {
 
         return () => clearInterval(intervalId);
     }, [countdown]);
-
-    // Progress Bar style
-    let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
-    let outerProgress = {
-        height: "30px",
-        width: "100%",
-        backgroundColor: "#363636",
-        borderRadius: "5px",
-        overflow: "hidden",
-        position: "relative",
-        border: "1px solid #666666",
-    };
-
-    let innerProgress = {
-        height: "100%",
-        width: `${String(Math.round(progress * 10) / 10) + "%"}`,
-        background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
-        borderRadius: "5px 0 0 5px"
-    };
 
     // If user completed the anime display completed until log back in
     if(anime.eps_watched === anime.eps && anime.eps_watched !== 0) {
