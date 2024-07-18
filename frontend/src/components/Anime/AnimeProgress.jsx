@@ -192,7 +192,71 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
     }
 }
 
+// TODO add more info and ability to add to watching div
+const animePlanToWatchInfo = ((anime) => {
+    const air_status = anime.air_status;
+    // if anime is currently airing
+    if(air_status === "currently_airing") {
+        if(anime.season !== null) {
+            return(
+                <p className='episode-status'>
+                    <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                    This anime is currently airing.
+                </p>
+            );
+        }
+        return(
+            <p className='episode-status'>
+                This anime is currently airing.
+            </p>
+        );
+    }
+    // if anime is not yet aired
+    else if (air_status === "not_yet_aired") {
+        if(anime.season !== null) {
+            return(
+                <p className='episode-status'>
+                    <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                    This anime has not aired yet.
+                </p>
+            );
+        }
+        return(
+            <p className='episode-status'>
+                <span className='white-bold'>TBD</span><br/>
+                This anime has not aired yet.
+            </p>
+        );
+    }
+    // if anime is finished airing
+    else if(air_status === "finished_airing") {
+        if(anime.season !== null) {
+            return(
+                <p className='episode-status'>
+                    <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                    This anime has finished airing.
+                </p>
+            );
+        }
+        return(
+            <p className='episode-status'>
+                This anime has finished airing
+            </p>
+        );
+    }
+    // Should not be possible
+    else {
+        return(
+            <p className='episode-status'>
+                This anime does not have any info available.
+            </p>
+        );
+    }
+});
+
+
 const planToWatchDivHTML = ((unclickable, hideCheckBox, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
+    console.log(planToWatchAnimeList);
     return(
         <>
             <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' 
@@ -218,6 +282,7 @@ const planToWatchDivHTML = ((unclickable, hideCheckBox, displayPlanToWatch, notY
                                         src={anime.img === null ? defaultpfp : anime.img} 
                                         alt={`Image of ${anime.title}`}></img>
                                     </div>
+                                    {animePlanToWatchInfo(anime)}
                                 </div>
                             </div>
                             {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
@@ -275,8 +340,6 @@ const watchingDivHTML = ((unclickable, hideCheckBox, displayAnime, currAiringAni
 
 // Displays weekly anime
 const renderContent = (notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
-    // console.log(displayPlanToWatch);
-    console.log(weeklyAnime);
     // Returns error message if failed get request
     if(failedRequest) {
         const popup = document.getElementById("error-popup");

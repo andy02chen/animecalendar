@@ -171,7 +171,7 @@ def plan_to_watch():
 
                     # Get anime season
                     if 'start_season' in anime['node']:
-                        details['season'] = anime['node']['start_season']['season'] + str(anime['node']['start_season']['year'])
+                        details['season'] = anime['node']['start_season']['season'],str(anime['node']['start_season']['year'])
 
                     else:
                         details['season'] = None
