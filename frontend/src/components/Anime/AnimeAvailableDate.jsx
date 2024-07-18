@@ -73,6 +73,35 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
     }
 }
 
+// Display episode status when there is no time available
+const episodeStatusNoBroadcastTime = ((days, nextEpInfo, anime) => {
+    if(days > 1) {
+        // More than 1 day until available
+        return(
+            <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` is estimated to air in ${Math.ceil(days)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo[0]}, {nextEpInfo.splice(1,3).join(' ')}</span></p>
+        );
+    } else if(days < 0) {
+        // Available
+        return(
+            <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
+        );
+    } else {
+        // Available today
+        
+        return(
+            <p className="episode-status">
+                <span style={{color: "var(--text)", fontWeight: "bold"}}>
+                    Ep. {anime.eps_watched + 1}&nbsp;
+                </span>
+                should be available to watch&nbsp;
+                <span style={{color: "var(--text)", fontWeight: "bold"}}>
+                    today.
+                </span>
+            </p>
+        );
+    }
+});
+
 // Formats the time into HH:MM:SS
 function formatTime(timeRemaining) {
     let hours = Math.floor(timeRemaining / (1000*60*60));
@@ -106,52 +135,24 @@ function AnimeAvailableDate({anime}) {
         borderRadius: "5px 0 0 5px"
     };
 
-    // If no information about time is available
-    if(anime.broadcast_time === null) {
-        return(
-            <>
-                <div className="progress-bar-text-div">
-                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
-                </div>
-                <div className="progress-info-div">
-                    <p className="episode-status">
-                        No Info on broadcast time available
-                    </p>
-                </div>
-            </>
-        );
-    } else if (anime.start_date === null) {
-        return(
-            <>
-                <div className="progress-bar-text-div">
-                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
-                </div>
-                <div className="progress-info-div">
-                    <p className="episode-status">
-                        No info on start date available
-                    </p>
-                </div>
-            </>
-        );
-    }
-
     if(localStorage.getItem(anime.id) !== null) {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));
     }
 
-    // Get anime broadcast date and time
-    // Then convert it to local time
-    const jstDateTimeStr = `${anime.start_date}T${anime.broadcast_time}:00+09:00`;
-    const jstDate = new Date(jstDateTimeStr);
-    const localDateTimeStr = jstDate.toLocaleString();
+    let isoTime;
+    if(anime.broadcast_time !== null) {
+        // Get anime broadcast date and time
+        // Then convert it to local time
+        const jstDateTimeStr = `${anime.start_date}T${anime.broadcast_time}:00+09:00`;
+        const jstDate = new Date(jstDateTimeStr);
+        const localDateTimeStr = jstDate.toLocaleString();
 
-    // Change into ISO 8601 format
-    const [date, time] = localDateTimeStr.split(',');
-    const [day,mth,yr] = date.trim().split('/');
-    const [hour,min,sec] = time.trim().split(":");
-    const isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
+        // Change into ISO 8601 format
+        const [date, time] = localDateTimeStr.split(',');
+        const [day,mth,yr] = date.trim().split('/');
+        const [hour,min,sec] = time.trim().split(":");
+        isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
+    }
     
     // Get next episode date
     let nextEpDate = new Date(isoTime);
@@ -206,6 +207,72 @@ function AnimeAvailableDate({anime}) {
 
         return () => clearInterval(intervalId);
     }, [countdown]);
+
+    // If no information about time is available
+    if(anime.broadcast_time === null && anime.start_date !== null) {
+        let nextEpDate = new Date(anime.start_date);
+        let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
+        nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
+
+        const dateNow = Date.now();
+        let diffMs = nextEpDate - dateNow;
+        let days = diffMs / (1000 * 60 * 60 * 24);
+        let nextEpInfo = nextEpDate.toString().trim().split(' ');
+
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <div className={anime.id}>
+                        {episodeStatusNoBroadcastTime(days, nextEpInfo, anime)}
+                        <div className="button-choice-div">
+                            <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                onClick={(event) => {
+                                    clearTimeout(event.target.timeoutId);
+                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                    event.target.style.display = "none";
+                                }}>Confirm?</button>
+                            <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                onClick={(event) => {
+                                    event.target.style.display = "none";
+                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                    confirmButton.style.display = "block";
+
+                                    const timeoutId = setTimeout(() => {
+                                        confirmButton.style.display = "none";
+                                        event.target.classList.add('bounce');
+                                        event.target.style.display = "block";
+                                    }, 3000);
+
+                                    confirmButton.timeoutId = timeoutId;
+                                }
+                            }>Watched</button>
+                        </div>
+                    </div>
+                    <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                </div>
+            </>
+        );
+    } else if (anime.start_date === null) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <p className="episode-status">
+                        No info on start date available
+                    </p>
+                </div>
+            </>
+        );
+    }
 
     // If user completed the anime display completed until log back in
     if(anime.eps_watched === anime.eps && anime.eps_watched !== 0) {
@@ -309,7 +376,7 @@ function AnimeAvailableDate({anime}) {
                     :
                     <>
                         <div className={anime.id}>
-                            <p><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
+                            <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
                             <div className="button-choice-div">
                                 <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                                 <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"

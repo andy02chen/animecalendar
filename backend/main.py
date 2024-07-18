@@ -250,9 +250,13 @@ def weekly_anime():
                         details['img'] = None
 
                     details['eps_watched'] = anime['list_status']['num_episodes_watched']
-                    details['eps'] = anime['node']['num_episodes']
 
-                    # TODO test
+                    if 'num_episodes' in anime['node']:
+                        details['eps'] = anime['node']['num_episodes']
+
+                    else:
+                        details['eps'] = 0
+
                     if 'broadcast' in anime['node']:
                         if 'start_time' in anime['node']['broadcast']:
                             details['broadcast_time'] = anime['node']['broadcast']['start_time']
