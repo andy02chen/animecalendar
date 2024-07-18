@@ -135,6 +135,47 @@ function AnimeAvailableDate({anime}) {
         borderRadius: "5px 0 0 5px"
     };
 
+    if (anime.start_date === null) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <p className="episode-status">
+                        No info on start date available
+                    </p>
+                    <div className="button-choice-div">
+                            <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
+                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                onClick={(event) => {
+                                    clearTimeout(event.target.timeoutId);
+                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                    event.target.style.display = "none";
+                                }}>Confirm?</button>
+                            <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                onClick={(event) => {
+                                    event.target.style.display = "none";
+                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                    confirmButton.style.display = "block";
+
+                                    const timeoutId = setTimeout(() => {
+                                        confirmButton.style.display = "none";
+                                        event.target.classList.add('bounce');
+                                        event.target.style.display = "block";
+                                    }, 3000);
+
+                                    confirmButton.timeoutId = timeoutId;
+                                }
+                            }>Watched</button>
+                        </div>
+                </div>
+            </>
+        );
+    }
+
     if(localStorage.getItem(anime.id) !== null) {
         anime.delayed_eps = Number(localStorage.getItem(anime.id));
     }
@@ -255,20 +296,6 @@ function AnimeAvailableDate({anime}) {
                         </div>
                     </div>
                     <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
-                </div>
-            </>
-        );
-    } else if (anime.start_date === null) {
-        return(
-            <>
-                <div className="progress-bar-text-div">
-                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
-                </div>
-                <div className="progress-info-div">
-                    <p className="episode-status">
-                        No info on start date available
-                    </p>
                 </div>
             </>
         );
