@@ -192,9 +192,9 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
     }
 }
 
-// TODO test error when moving anime from plan to watch to watching div
 // Moves anime from plan to watch div into watching and updates status on MyAnimeList
-const moveToWatchingDiv = ((anime,setTrigger) => {
+const moveToWatchingDiv = ((anime,setTrigger, setGotRequest) => {
+    setGotRequest(false);
     axios.post('/api/update-anime',
         {
             'anime-id': anime.id,
@@ -205,9 +205,11 @@ const moveToWatchingDiv = ((anime,setTrigger) => {
     )
     .then(response => {
         setTrigger(x => x + 1);
+        setGotRequest(true);
     })
     .catch(error => {
         if(error.response.status === 502) {
+            setGotRequest(true);
             document.getElementById('popup-error-message').textContent = error.response.data;
             const popup = document.getElementById("error-popup");
             popup.classList.add("show-error");
@@ -265,8 +267,7 @@ const animePlanToWatchInfo = ((anime,setTrigger, setGotRequest) => {
                     <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
                         onClick={(event) => {
                             clearTimeout(event.target.timeoutId);
-                            moveToWatchingDiv(anime,setTrigger);
-                            setGotRequest(false);
+                            moveToWatchingDiv(anime,setTrigger, setGotRequest);
                         }}
                         >
                         Confirm?
@@ -327,7 +328,7 @@ const animePlanToWatchInfo = ((anime,setTrigger, setGotRequest) => {
                     <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
                         onClick={(event) => {
                             clearTimeout(event.target.timeoutId);
-                            moveToWatchingDiv(anime,setTrigger);
+                            moveToWatchingDiv(anime,setTrigger, setGotRequest);
                             setGotRequest(false);
                         }}
                         >
