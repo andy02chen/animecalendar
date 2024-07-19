@@ -317,3 +317,15 @@
     color: var(--text);
     font-weight: bold;
 }
+
+.plan-to-watch-anime-info-div {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.add-to-watching-button {
+    padding: 5%;
+    border-radius: 10px;
+    cursor: pointer;
+}

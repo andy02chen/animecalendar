@@ -192,23 +192,34 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
     }
 }
 
-// TODO add more info and ability to add to watching div
+// TODO add more info for not yet aired anime with start dat available
+// TODO ability to add to watching div for currently airing and finished airing
 const animePlanToWatchInfo = ((anime) => {
     const air_status = anime.air_status;
     // if anime is currently airing
     if(air_status === "currently_airing") {
         if(anime.season !== null) {
             return(
-                <p className='episode-status'>
-                    <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
-                    This anime is currently airing.
-                </p>
+                <div className='plan-to-watch-anime-info-div'>
+                    <p className='episode-status'>
+                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                        This anime is currently airing.
+                    </p>
+                    <div>
+                        <button className="positive-button add-to-watching-button">Started Watching</button>
+                    </div>
+                </div>
             );
         }
         return(
-            <p className='episode-status'>
-                This anime is currently airing.
-            </p>
+            <div className='plan-to-watch-anime-info-div'>
+                    <p className='episode-status'>
+                        This anime is currently airing.
+                    </p>
+                    <div>
+                        <button className="positive-button add-to-watching-button">Started Watching</button>
+                    </div>
+                </div>
         );
     }
     // if anime is not yet aired
@@ -232,16 +243,26 @@ const animePlanToWatchInfo = ((anime) => {
     else if(air_status === "finished_airing") {
         if(anime.season !== null) {
             return(
-                <p className='episode-status'>
-                    <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
-                    This anime has finished airing.
-                </p>
+                <div className='plan-to-watch-anime-info-div'>
+                    <p className='episode-status'>
+                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                        This anime has finished airing.
+                    </p>
+                    <div>
+                        <button className="positive-button add-to-watching-button">Started Watching</button>
+                    </div>
+                </div>
             );
         }
         return(
-            <p className='episode-status'>
-                This anime has finished airing
-            </p>
+            <div className='plan-to-watch-anime-info-div'>
+                <p className='episode-status'>
+                    This anime has finished airing.
+                </p>
+                <div>
+                    <button className="positive-button add-to-watching-button">Started Watching</button>
+                </div>
+            </div>
         );
     }
     // Should not be possible
