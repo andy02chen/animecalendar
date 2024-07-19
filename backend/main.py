@@ -53,6 +53,7 @@ def updateStatus():
             }
 
             body = {}
+            # If Completed
             if data['completed']:
                 if 'score' in data:
                     body = {
@@ -67,9 +68,11 @@ def updateStatus():
                         "status" : "completed"
                     }
 
+            # Update progress
             else:
                 body = {
-                    "num_watched_episodes": eps_watched
+                    "num_watched_episodes": eps_watched,
+                    "status" : data['status']
                 }
 
             response = requests.patch(mal_update_anime, headers=headers, data=body)

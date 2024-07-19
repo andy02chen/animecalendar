@@ -42,7 +42,8 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
             {
                 'anime-id': anime.id,
                 'eps-watched': anime.eps_watched,
-                'completed': false
+                'completed': false,
+                'status': 'watching'
             }
         )
         .then(response => {
