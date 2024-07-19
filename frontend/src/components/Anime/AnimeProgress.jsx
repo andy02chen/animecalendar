@@ -227,9 +227,8 @@ const moveToWatchingDiv = ((anime,setTrigger) => {
     })
 });
 
-// TODO add more info for not yet aired anime with start dat available
-// TODO ability to add to watching div for currently airing and finished airing
-const animePlanToWatchInfo = ((anime,setTrigger) => {
+// TODO add more info for not yet aired anime with start day available
+const animePlanToWatchInfo = ((anime,setTrigger, setGotRequest) => {
     const air_status = anime.air_status;
     // if anime is currently airing
     if(air_status === "currently_airing") {
@@ -263,7 +262,13 @@ const animePlanToWatchInfo = ((anime,setTrigger) => {
                         >
                         Started Watching
                     </button>
-                    <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button">
+                    <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
+                        onClick={(event) => {
+                            clearTimeout(event.target.timeoutId);
+                            moveToWatchingDiv(anime,setTrigger);
+                            setGotRequest(false);
+                        }}
+                        >
                         Confirm?
                     </button>
                 </div>
@@ -323,9 +328,7 @@ const animePlanToWatchInfo = ((anime,setTrigger) => {
                         onClick={(event) => {
                             clearTimeout(event.target.timeoutId);
                             moveToWatchingDiv(anime,setTrigger);
-                            // TODO maybe need to remove this code
-                            document.getElementById(anime.id+'ptw-button1').style.display = "block";
-                            event.target.style.display = "none";
+                            setGotRequest(false);
                         }}
                         >
                         Confirm?
@@ -345,7 +348,7 @@ const animePlanToWatchInfo = ((anime,setTrigger) => {
 });
 
 
-const planToWatchDivHTML = ((setTrigger, unclickable, hideCheckBox, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
+const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
     return(
         <>
             <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' 
@@ -371,7 +374,7 @@ const planToWatchDivHTML = ((setTrigger, unclickable, hideCheckBox, displayPlanT
                                         src={anime.img === null ? defaultpfp : anime.img} 
                                         alt={`Image of ${anime.title}`}></img>
                                     </div>
-                                    {animePlanToWatchInfo(anime,setTrigger)}
+                                    {animePlanToWatchInfo(anime,setTrigger,setGotRequest)}
                                 </div>
                             </div>
                             {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
@@ -473,7 +476,7 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
                 else if (displayAnime.length === 0 && displayPlanToWatch.length > 0) {
                     return(
                         <>
-                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setTrigger, true, true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, true, true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                         </>
                     );
                 }
@@ -491,7 +494,7 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
                     return(
                         <>
                             {displayAnime.length > 0 ? watchingDivHTML(false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setTrigger, false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                         </>
                     );
                 }
@@ -501,7 +504,7 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
             return(
                 <>
                     {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                    {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setTrigger, false, false, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                    {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, false, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                 </>
             );
         }
