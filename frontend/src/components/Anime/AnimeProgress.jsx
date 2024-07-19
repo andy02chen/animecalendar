@@ -198,65 +198,73 @@ const animePlanToWatchInfo = ((anime) => {
     const air_status = anime.air_status;
     // if anime is currently airing
     if(air_status === "currently_airing") {
-        if(anime.season !== null) {
-            return(
-                <div className='plan-to-watch-anime-info-div'>
-                    <p className='episode-status'>
-                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
-                        This anime is currently airing.
-                    </p>
-                    <div>
-                        <button className="positive-button add-to-watching-button">Started Watching</button>
-                    </div>
-                </div>
-            );
-        }
         return(
             <div className='plan-to-watch-anime-info-div'>
-                    <p className='episode-status'>
-                        This anime is currently airing.
-                    </p>
-                    <div>
-                        <button className="positive-button add-to-watching-button">Started Watching</button>
-                    </div>
+                <p className='episode-status'>
+                {anime.season !== null ? 
+                    <>
+                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                    </>
+                : 
+                    null
+                }
+                This anime is currently airing.
+                </p>
+                <div className='ptw-button-div'>
+                    <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"
+                        onClick={(event) => {
+                            event.target.style.display = "none";
+                            const confirmButton = document.getElementById(anime.id+'ptw-button2');
+                            confirmButton.style.display = "block";
+
+                            const timeoutId = setTimeout(() => {
+                                confirmButton.style.display = "none";
+                                event.target.classList.add('bounce');
+                                event.target.style.display = "block";
+                            }, 3000);
+
+                            confirmButton.timeoutId = timeoutId;
+                        }}
+                        >
+                        Started Watching
+                    </button>
+                    <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button">
+                        Confirm?
+                    </button>
                 </div>
+                
+            </div>
         );
     }
     // if anime is not yet aired
     else if (air_status === "not_yet_aired") {
-        if(anime.season !== null) {
-            return(
-                <p className='episode-status'>
-                    <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
-                    This anime has not aired yet.
-                </p>
-            );
-        }
         return(
             <p className='episode-status'>
-                <span className='white-bold'>TBD</span><br/>
+                {anime.season !== null ?
+                    <>
+                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                    </>
+                    :
+                    <>
+                        <span className='white-bold'>TBD</span><br/>
+                    </>
+                }
                 This anime has not aired yet.
             </p>
         );
     }
     // if anime is finished airing
     else if(air_status === "finished_airing") {
-        if(anime.season !== null) {
-            return(
-                <div className='plan-to-watch-anime-info-div'>
-                    <p className='episode-status'>
-                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
-                        This anime has finished airing.
-                    </p>
-                    <div>
-                        <button className="positive-button add-to-watching-button">Started Watching</button>
-                    </div>
-                </div>
-            );
-        }
         return(
             <div className='plan-to-watch-anime-info-div'>
                 <p className='episode-status'>
+                {anime.season !== null ?
+                    <>
+                        <span className='white-bold'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</span><br/>
+                    </>
+                :
+                    null
+                }
                     This anime has finished airing.
                 </p>
                 <div>

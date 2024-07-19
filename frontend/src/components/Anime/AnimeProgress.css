@@ -329,3 +329,9 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+.ptw-button-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
