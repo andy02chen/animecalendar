@@ -98,9 +98,6 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
             // Release date is known
             // TODO if broadcast time is available
             if(arr.length === 3) {
-                const year = arr[0];
-                const month = arr[1];
-                const day = arr[2];
 
                 if(anime.broadcast_time) {
                     // Convert time to local time
@@ -135,9 +132,8 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                                     </span>
                                     days on&nbsp;
                                     <span className='white-bold'>
-                                        {startDateArr[2]} {startDateArr[1]}  {startDateArr[3]}, {startDateArr[0]}
+                                        {startDateArr[2]} {startDateArr[1]} {startDateArr[3]}, {startDateArr[0]}
                                     </span>.<br/>
-
                                 </p>
                             </>
                         );
@@ -149,9 +145,21 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
 
                 } else {
                     // Convert JST to local time
-                    const jstDate = new Date(start_date);
-                    const localDateTimeStr = new Date(jstDate.toLocaleString());
-                    let releaseDate = localDateTimeStr.toString().trim().split(' ');
+                    const jstDate = new Date(anime.start_date);
+                    const localDateTimeStr = jstDate.toLocaleString();
+
+                    // Change into ISO 8601 format
+                    const [date, time] = localDateTimeStr.split(',');
+                    const [day,mth,yr] = date.trim().split('/');
+                    const [hour,min,sec] = time.trim().split(":");
+                    const isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
+
+                    const startDate = new Date(isoTime);
+                    const dateNow = new Date(Date.now());
+                    let diff = startDate - dateNow;
+                    let days = Math.round(diff / (1000 * 60 * 60 * 24));
+
+                    let releaseDate = startDate.toString().trim().split(' ');
 
                     return(
                         <>
@@ -167,9 +175,13 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                                 }
                             </p>
                             <p className='episode-status'>
-                                This anime is set to release on&nbsp;
+                                This anime is set to release in&nbsp;
+                                <span className="white-bold">
+                                    {days}&nbsp;
+                                </span>
+                                days on&nbsp;
                                 <span className='white-bold'>
-                                    {releaseDate[2]} {releaseDate[1]}  {releaseDate[3]}, {releaseDate[0]}
+                                    {releaseDate[2]} {releaseDate[1]} {releaseDate[3]}, {releaseDate[0]}
                                 </span>.<br/>
                             </p>
                         </>
