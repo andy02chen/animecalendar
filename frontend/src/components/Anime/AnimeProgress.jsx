@@ -220,7 +220,6 @@ const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox
                                         alt={`Image of ${anime.title}`}></img>
                                     </div>
                                     <AnimePlanToWatch anime={anime} setTrigger={setTrigger} setGotRequest={setGotRequest}/>
-                                    {/* {animePlanToWatchInfo(anime,setTrigger,setGotRequest)} */}
                                 </div>
                             </div>
                             {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }

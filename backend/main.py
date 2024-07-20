@@ -169,7 +169,13 @@ def plan_to_watch():
                     details = {}
                     details['title'] = anime['node']['title']
                     details['id'] = anime['node']['id']
-                    details['img'] = anime['node']['main_picture']['medium']
+
+                    if 'main_picture' in anime['node']:
+                        details['img'] = anime['node']['main_picture']['medium']
+
+                    else:
+                        details['img'] = None
+
                     details['air_status'] = anime['node']['status']
 
                     # Get anime season
@@ -185,6 +191,16 @@ def plan_to_watch():
 
                     else:
                         details['start_date'] = None
+
+                    if 'broadcast' in anime['node']:
+                        if 'start_time' in anime['node']['broadcast']:
+                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                        else:
+                            details['broadcast_time'] = None
+
+                    else:
+                        details['broadcast_time'] = None
 
                     data_to_return['plan_to_watch'].append(details)
 
