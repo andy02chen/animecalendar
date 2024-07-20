@@ -219,7 +219,9 @@ const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox
                                         src={anime.img === null ? defaultpfp : anime.img} 
                                         alt={`Image of ${anime.title}`}></img>
                                     </div>
-                                    <AnimePlanToWatch anime={anime} setTrigger={setTrigger} setGotRequest={setGotRequest}/>
+                                    <div>
+                                        <AnimePlanToWatch anime={anime} setTrigger={setTrigger} setGotRequest={setGotRequest}/>
+                                    </div>
                                 </div>
                             </div>
                             {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
@@ -301,7 +303,6 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
                 </div>
             );
         } else if (weeklyAnime.length > 0 && planToWatchAnimeList.length === 0) {
-            console.log('a');
             return(
                 <>
                     {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}

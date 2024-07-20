@@ -88,7 +88,6 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
     // TODO add more info for not yet aired anime with start day available
     // if anime is not yet aired
     else if (air_status === "not_yet_aired") {
-        console.log(anime);
         const start_date = anime.start_date;
 
         if(start_date) {
@@ -105,7 +104,6 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                 const jstDate = new Date(start_date);
                 const localDateTimeStr = new Date(jstDate.toLocaleString());
                 let releaseDate = localDateTimeStr.toString().trim().split(' ');
-                console.log(releaseDate);
 
                 return(
                     <p className='episode-status'>
