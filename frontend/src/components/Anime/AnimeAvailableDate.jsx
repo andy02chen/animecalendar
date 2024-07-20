@@ -213,7 +213,7 @@ function AnimeAvailableDate({anime}) {
     if(anime.end_date === 0 && anime.eps) {
         let estEndDate = new Date(isoTime);
         const addDays = 7 * anime.eps;
-        anime.end_date = estEndDate.setDate(estEndDate.getDate() + daysToAdd);
+        anime.end_date = estEndDate.setDate(estEndDate.getDate() + addDays);
     }
 
     // When user watches an episode, it will update
@@ -235,13 +235,13 @@ function AnimeAvailableDate({anime}) {
             background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
             borderRadius: "5px 0 0 5px"
         };
-        setCountdown(diffMs);
+        // setCountdown(diffMs);
     }, [refreshAnimeDisplay]);
 
     const [countdown, setCountdown] = useState(diffMs);
 
     useEffect(() => {
-        if(countdown <= 0) return;
+        if(countdown <= 0 || days > 1) return;
 
         const intervalId = setInterval(() => {
             setCountdown(c => c - 1000);
@@ -320,7 +320,7 @@ function AnimeAvailableDate({anime}) {
     }
 
     // Displays next episode status
-    if(days >= 1) {
+    if(days > 1) {
         return(
             <>
                 <div className="progress-bar-text-div">
@@ -361,7 +361,7 @@ function AnimeAvailableDate({anime}) {
             </>
         );
     // Countdown if within 24 hours
-    } else if (days < 1 && days >= 0) {
+    } else if (days <= 1 && days >= 0) {
         return(
             <>
                 <div className="progress-bar-text-div">

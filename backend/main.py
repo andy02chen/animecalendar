@@ -201,7 +201,7 @@ def plan_to_watch():
 
                     else:
                         details['broadcast_time'] = None
-
+                        
                     data_to_return['plan_to_watch'].append(details)
 
                 return data_to_return
