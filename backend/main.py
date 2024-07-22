@@ -53,6 +53,7 @@ def updateStatus():
             }
 
             body = {}
+            # If Completed
             if data['completed']:
                 if 'score' in data:
                     body = {
@@ -67,9 +68,11 @@ def updateStatus():
                         "status" : "completed"
                     }
 
+            # Update progress
             else:
                 body = {
-                    "num_watched_episodes": eps_watched
+                    "num_watched_episodes": eps_watched,
+                    "status" : data['status']
                 }
 
             response = requests.patch(mal_update_anime, headers=headers, data=body)
@@ -123,6 +126,95 @@ def is_rate_limited(ip, endpoint, limit, period):
     recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
     return recent_requests >= limit
 
+# Function gets user's plan to watch list
+@app.route('/api/get-plan-to-watch', methods=["GET"])
+def plan_to_watch():
+    # Check limit
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+        return jsonify({"error": "rate limit exceeded"}), 429
+
+    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
+    db.session.add(new_request)
+    db.session.commit()
+
+    # Find user using session id
+    user_session_id = request.cookies.get('session')
+    if user_session_id:
+        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
+        if find_user:
+            msg, code = check_expiry()
+
+            # Login again
+            if code == 401 or code == 403:
+                return msg, code
+            
+
+            mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=plan_to_watch&
+            sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast,start_season&nsfw=true
+            &limit=1000'''
+            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+            headers = {
+                'Authorization': f'Bearer {mal_access_token}'
+            }
+
+            response = requests.get(mal_get_anime, headers=headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_to_return = {'plan_to_watch':[]}
+
+                for anime in data['data']:
+                    details = {}
+                    details['title'] = anime['node']['title']
+                    details['id'] = anime['node']['id']
+
+                    if 'main_picture' in anime['node']:
+                        details['img'] = anime['node']['main_picture']['medium']
+
+                    else:
+                        details['img'] = None
+
+                    details['air_status'] = anime['node']['status']
+
+                    # Get anime season
+                    if 'start_season' in anime['node']:
+                        details['season'] = anime['node']['start_season']['season'],str(anime['node']['start_season']['year'])
+
+                    else:
+                        details['season'] = None
+
+                    # Get anime start date
+                    if 'start_date' in anime['node']:
+                        details['start_date'] = anime['node']['start_date']
+
+                    else:
+                        details['start_date'] = None
+
+                    if 'broadcast' in anime['node']:
+                        if 'start_time' in anime['node']['broadcast']:
+                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                        else:
+                            details['broadcast_time'] = None
+
+                    else:
+                        details['broadcast_time'] = None
+                        
+                    data_to_return['plan_to_watch'].append(details)
+
+                return data_to_return
+
+            return 'Unable to get plan to watch anime from MAL',500
+
+        # User not found
+        response = redirect("/")
+        response.set_cookie('session', '', expires=0)
+        return response
+
+    # User not logged in
+    return redirect('/')
+
 # Functions gets user's weekly watching anime
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
@@ -159,28 +251,54 @@ def weekly_anime():
                 data = response.json()
                 data_to_return = {'anime':[]}
                 for anime in data['data']:
-                    # TODO maybe need to add/change details
                     details = {}
                     details['title'] = anime['node']['title']
                     details['id'] = anime['node']['id']
-                    details['start_date'] = anime['node']['start_date']
-                    details['img'] = anime['node']['main_picture']['medium']
-                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
-                    details['eps'] = anime['node']['num_episodes']
-                    details['broadcast_time'] = anime['node']['broadcast']['start_time']
-                    details['delayed_eps'] = 0
 
-                    try:
+                    if 'start_date' in anime['node']:
+                        details['start_date'] = anime['node']['start_date']
+
+                    else:
+                        details['start_date'] = None
+
+                    if 'main_picture' in anime['node']:
+                        details['img'] = anime['node']['main_picture']['medium']
+
+                    else:
+                        details['img'] = None
+
+                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
+
+                    if 'num_episodes' in anime['node']:
+                        details['eps'] = anime['node']['num_episodes']
+
+                    else:
+                        details['eps'] = 0
+
+                    if 'broadcast' in anime['node']:
+                        if 'start_time' in anime['node']['broadcast']:
+                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                        else:
+                            details['broadcast_time'] = None
+
+                    else:
+                        details['broadcast_time'] = None
+
+                    details['delayed_eps'] = 0
+                    details['air_status'] = anime['node']['status']
+
+                    if 'end_date' in anime['node']:
                         details['end_date'] = anime['node']['end_date']
 
-                    except KeyError:
+                    else:
                         details['end_date'] = None
                     
                     data_to_return['anime'].append(details)
 
                 return data_to_return
 
-            return '',500
+            return 'Unable to get anime watchlist from MAL',500
 
         # User not found
         response = redirect("/")

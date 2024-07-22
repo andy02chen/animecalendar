@@ -12,12 +12,12 @@ function MainComponent() {
                 </div>
 
                 <div className="calendar-div">
-                    <div className="month-div">
-                        <div></div>
-                        <Month/>
-                        <div></div>
+                    <div>
+                        <div className="month-div">
+                            <Month/>
+                        </div>
+                        <Calendar/>
                     </div>
-                    <Calendar/>
                 </div>
             </div>
         </>

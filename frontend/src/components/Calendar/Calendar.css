@@ -1,10 +1,10 @@
 .calendar-main {
     background-color: var(--background-div);
-    border-radius: 50px;
-    height: calc(90% - 40px);
+    height: 90%;
     width: 100%;
-    border: 2px solid var(--primary);
-    margin-top: 40px;
+    border: 1px solid var(--primary);
     align-content: center;
     text-align: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }

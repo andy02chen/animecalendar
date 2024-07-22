@@ -1,59 +1,260 @@
 import './AnimeProgress.css'
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import AnimeAvailableDate from './AnimeAvailableDate';
 import defaultpfp from '../imgs/defaultpfp.png';
+import AnimePlanToWatch from './AnimePlanToWatch';
 
 // Searches weekly anime and displays them
-function searchAnime(event, weeklyAnime, setDisplayAnime) {
+function searchAnime(event, weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList) {
     let findAnime = event.target.value.trim();
 
     if(findAnime) {
-        const returnAnimes = [];
+        const returnSearchedWatchingAnimes = [];
+        const returnSearchedPlanToWatchAnimes = [];
 
         for(let anime of weeklyAnime) {
             if(anime.title.toLowerCase().includes(findAnime.toLowerCase())) {
-                returnAnimes.push(anime);
+                returnSearchedWatchingAnimes.push(anime);
             }
         }
-        setDisplayAnime(returnAnimes);
+
+        for(let anime of planToWatchAnimeList) {
+            if(anime.title.toLowerCase().includes(findAnime.toLowerCase())) {
+                returnSearchedPlanToWatchAnimes.push(anime);
+            }
+        }
+
+        setDisplayAnime(returnSearchedWatchingAnimes);
+        setPlanToWatch(returnSearchedPlanToWatchAnimes);
     } else {
         setDisplayAnime(weeklyAnime);
+        setPlanToWatch(planToWatchAnimeList);
     }
 }
 
-// Displays weekly anime
-const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest) => {
-    // Returns error message if failed get request
-    if(failedRequest) {
-        document.getElementById('popup-error-message').textContent = "Rate Limit Exceeded. Please stop spamming and try refreshing later.";
-        const popup = document.getElementById("error-popup");
-        popup.classList.remove("hide-error");
-        popup.classList.add("show-error");
+// Expands the list of plan to watch anime
+const expandPlanToWatchDiv = () => {
+    const watchingList = document.getElementById('anime-list-div-watching');
+    const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
+    const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
 
-        return(
-            <div className='message-div'>
-                <p className='message-text'>Unable to get weekly anime. Please refresh or try again later.</p>
-                <button className='refresh-button' onClick={() => {
-                    getWeeklyAnime(setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest);
-                }}>Refresh</button>
-            </div>
-        );
+    // Disable click on div to prevent spamming
+    const disableCurrWatchingDiv = document.getElementById('curr-watching-animes-div');
+    const disablePlanWatchDiv = document.getElementById('plan-to-watch-animes-div');
+
+    disableCurrWatchingDiv.style.pointerEvents = "none";
+    disablePlanWatchDiv.style.pointerEvents = "none";
+
+    if(planToWatchList.style.display === "none") {
+        watchingList.style.height = "0px";
+        setTimeout(() => {
+            watchingList.style.display = "none";
+            planToWatchBar.style.borderTop = "none";
+
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
+        }, 500);
+
+        planToWatchList.style.display = "block";
+        planToWatchList.style.height = "100%";
+        planToWatchBar.style.borderBottom = "1px solid var(--primary)";
     } else {
-        // Displays list of anime
-        if(displayAnime.length > 0) {
-            return(
-                <ul className='anime-list'>
-                    {displayAnime.map((anime,index) =>
+        planToWatchList.style.height = "0px";
+        planToWatchBar.style.borderTop = "1px solid var(--primary)";
+
+        setTimeout(() => {
+            planToWatchBar.style.borderBottom = "none";
+            planToWatchList.style.display = "none";
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
+        }, 500);
+
+        watchingList.style.display = "block";
+        watchingList.style.height = "100%";
+    }
+}
+
+// Expands the div of currently watching anime
+const expandCurrWatchingDiv = () => {
+    const currWatchingList = document.getElementById('anime-list-div-watching');
+    const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
+    const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
+
+    // Disable click on div to prevent spamming
+    const disableCurrWatchingDiv = document.getElementById('curr-watching-animes-div');
+    const disablePlanWatchDiv = document.getElementById('plan-to-watch-animes-div');
+
+    disableCurrWatchingDiv.style.pointerEvents = "none";
+    disablePlanWatchDiv.style.pointerEvents = "none";
+
+    if(currWatchingList.style.display === "none") {
+        planToWatchList.style.height = "0px";
+        planToWatchBar.style.borderTop = "1px solid var(--primary)";
+        setTimeout(() => {
+            planToWatchBar.style.borderBottom = "none";
+            planToWatchList.style.display = "none";
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
+        }, 500);
+
+        currWatchingList.style.display = "block";
+        currWatchingList.style.height = "100%";
+    } else {
+        planToWatchBar.style.borderBottom = "1px solid var(--primary)";
+        currWatchingList.style.height = "0px";
+        setTimeout(() => {
+            currWatchingList.style.display = "none";
+            planToWatchBar.style.borderTop = "none";
+            disableCurrWatchingDiv.style.pointerEvents = "auto";
+            disablePlanWatchDiv.style.pointerEvents = "auto";
+        }, 500);
+        
+        planToWatchList.style.display = "block";
+        planToWatchList.style.height = "100%";
+    }
+}
+
+// Displays curr airing anime
+const displayCurrAiring = (event, currAiringAnime,weeklyAnime, setDisplayAnime) => {
+    const currWatchingList = document.getElementById('anime-list-div-watching');
+    const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
+    const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
+
+    if(currWatchingList.style.display === "none") {
+        if(event.target.checked) {
+            setDisplayAnime(currAiringAnime);
+        } else {
+            setDisplayAnime(weeklyAnime);
+        }
+
+        planToWatchList.style.height = "0px";
+        planToWatchBar.style.borderTop = "1px solid var(--primary)";
+        setTimeout(() => {
+            planToWatchBar.style.borderBottom = "none";
+            planToWatchList.style.display = "none";
+        }, 500);
+
+        currWatchingList.style.display = "block";
+        currWatchingList.style.height = "100%";
+    } else {
+        if(event.target.checked) {
+            currWatchingList.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setDisplayAnime(currAiringAnime);
+                currWatchingList.classList.remove("checkbox-selected-transition");
+            }, 500);
+        } else {
+            currWatchingList.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setDisplayAnime(weeklyAnime);
+                currWatchingList.classList.remove("checkbox-selected-transition");
+            }, 500);
+        }
+    }
+}
+
+// Displays Not Yet Aired Anime
+const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
+    const watchingList = document.getElementById('anime-list-div-watching');
+    const planToWatchList = document.getElementById('anime-list-div-plan-to-watch');
+    const planToWatchBar = document.getElementById('plan-to-watch-animes-div');
+
+    if(planToWatchList.style.display === "none") {
+        if(event.target.checked) {
+            setPlanToWatch(notYetAiredList);
+        } else {
+            setPlanToWatch(planToWatchAnimeList);
+        }
+
+        watchingList.style.height = "0px";
+        setTimeout(() => {
+            watchingList.style.display = "none";
+            planToWatchBar.style.borderTop = "none";
+        }, 500);
+
+        planToWatchList.style.display = "block";
+        planToWatchList.style.height = "100%";
+        planToWatchBar.style.borderBottom = "1px solid var(--primary)";
+    } else {
+        if(event.target.checked) {
+            planToWatchList.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setPlanToWatch(notYetAiredList);
+                planToWatchList.classList.remove("checkbox-selected-transition");
+            }, 500);
+        } else {
+            planToWatchList.classList.add("checkbox-selected-transition");
+            setTimeout(() => {
+                setPlanToWatch(planToWatchAnimeList);
+                planToWatchList.classList.remove("checkbox-selected-transition");
+            }, 500);
+        }
+    }
+}
+
+const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
+    return(
+        <>
+            <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' 
+            onClick={unclickable ? undefined :() => expandPlanToWatchDiv()}>
+                <p className='progress-section-heading unselectable'>Plan To Watch</p>
+                <div className='checkbox-container unselectable'
+                style={hideCheckBox ? {display: 'none'} : {}}>
+                    <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayNotYetAired(event, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}  type='checkbox' id='plan-to-watch-check' name='plan-to-watch-check' value="plan-to-watch-value"></input>
+                    <label onClick={(event) => event.stopPropagation()} htmlFor="plan-to-watch-check" className='anime-progress-checkbox'> Show Not Yet Aired Only</label>
+                </div>
+            </div>
+            <div id='anime-list-div-plan-to-watch' style={unclickable ? {height: "100%"} : {display: 'none'}}>
+                <ul className='anime-list' >
+                    {displayPlanToWatch.map((anime,index) =>
                         <li key={index} className='weekly-anime'>
                             <div className='anime'>
-
                                 <div className='anime-top-div'>
                                     <h1 className='anime-list-title'>{anime.title}</h1>
                                 </div>
                                 <div className='anime-bot-div'>
                                     <div>
-                                        <img className='weekly-anime-img' src={anime.img} alt={`Image of ${anime.title}`}></img>
+                                        <img className='weekly-anime-img' 
+                                        src={anime.img === null ? defaultpfp : anime.img} 
+                                        alt={`Image of ${anime.title}`}></img>
+                                    </div>
+                                    <div>
+                                        <AnimePlanToWatch anime={anime} setTrigger={setTrigger} setGotRequest={setGotRequest}/>
+                                    </div>
+                                </div>
+                            </div>
+                            {index === displayPlanToWatch.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
+                        </li>
+                    )}
+                </ul>
+            </div>
+        </>
+    );
+});
+
+const watchingDivHTML = ((unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
+    return(
+        <>
+            <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' className='progress-section-div watching-div'>
+                <p className='progress-section-heading unselectable'>Watching</p>
+                <div className='checkbox-container unselectable'
+                style={hideCheckBox ? {display: 'none'} : {}}>
+                    <input onClick={(event) => event.stopPropagation()} onChange={(event) => displayCurrAiring(event, currAiringAnime, weeklyAnime, setDisplayAnime)} type='checkbox' id='currently-airing' name='currently-airing' value="curr-airing"></input>
+                    <label onClick={(event) => event.stopPropagation()} htmlFor="currently-airing" className='anime-progress-checkbox'> Show Currently Airing Only</label>
+                </div>
+            </div>
+            <div id='anime-list-div-watching'>
+                <ul className='anime-list'>
+                    {displayAnime.map((anime,index) =>
+                        <li key={index} className='weekly-anime'>
+                            <div className='anime'>
+                                <div className='anime-top-div'>
+                                    <h1 className='anime-list-title'>{anime.title}</h1>
+                                </div>
+                                <div className='anime-bot-div'>
+                                    <div>
+                                        <img className='weekly-anime-img' src={anime.img === null ? defaultpfp : anime.img}  alt={`Image of ${anime.title}`}></img>
                                     </div>
 
                                     <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>
@@ -62,7 +263,7 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
 
                                     <div id={anime.id+'update-spinner'} className='update-div'>
                                         <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <path  d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
+                                        <path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
                                         <p>Updating...</p>
                                     </div>
                                 </div>
@@ -71,40 +272,153 @@ const renderContent = (weeklyAnime, displayAnime, failedRequest, setWeeklyAnime,
                         </li>
                     )}
                 </ul>
-            )
-        } else if(weeklyAnime.length == 0) {
+            </div>
+        </>
+    );
+});
+
+// Displays weekly anime
+const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
+    // Returns error message if failed get request
+    if(failedRequest) {
+        const popup = document.getElementById("error-popup");
+        popup.classList.remove("hide-error");
+        popup.classList.add("show-error");
+
+        return(
+            <div className='message-div'>
+                <p className='message-text'>Unable to get weekly anime. Please refresh or try again later.</p>
+                <button className='refresh-button' onClick={() => {
+                    getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeList,setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest,setCurrAiringAnime);
+                }}>Refresh</button>
+            </div>
+        );
+    } else {
+        // TODO when user does not have anime list filled
+        // Case when user does not have anything on MAL
+        if (weeklyAnime.length === 0 && planToWatchAnimeList.length === 0) {
             return(
                 <div className='message-div'>
                     <p className='message-text'>Please add anime to watch list on <a href='https://myanimelist.net/' target="_blank">MyAnimeList</a> then refresh this page.</p>
                 </div>
             );
-        } else {
-            // Returns message if unable to find anime with keywords
+        } else if (weeklyAnime.length > 0 && planToWatchAnimeList.length === 0) {
             return(
-                <div className='message-div'>
-                    <p className='message-text'>No results found for "{document.getElementById('search-value').value}". 
-                        Please try a different search term.</p>
-                </div>
+                <>
+                    {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                </>
+            );        
+        } else {
+            if(document.getElementById('search-value').value !== '') {
+                // Match in Watching anime div only
+                if(displayAnime.length > 0 && displayPlanToWatch.length === 0) {
+                    return(
+                        <>
+                            {displayAnime.length > 0 ? watchingDivHTML(true, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                        </>
+                    );
+                }
+                // Match in Plan to Watch Anime div only
+                else if (displayAnime.length === 0 && displayPlanToWatch.length > 0) {
+                    return(
+                        <>
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, true, true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                        </>
+                    );
+                }
+                // No match in either div
+                else if (displayAnime.length === 0 && displayPlanToWatch.length === 0) {
+                    return(
+                        <div className='message-div'>
+                            <p className='message-text'>No results found for "{document.getElementById('search-value').value}". 
+                                Please try a different search term.</p>
+                        </div>
+                    );
+                }
+                // Match in Both div
+                else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
+                    return(
+                        <>
+                            {displayAnime.length > 0 ? watchingDivHTML(false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                        </>
+                    );
+                }
+            }
+
+            // Displays list of anime
+            return(
+                <>
+                    {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                    {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, false, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                </>
             );
         }
     }
 };
 
-function getWeeklyAnime(setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest) {
+function getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeList,setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest,setCurrAiringAnime) {
     // Get users weekly anime
     setGotRequest(false);
     axios.get('/api/get-weekly-anime')
     .then(response => {
         setWeeklyAnime(response.data.anime);
         setDisplayAnime(response.data.anime);
-        setFailedRequest(false);
-        setGotRequest(true);
+        
+        const currAiring = [];
+        for(let anime of response.data.anime) {
+            if(anime.air_status === "currently_airing") {
+                currAiring.push(anime)
+            }
+        }
+        setCurrAiringAnime(currAiring);
+
+        // Get user's plan to watch list
+        axios.get('/api/get-plan-to-watch')
+        .then(response => {
+            setPlanToWatchAnimeList(response.data.plan_to_watch);
+            setPlanToWatch(response.data.plan_to_watch);
+
+            const notYetAired = [];
+            for(let anime of response.data.plan_to_watch) {
+                if(anime.air_status === "not_yet_aired") {
+                    notYetAired.push(anime)
+                }
+            }
+            setNotYetAiredList(notYetAired);
+            setFailedRequest(false);
+            setGotRequest(true);
+        })
+        .catch(error => {
+            if(error.response.status === 429) {
+                localStorage.setItem('errorMsgDiv', '3');
+                setFailedRequest(true);
+                setGotRequest(true);
+            } else if (error.response.status === 500) {
+                document.getElementById('popup-error-message').textContent = error.response.data;
+                const popup = document.getElementById("error-popup");
+                popup.classList.add("show-error");
+                popup.classList.remove("hide-error");
+                setFailedRequest(true);
+                setGotRequest(true);
+            }
+        });
     })
     .catch (error => {
-        localStorage.setItem('errorMsgDiv', '3');
-        setFailedRequest(true);
-        setGotRequest(true);
+        if(error.response.status === 429) {
+            localStorage.setItem('errorMsgDiv', '3');
+            setFailedRequest(true);
+            setGotRequest(true);
+        } else if (error.response.status === 500) {
+            document.getElementById('popup-error-message').textContent = error.response.data;
+            const popup = document.getElementById("error-popup");
+            popup.classList.add("show-error");
+            popup.classList.remove("hide-error");
+            setFailedRequest(true);
+            setGotRequest(true);
+        }
     });
+
 }
 
 // Displays the settings div
@@ -132,11 +446,18 @@ function AnimeProgress() {
     const [weeklyAnime, setWeeklyAnime] = useState([]);
     const [gotRequest, setGotRequest] = useState(false);
     const [failedRequest, setFailedRequest] = useState(false);
+    const [currAiringAnime, setCurrAiringAnime] = useState([]);
+    const [displayPlanToWatch, setPlanToWatch] = useState([]);
+    const [planToWatchAnimeList, setPlanToWatchAnimeList] = useState([]);
+    const [notYetAiredList, setNotYetAiredList] = useState([]);
+
+    const [trigger, setTrigger] = useState(0);
 
     useEffect(() => {
-        getWeeklyAnime(setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest);
-    },[]);
+        getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeList,setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest,setCurrAiringAnime);
+    },[trigger]);
 
+    // When settings div is expanded but user clicks elsewhere
     document.addEventListener("click", function(event) {
         const div = document.getElementById('settings-options-div');
         const username = document.getElementById('settings-div-show-btn')
@@ -177,14 +498,14 @@ function AnimeProgress() {
                 </div>
                 <div className='search-anime-div'>
                     <input id='search-value' onChange={(event) => 
-                        searchAnime(event,weeklyAnime,setDisplayAnime)
+                        searchAnime(event,weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList)
                     } className='search-weekly-anime' type='text' placeholder='Search for an anime title from your watchlist'/>
                 </div>
                 <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>
             </div>
             <div className='progress-div'>
                     {gotRequest ?
-                        renderContent(weeklyAnime, displayAnime, failedRequest, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest)
+                        renderContent(setTrigger, notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
                         :
                         <div className='message-div'>
                             <svg className='loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>

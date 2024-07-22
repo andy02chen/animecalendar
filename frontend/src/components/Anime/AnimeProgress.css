@@ -1,8 +1,26 @@
 .progress-div {
-    overflow-y: auto;
+    height: 100%;
+    overflow-y: hidden;
     background-color: var(--primary-darker);
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+#anime-list-div-watching {
+    height: 100%;
+    overflow-y: scroll;
+    transition: height 0.5s ease, opacity 0.5s ease-in-out;
+}
+
+#anime-list-div-plan-to-watch {
+    height: 100%;
+    overflow-y: scroll;
+    transition: height 0.5s ease, opacity 0.5s ease-in-out;
+    border-bottom: none;
+}
+
+.checkbox-selected-transition {
+    opacity: 0;
 }
 
 .anime-list {
@@ -13,7 +31,7 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    margin: 30px;
+    margin: 20px;
 }
 
 .anime-top-div {
@@ -35,7 +53,7 @@
 .weekly-anime-img {
     height: auto;
     width: 85%;
-    border: 2px solid #666666;
+    border: 1px solid #666666;
     
     -webkit-user-drag: none;
     pointer-events: none;
@@ -58,6 +76,10 @@
     padding: 5px;
     text-align: center;
     font-size: 1.2rem;
+}
+
+.weekly-anime {
+    list-style: none;
 }
 
 .search-anime-div {
@@ -125,14 +147,13 @@
 
 .heading {
     width: 100%;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 1px solid var(--primary);
 }
 
 .heading-top{
     width: 100%;
     display: flex;
     justify-content: space-between;
-    /* padding: 0 5%; */
 }
 
 .dropdown-btn {
@@ -163,13 +184,13 @@
 
 .settings-dropdown {
     padding: 1px;
+    margin: 1px;
     width: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: max-content;
     overflow: hidden;
-    border-top-right-radius: 15px;
 }
 
 #settings-options-div {
@@ -201,4 +222,121 @@
 
 .release-note {
     padding: 2%;
+}
+
+.progress-section-div {
+    position: -webkit-sticky;
+    position: sticky;
+    width: 100%;
+    padding: 3%;
+    background-color: black;
+    align-content: center;
+    z-index: 10;
+    border-bottom: 1px solid var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.watching-div {
+    top: 0;
+}
+
+.plan-to-watch-div {
+    bottom: 0;
+}
+
+.progress-section-div:hover {
+    cursor: pointer;
+}
+
+.progress-section-div:hover .progress-section-heading {
+    text-decoration: underline;
+}
+
+.progress-section-heading {
+    font-size: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#plan-to-watch-animes-div {
+    border-top: 1px solid var(--primary);
+    border-bottom: none;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    color: var(--text-gray);
+}
+
+.checkbox-container label {
+    display: flex;
+    cursor: pointer;
+}
+
+.checkbox-container input[type='checkbox'] {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-container label::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: .05em solid white;
+    border-radius: .15em;
+    margin-right: .3em;
+}
+
+.checkbox-container label:hover::before,
+.checkbox-container input[type='checkbox']:hover + label::before {
+    background-color: var(--primary-small-hover);
+}
+
+.checkbox-container input[type='checkbox']:hover + label {
+    color: var(--text);
+}
+
+.checkbox-container input[type='checkbox']:focus + label::before {
+    box-shadow: 0 0 3px var(--text);
+}
+
+.checkbox-container input[type='checkbox']:checked + label::before {
+    content: '\002714';
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.white-bold {
+    color: var(--text);
+    font-weight: bold;
+}
+
+.white-bold-big {
+    color: var(--text);
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.plan-to-watch-anime-info-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-to-watching-button {
+    padding: 5%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.ptw-button-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
