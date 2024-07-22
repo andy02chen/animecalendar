@@ -1,4 +1,5 @@
 import axios from "axios";
+import CountDown from "./Countdown";
 
 // Moves anime from plan to watch div into watching and updates status on MyAnimeList
 const moveToWatchingDiv = ((anime,setTrigger, setGotRequest) => {
@@ -87,8 +88,6 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
         );
     }
 
-    // TODO add more info for not yet aired anime with start day available
-    // if anime is not yet aired
     else if (air_status === "not_yet_aired") {
         const start_date = anime.start_date;
 
@@ -96,7 +95,6 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
             const arr = start_date.split('-');
 
             // Release date is known
-            // TODO if broadcast time is available
             if(arr.length === 3) {
 
                 if(anime.broadcast_time) {
@@ -118,7 +116,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                     let days = Math.round(diff / (1000 * 60 * 60 * 24));
 
                     let startDateArr = startDate.toString().trim().split(' ');
-                    
+
                     if(days > 1) {
                         return(
                             <>
@@ -138,11 +136,25 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                             </>
                         );
                     } 
-                    // else (days <= 1 && days >= 0) {
-
-                    // }
-
-
+                    else if (days <= 1 && days >= 0) {
+                        return(
+                            <>
+                                <p className="progress-bar-text" style={{marginBottom: "4%"}}>
+                                    {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                </p>
+                                <p className='episode-status'>
+                                    This anime is set to release in&nbsp;
+                                    <span className="white-bold">
+                                        <CountDown timer={diff}/>&nbsp;
+                                    </span>
+                                    on&nbsp;
+                                    <span className='white-bold'>
+                                        {startDateArr[2]} {startDateArr[1]} {startDateArr[3]}, {startDateArr[0]}
+                                    </span>.<br/>
+                                </p>
+                            </>
+                        );
+                    }
                 } else {
                     // Convert JST to local time
                     const jstDate = new Date(anime.start_date);
@@ -161,31 +173,59 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
 
                     let releaseDate = startDate.toString().trim().split(' ');
 
-                    return(
-                        <>
-                            <p className="progress-bar-text" style={{marginBottom: "4%"}}>
-                                {anime.season !== null ?
-                                    <>
-                                        {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
-                                    </>
-                                    :
-                                    <>
-                                        TBD
-                                    </>
-                                }
-                            </p>
-                            <p className='episode-status'>
-                                This anime is set to release in&nbsp;
-                                <span className="white-bold">
-                                    {days}&nbsp;
-                                </span>
-                                days on&nbsp;
-                                <span className='white-bold'>
-                                    {releaseDate[2]} {releaseDate[1]} {releaseDate[3]}, {releaseDate[0]}
-                                </span>.<br/>
-                            </p>
-                        </>
-                    );
+                    if(days > 1) {
+                        return(
+                            <>
+                                <p className="progress-bar-text" style={{marginBottom: "4%"}}>
+                                    {anime.season !== null ?
+                                        <>
+                                            {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                        </>
+                                        :
+                                        <>
+                                            TBD
+                                        </>
+                                    }
+                                </p>
+                                <p className='episode-status'>
+                                    This anime is set to release in&nbsp;
+                                    <span className="white-bold">
+                                        {days}&nbsp;
+                                    </span>
+                                    days on&nbsp;
+                                    <span className='white-bold'>
+                                        {releaseDate[2]} {releaseDate[1]} {releaseDate[3]}, {releaseDate[0]}
+                                    </span>.<br/>
+                                </p>
+                            </>
+                        );
+                    } else if (days <= 1 && days > 0) {
+                        return(
+                            <>
+                                <p className="progress-bar-text" style={{marginBottom: "4%"}}>
+                                    {anime.season !== null ?
+                                        <>
+                                            {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                        </>
+                                        :
+                                        <>
+                                            TBD
+                                        </>
+                                    }
+                                </p>
+                                <p className='episode-status'>
+                                    This anime is set to release&nbsp;
+                                    <span className="white-bold">
+                                        sometime today &nbsp;
+                                    </span>
+                                    on&nbsp;
+                                    <span className='white-bold'>
+                                        {releaseDate[2]} {releaseDate[1]} {releaseDate[3]}, {releaseDate[0]}
+                                    </span>.<br/>
+                                </p>
+                            </>
+                        );
+                    } 
                 }
             }
             // Only Release month and year is known
