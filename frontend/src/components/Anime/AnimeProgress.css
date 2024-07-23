@@ -8,13 +8,13 @@
 
 #anime-list-div-watching {
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     transition: height 0.5s ease, opacity 0.5s ease-in-out;
 }
 
 #anime-list-div-plan-to-watch {
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     transition: height 0.5s ease, opacity 0.5s ease-in-out;
     border-bottom: none;
 }
@@ -246,11 +246,11 @@
     bottom: 0;
 }
 
-.progress-section-div:hover {
+.progress-section-div-hover-effects:hover {
     cursor: pointer;
 }
 
-.progress-section-div:hover .progress-section-heading {
+.progress-section-div-hover-effects:hover .progress-section-heading {
     text-decoration: underline;
 }
 

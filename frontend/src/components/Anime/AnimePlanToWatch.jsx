@@ -55,7 +55,9 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                     }
                 </p>
                 <p className='episode-status'>
-                    This anime is currently airing.
+                    This anime is&nbsp;
+                    <span style={{textDecoration: "underline", color: "var(--text)"}}>currently</span>
+                    &nbsp;airing.
                 </p>
                 <div className='ptw-button-div'>
                     <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"
@@ -310,7 +312,9 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                     }
                 </p>
                 <p className='episode-status'>
-                    This anime has finished airing.
+                    This anime has&nbsp;
+                    <span style={{textDecoration: 'underline', color: "var(--text)"}}>finished</span>
+                    &nbsp;airing.
                 </p>
                 <div className='ptw-button-div'>
                     <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"

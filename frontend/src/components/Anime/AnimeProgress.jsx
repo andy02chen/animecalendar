@@ -178,7 +178,7 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
         planToWatchBar.style.borderBottom = "1px solid var(--primary)";
     } else {
         if(event.target.checked) {
-            planToWatchList.classList.add("checkbox-selected-transition");
+            planToWatchList.classList.add("checkbox-selected-transition");           
             setTimeout(() => {
                 setPlanToWatch(notYetAiredList);
                 planToWatchList.classList.remove("checkbox-selected-transition");
@@ -196,8 +196,10 @@ const displayNotYetAired = (event, notYetAiredList, planToWatchAnimeList, setPla
 const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) => {
     return(
         <>
-            <div id='plan-to-watch-animes-div' className='progress-section-div plan-to-watch-div' 
-            onClick={unclickable ? undefined :() => expandPlanToWatchDiv()}>
+            <div id='plan-to-watch-animes-div' 
+            className={unclickable ? 'progress-section-div plan-to-watch-div' : 'progress-section-div plan-to-watch-div progress-section-div-hover-effects'}
+            onClick={unclickable ? undefined :() => expandPlanToWatchDiv()}
+            style={unclickable ? {borderBottom: "1px solid var(--primary)"} : null}>
                 <p className='progress-section-heading unselectable'>Plan To Watch</p>
                 <div className='checkbox-container unselectable'
                 style={hideCheckBox ? {display: 'none'} : {}}>
@@ -236,7 +238,8 @@ const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox
 const watchingDivHTML = ((unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
     return(
         <>
-            <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' className='progress-section-div watching-div'>
+            <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' 
+            className={unclickable ? 'progress-section-div watching-div' : 'progress-section-div watching-div progress-section-div-hover-effects' }>
                 <p className='progress-section-heading unselectable'>Watching</p>
                 <div className='checkbox-container unselectable'
                 style={hideCheckBox ? {display: 'none'} : {}}>
@@ -294,58 +297,66 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
             </div>
         );
     } else {
+        if(document.getElementById('search-value').value !== '') {
+            // Match in Watching anime div only
+            if(displayAnime.length > 0 && displayPlanToWatch.length === 0) {
+                return(
+                    <>
+                        {displayAnime.length > 0 ? watchingDivHTML(true, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                    </>
+                );
+            }
+            // Match in Plan to Watch Anime div only
+            else if (displayAnime.length === 0 && displayPlanToWatch.length > 0) {
+                return(
+                    <>
+                        {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, true, true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                    </>
+                );
+            }
+            // No match in either div
+            else if (displayAnime.length === 0 && displayPlanToWatch.length === 0) {
+                return(
+                    <div className='message-div'>
+                        <p className='message-text'>No results found for "{document.getElementById('search-value').value}". 
+                            Please try a different search term.</p>
+                    </div>
+                );
+            }
+            // Match in Both div
+            else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
+                return(
+                    <>
+                        {displayAnime.length > 0 ? watchingDivHTML(false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                        {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
+                    </>
+                );
+            }
+        }
+
         // TODO when user does not have anime list filled
         // Case when user does not have anything on MAL
         if (weeklyAnime.length === 0 && planToWatchAnimeList.length === 0) {
             return(
                 <div className='message-div'>
-                    <p className='message-text'>Please add anime to watch list on <a href='https://myanimelist.net/' target="_blank">MyAnimeList</a> then refresh this page.</p>
+                    <p className='message-text'>Please add anime to plan to watch and/or watchlist on <a href='https://myanimelist.net/' target="_blank">MyAnimeList</a> then refresh this page.</p>
                 </div>
             );
+        // Case when user only has anime in watchlist and not any in plan to watch
         } else if (weeklyAnime.length > 0 && planToWatchAnimeList.length === 0) {
             return(
                 <>
                     {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
                 </>
-            );        
+            );
+        // case when user only has anime in plan to watch
+        } else if (weeklyAnime.length === 0 && planToWatchAnimeList.length > 0) {
+            return(
+                <>
+                    {planToWatchDivHTML(setGotRequest,setTrigger, true, notYetAiredList.length === 0, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch)}
+                </>
+            )
         } else {
-            if(document.getElementById('search-value').value !== '') {
-                // Match in Watching anime div only
-                if(displayAnime.length > 0 && displayPlanToWatch.length === 0) {
-                    return(
-                        <>
-                            {displayAnime.length > 0 ? watchingDivHTML(true, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                        </>
-                    );
-                }
-                // Match in Plan to Watch Anime div only
-                else if (displayAnime.length === 0 && displayPlanToWatch.length > 0) {
-                    return(
-                        <>
-                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, true, true, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
-                        </>
-                    );
-                }
-                // No match in either div
-                else if (displayAnime.length === 0 && displayPlanToWatch.length === 0) {
-                    return(
-                        <div className='message-div'>
-                            <p className='message-text'>No results found for "{document.getElementById('search-value').value}". 
-                                Please try a different search term.</p>
-                        </div>
-                    );
-                }
-                // Match in Both div
-                else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
-                    return(
-                        <>
-                            {displayAnime.length > 0 ? watchingDivHTML(false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
-                            {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
-                        </>
-                    );
-                }
-            }
-
             // Displays list of anime
             return(
                 <>
