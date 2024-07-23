@@ -346,7 +346,8 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
         } else if (weeklyAnime.length > 0 && planToWatchAnimeList.length === 0) {
             return(
                 <>
-                    {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                    {watchingDivHTML(true, currAiringAnime.length === 0, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime)}
+                    {/* {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null} */}
                 </>
             );
         // case when user only has anime in plan to watch
