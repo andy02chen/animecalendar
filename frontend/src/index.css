@@ -129,6 +129,7 @@ img {
     }
 }
 
+/* Small Laptops */
 @media screen and (min-width: 1024px) and (max-width: 1279px) {
     .anime-top-div {
         padding: 2px;
@@ -192,5 +193,125 @@ img {
 
     .dropdown-btn {
         font-size: 0.9rem;
+    }
+
+    .anime-progress-div {
+        flex: 0 0 35%;
+    }
+
+    .calendar-div {
+        flex: 0 0 65%;
+    }
+}
+
+/* Tablets */
+@media screen and (max-width: 1023px) {
+    .main-div {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .weekly-title {
+        font-size: 2rem;
+    }
+
+    .anime-progress-div {
+        width: 90%;
+        height: 100%;
+    }
+
+    .calendar-div {
+        width: 90%;
+    }
+
+    .calendar-div > div {
+        width: 100%;
+        height: 95%;
+        border-radius: 20px;
+    }
+
+    .anime-list-title {
+        font-size: 1.7rem;
+    }
+
+    .episode-status {
+        font-size: 1.3rem;
+    }
+
+    .progress-bar-text {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .anime-list-title {
+        font-size: 1.5rem;
+    }
+
+    .episode-status {
+        font-size: 1rem;
+    }
+
+    .progress-bar-text {
+        font-size: 1.3rem;
+    }
+
+    .month-heading {
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 500px) {
+    .anime-list-title {
+        font-size: 1.5rem;
+    }
+
+    .episode-status {
+        font-size: 1rem;
+    }
+
+    .progress-bar-text {
+        font-size: 1.3rem;
+    }
+
+    .month-heading {
+        font-size: 1.2rem;
+    }
+
+    .progress-section-heading {
+        font-size: 1.3rem;
+    }
+
+    .anime-progress-checkbox {
+        font-size: 0.85rem;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .button-choice-div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .weekly-title {
+        font-size: 1.7rem;
+    }
+
+    .dropdown-btn {
+        font-size: 0.8rem;
+    }
+
+    .search-weekly-anime {
+        font-size: 0.8rem;
+    }
+
+    .release-note {
+        font-size: 0.8rem;
+    }
+
+    .anime-top-div {
+        padding: 0px;
     }
 }
