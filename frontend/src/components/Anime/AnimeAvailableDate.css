@@ -60,3 +60,7 @@
     75% {transform: translateY(-3px);}
     /* 100% {transform: translateY(0);} */
 }
+
+.bar-itself {
+    height: 1.75rem;
+}

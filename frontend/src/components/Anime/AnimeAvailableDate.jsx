@@ -120,7 +120,6 @@ function AnimeAvailableDate({anime}) {
     // Progress Bar style
     let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
     let outerProgress = {
-        height: "30px",
         width: "100%",
         backgroundColor: "#363636",
         borderRadius: "5px",
@@ -141,7 +140,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <p className="episode-status">
@@ -265,7 +264,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
@@ -308,7 +307,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <p className="episode-status">
@@ -325,7 +324,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
@@ -366,7 +365,7 @@ function AnimeAvailableDate({anime}) {
             <>
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     {countdown > 0 ? 
@@ -445,7 +444,7 @@ function AnimeAvailableDate({anime}) {
             <>  
                 <div className="progress-bar-text-div">
                     <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>

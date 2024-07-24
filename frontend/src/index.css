@@ -87,7 +87,7 @@ img {
 
 @media screen and (max-width: 1440px) {
     .weekly-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     .anime-list-title {
@@ -126,5 +126,71 @@ img {
 
     .search-weekly-anime {
         font-size: 0.8rem;
+    }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+    .anime-top-div {
+        padding: 2px;
+    }
+
+    .search-weekly-anime {
+        font-size: 0.8rem;
+    }
+
+    .button-choice-div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .negative-button:hover {
+        background-color: var(--no-button-small-hover);
+        transform: translate(0, 0);
+    }
+    
+    .positive-button:hover {
+        background-color: var(--primary-small-hover);
+        transform: translate(0, 0);
+    }
+
+    .search-weekly-anime {
+        font-size: 0.8rem;
+    }
+
+    .progress-section-heading {
+        font-size: 1.6rem;
+    }
+
+    .anime-progress-checkbox {
+        font-size: 0.85rem;
+    }
+
+    .bar-itself {
+        height: 1.2rem;
+    }
+
+    .progress-bar-text {
+        font-size: 1.1rem;
+    }
+
+    .episode-status {
+        font-size: 0.9rem;
+    }
+
+    .release-note {
+        font-size: 0.8rem;
+    }
+
+    .weekly-title {
+        font-size: 1.5rem;
+    }
+
+    .anime-list-title {
+        font-size: 1.2rem;
+    }
+
+    .dropdown-btn {
+        font-size: 0.9rem;
     }
 }
