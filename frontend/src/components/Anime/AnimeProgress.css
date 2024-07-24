@@ -154,6 +154,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    position: relative;
 }
 
 .dropdown-btn {
@@ -191,6 +192,8 @@
     align-items: center;
     height: max-content;
     overflow: hidden;
+    position: absolute;
+    right: 0;
 }
 
 #settings-options-div {

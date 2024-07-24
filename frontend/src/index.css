@@ -65,6 +65,26 @@ img {
     background: #555;
 }
 
+@media screen and (max-width: 1800px) {
+    .release-note {
+        font-size: 0.9rem;
+    }
+
+    .weekly-title {
+        font-size: 2rem;
+    }
+
+    .search-weekly-anime {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 1500px) {
+    .weekly-title {
+        font-size: 1.75rem;
+    }
+}
+
 @media screen and (max-width: 1440px) {
     .weekly-title {
         font-size: 2rem;
@@ -102,5 +122,9 @@ img {
     .positive-button:hover {
         background-color: var(--primary-small-hover);
         transform: translate(0, 0);
+    }
+
+    .search-weekly-anime {
+        font-size: 0.8rem;
     }
 }
