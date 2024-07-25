@@ -47,8 +47,9 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         } else {
             axios.delete('/api/logout')
             .then(response => {
-                localStorage.removeItem('username');
-                localStorage.removeItem('pfp');
+                document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+                document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+
                 localStorage.setItem('errorMsgDiv', true);
                 document.cookie = 'session=; Max-Age=-99999999;';
                 window.location.href = response.data.redirect_url;
@@ -75,7 +76,7 @@ function RateAnime({anime, setRefreshAnimeDisplay, displayDiv}) {
                     min="1" 
                     max="10" 
                     defaultValue={rating}/>
-                <p style={{fontSize: "1.5rem", color: "var(--secondary)"}} id="rating-output">{rating}</p>
+                <p style={{fontSize: "1.5rem", color: "var(--text)", fontWeight: "700"}} id="rating-output">{rating}</p>
             </div>
             <div className="button-choice-div">
                 <button className="negative-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay, 0, displayDiv)}>Skip</button>

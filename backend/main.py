@@ -551,6 +551,9 @@ def oauth():
                                         pfp=user_image)
                         db.session.add(new_user)
                     
+                    # Remove row from auth DB
+                    db.session.delete(find_auth)
+
                     db.session.commit()
 
                 else:

@@ -334,7 +334,6 @@ const renderContent = (setTrigger, notYetAiredList,planToWatchAnimeList,displayP
             }
         }
 
-        // TODO when user does not have anime list filled
         // Case when user does not have anything on MAL
         if (weeklyAnime.length === 0 && planToWatchAnimeList.length === 0) {
             return(
@@ -446,11 +445,17 @@ function displaySettings() {
 function logOut() {
     axios.delete('/api/logout')
         .then(response => {
-            localStorage.removeItem('username');
-            localStorage.removeItem('pfp');
+            document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+            document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
             document.cookie = 'session=; Max-Age=-99999999;';
             window.location.href = response.data.redirect_url;
         })
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
 function AnimeProgress() {
@@ -491,9 +496,9 @@ function AnimeProgress() {
 
                     <div className='settings-dropdown'>
                         <button className='dropdown-btn' id='settings-div-show-btn' onClick={() => displaySettings()}>
-                            <img className='user-profile-pic' alt="pfp" src={localStorage.getItem('pfp') === 'null' ? defaultpfp : localStorage.getItem('pfp') }
+                            <img className='user-profile-pic' alt="pfp" src={getCookie('pfp') === 'null' ? defaultpfp : getCookie('pfp') }
                             />
-                            {localStorage.getItem('username')}
+                            {getCookie("username")}
                             <svg className='settings-div-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"/></svg>
                         </button>
                         <div className='settings-hide' id='settings-options-div' style={{display: 'none'}}>

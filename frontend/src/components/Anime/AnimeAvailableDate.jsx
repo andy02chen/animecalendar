@@ -63,8 +63,9 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
             } else {
                 axios.delete('/api/logout')
                 .then(response => {
-                    localStorage.removeItem('username');
-                    localStorage.removeItem('pfp');
+                    document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+                    document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+
                     localStorage.setItem('errorMsgDiv', true);
                     document.cookie = 'session=; Max-Age=-99999999;';
                     window.location.href = response.data.redirect_url;
