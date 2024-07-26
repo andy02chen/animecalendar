@@ -1,6 +1,21 @@
 import './Month.css';
 
 function Month() {
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+
     return(
         <div className='month-display-div'>
             <button className="prev-month-button">

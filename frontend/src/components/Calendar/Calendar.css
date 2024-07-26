@@ -3,8 +3,74 @@
     height: 90%;
     width: 100%;
     border: 1px solid var(--primary);
-    align-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+}
+
+.calendar-main > div {
+    width: 75%;
+    height: 75%;
+}
+
+.days-of-week {
+    list-style: none;
+    display: flex;
+    text-align: center;
+}
+
+.days-of-week li {
+    width: calc(100%/7);
+}
+
+.day-title {
+    color: var(--primary);
+    font-family: "Montserrat", sans-serif;
+}
+
+.days-div {
+    width: 100%;
+}
+
+.dates-div {
+    height: 100%;
+}
+
+.dates-div ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    height: 100%;
+    position: relative;
+}
+
+.dates-div ul li {
+    color: var(--text);
+    width: calc(100%/7);
+    height: calc(100%/5);
+    font-size: 1.5rem;
+    font-family: "Montserrat", sans-serif;
+    align-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.today::before {
+    position: absolute;
+    content: "";
+    border-radius: 50%;
+    height: 4rem;
+    width: 4rem;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.dates-div ul li.inactive-date {
+    color: rgb(59, 59, 59);
 }
