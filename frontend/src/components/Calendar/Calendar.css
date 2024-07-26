@@ -47,7 +47,7 @@
     position: relative;
 }
 
-.dates-div ul li {
+.dates-list li {
     color: var(--text);
     width: calc(100%/7);
     height: calc(100%/5);
@@ -56,6 +56,10 @@
     align-content: center;
     position: relative;
     z-index: 2;
+}
+
+.dates-list {
+    position: relative;
 }
 
 .today::before {
@@ -68,9 +72,50 @@
     left: 50%;
     z-index: -1;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 20px var(--primary);
+    box-shadow: 0 0 15px var(--primary);
 }
 
-.dates-div ul li.inactive-date {
+.inactive-date > div > p {
     color: rgb(59, 59, 59);
+}
+
+.dates-list > li > div {
+    width: 100%;
+    height: 100%;
+    align-content: center;
+}
+
+.dates-list > li > div > p {
+    height: 100%;
+    width: 100%;
+    align-content: center;
+}
+
+.days-div ul, .dates-div ul {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.dates-list li div::before {
+    content: "";
+    position: absolute;
+    height: 4rem;
+    width: 4rem;
+    border-radius: 50%;
+    background-color: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.dates-list li div:hover {
+    cursor: pointer;
+}
+
+.dates-list li div:hover::before {
+    background-color: var(--primary);
+    z-index: -1;
 }

@@ -16,14 +16,42 @@ function Calendar() {
                     </ul>
                 </div>
                 <div className='dates-div'>
-                    <ul>
-                        <li className='inactive-date'>28</li>
-                        <li className='inactive-date'>29</li>
-                        <li className='inactive-date'>30</li>
-                        <li className='inactive-date'>31</li>
-                        <li>1</li>
-                        <li>2</li>
-                        <li className='today'>3</li>
+                    <ul className='dates-list'>
+                        <li className='inactive-date'>
+                            <div>
+                                <p>28</p>
+                            </div>
+                        </li>
+                        <li className='inactive-date'>
+                            <div>
+                                <p>29</p>
+                            </div>
+                        </li>
+                        <li className='inactive-date'>
+                            <div>
+                                <p>30</p>
+                            </div>
+                        </li>
+                        <li className='inactive-date'>
+                            <div>
+                                <p>31</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <p>1</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <p>2</p>
+                            </div>
+                        </li>
+                        <li className='today'>
+                            <div>
+                                <p>3</p>
+                            </div>
+                        </li>
                         <li>4</li>
                         <li>5</li>
                         <li>6</li>

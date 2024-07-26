@@ -65,7 +65,7 @@ img {
     background: #555;
 }
 
-@media screen and (max-width: 1800px) {
+@media screen and (max-width: 1980px) {
     .release-note {
         font-size: 0.9rem;
     }
@@ -76,6 +76,22 @@ img {
 
     .search-weekly-anime {
         font-size: 1rem;
+    }
+
+    .anime-list-title {
+        font-size: 1.5rem;
+    }
+
+    .episode-status {
+        font-size: 0.8rem;
+    }
+
+    .progress-bar-text {
+        font-size: 1.5rem;
+    }
+
+    .progress-section-heading {
+        font-size: 1.6rem;
     }
 }
 
