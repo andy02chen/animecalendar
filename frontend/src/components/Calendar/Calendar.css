@@ -12,8 +12,8 @@
 }
 
 .calendar-main > div {
-    width: 75%;
-    height: 75%;
+    width: 85%;
+    height: 85%;
 }
 
 .days-of-week {
@@ -24,6 +24,7 @@
 
 .days-of-week li {
     width: calc(100%/7);
+    width: calc(100%/6);
 }
 
 .day-title {
@@ -50,7 +51,7 @@
 .dates-list li {
     color: var(--text);
     width: calc(100%/7);
-    height: calc(100%/5);
+    height: calc(100%/6);
     font-size: 1.5rem;
     font-family: "Montserrat", sans-serif;
     align-content: center;

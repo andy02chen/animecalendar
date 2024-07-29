@@ -1,5 +1,44 @@
 import './Calendar.css'
 import './Month.css';
+import { useState, useEffect } from 'react';
+
+function displayPrevMonth(month, year, setMonth, setYear) {
+    if(month === 0) {
+        setMonth(11);
+        setYear(y => y - 1);
+    } else {
+        setMonth(m => m - 1)
+    }
+}
+
+function displayNextMonth(month, year, setMonth, setYear) {
+    if(month === 11) {
+        setMonth(0);
+        setYear(y => y + 1);
+    } else {
+        setMonth(m => m + 1)
+    }
+}
+
+// Get the month start and end dates
+function getMonthDates(year, month) {
+    // Get start dates
+    let startDate = new Date(year, month, 1).getDate();
+    let endDate = new Date(year, month + 1, 0).getDate();
+
+    // Get Prev Month End
+    let prevMonthStart = new Date(year, month, 0).getDay();
+    let prevMonthDate = new Date(year, month, 0).getDate();
+
+    // Get Next Month Start
+    let nextMonthStart = new Date(year, month + 1, 1).getDate();
+    let nextMonthDay = new Date(year, month + 1, 1).getDay();
+
+    let returnArr = [startDate, endDate, prevMonthStart, 
+        prevMonthDate, nextMonthStart, nextMonthDay];
+
+    return returnArr;
+}
 
 function Calendar() {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -21,52 +60,93 @@ function Calendar() {
 
     // Today's Date
     const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const day = today.getDate();
 
-    // Get start dates
-    const startDate = new Date(year, month, 1).getDay();
-    const endDate = new Date(year, month + 1, 0).getDate();
+    const [year, setYear] = useState(today.getFullYear());
+    const [month, setMonth] = useState(today.getMonth());
 
-    // Get Prev Month End
-    const prevMonthStart = new Date(year, month, 0).getDay();
-    let prevMonthDate = new Date(year, month, 0).getDate();
 
-    // Get Next Month Start
-    let nextMonthStart = new Date(year, month + 1, 1).getDate();
-    const nextMonthDay = new Date(year, month + 1, 1).getDay();
-    console.log(nextMonthStart, nextMonthDay);
+    // let year = today.getFullYear();
+    // let month = today.getMonth();
+    let day = today.getDate();
+
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDay = today.getDate();
+
+    let startDate = 0;
+    let endDate = 0;
+    let prevMonthStart = 0;
+    let prevMonthDate = 0
+    let nextMonthDay = 0;
+    let nextMonthStart = 0;
+
+    [startDate, endDate, prevMonthStart, 
+    prevMonthDate, nextMonthStart, nextMonthDay] = getMonthDates(year, month);
+    
+    let inactiveDays = [];
+    let currMonthDates = [];
+    let nextMonthDates = [];
 
     // Array of prev month dates
-    const inactiveDays = [];
-    for(let i = prevMonthStart; i < startDate; i++) {
-        inactiveDays.push(prevMonthDate++);
+    if(prevMonthStart !== 6) {
+        for(let i = prevMonthDate - prevMonthStart; i <= prevMonthDate; i++) {
+            inactiveDays.push(i);
+        }
     }
-
+    
     // Array of curr month dates
-    const currMonthDates = [];
     for(let i = startDate; i <= endDate; i++) {
         currMonthDates.push(i);
     }
 
+    let lengthCalendar = inactiveDays.length + currMonthDates.length;
+
     // Array of next month dates
-    const nextMonthDates = [];
-    for(let i = nextMonthDay; i < 7; i++) {
+    // Fills to 6 rows
+    for(let i = lengthCalendar; i < 42; i++) {
         nextMonthDates.push(nextMonthStart++);
     }
+
+    useEffect(() => {
+        [startDate, endDate, prevMonthStart, 
+            prevMonthDate, nextMonthStart, nextMonthDay] = getMonthDates(year, month);
+
+        // Array of prev month dates
+        inactiveDays = [];
+        if(prevMonthStart !== 6) {
+            for(let i = prevMonthDate - prevMonthStart; i <= prevMonthDate; i++) {
+                inactiveDays.push(i);
+            }
+        }
+
+        // Array of curr month dates
+        currMonthDates = [];
+        for(let i = startDate; i <= endDate; i++) {
+            currMonthDates.push(i);
+        }
+
+        let lengthCalendar = inactiveDays.length + currMonthDates.length;
+
+        // Array of next month dates
+        nextMonthDates = [];
+        for(let i = lengthCalendar; i < 42 ; i++) {
+            nextMonthDates.push(nextMonthStart++);
+        }
+    }, [month]);
 
     return(
         <>
             <div className="month-div">
                 <div className='month-display-div'>
-                <button className="prev-month-button">
+                <button className="prev-month-button"
+                onClick={() => displayPrevMonth(month, year, setMonth, setYear)}>
                     <svg className="prev-month-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
                 </button>
                 <div>
                     <h1 className="month-heading unselectable">{months[month]} {year}</h1>
                 </div>
-                <button className="next-month-button">
+                <button className="next-month-button"
+                onClick={() => displayNextMonth(month, year, setMonth, setYear)}>
                     <svg className="next-month-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                 </button>
             </div>
@@ -92,7 +172,7 @@ function Calendar() {
                                 </li>
                             )}
                             {currMonthDates.map((date, index) => 
-                                <li key={index} className={date === day ? "today": null}>
+                                <li key={index} className={date === todayDay && month === todayMonth & year === todayYear ? "today": null}>
                                     <div>
                                         <p>{date}</p>
                                     </div>
