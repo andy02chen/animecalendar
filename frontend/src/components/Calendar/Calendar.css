@@ -11,6 +11,11 @@
     border-bottom-right-radius: 20px;
 }
 
+.prev-month-button-div {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .calendar-main > div {
     width: 85%;
     height: 85%;
