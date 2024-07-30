@@ -157,7 +157,8 @@
 
 #change-month-div {
     position: absolute;
-    background-color: rgb(255, 252, 240);
+    background-color: var(--background);
+    border: 1px solid var(--primary);
     top: 100%;
     z-index: 4;
     height: fit-content;
@@ -168,10 +169,16 @@
 
 #change-month-div > ul {
     list-style: none;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #change-month-div > ul > li {
-    margin: 4%;
+    color: var(--text);
+    flex: 0 0 33.33%;
+    text-align: center;
+    margin-top: 4%;
+    margin-bottom: 4%;
 }
 
 #change-month-div > ul > li:hover {
