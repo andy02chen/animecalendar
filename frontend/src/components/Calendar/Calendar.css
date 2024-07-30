@@ -126,13 +126,13 @@
     text-decoration: underline;
 }
 
-.prev-month-button, .next-month-button {
+/* .prev-month-button, .next-month-button {
     width: 3rem;
     height: 3rem;
-}
+} */
 
 .next-month-image, .prev-month-image {
-    height: 2rem;
+    height: 1.5rem;
     fill: var(--primary);
     align-content: center;
 }
@@ -191,6 +191,15 @@
 
 .month-buttons-div {
     display: flex;
+    align-items: center;
     justify-content: center;
     gap: 2%;
+    height: 100%;
+}
+
+.month-buttons-div > button {
+    height: 50%;
+    width: 4rem;
+    font-size: 1rem;
+    color: var(--primary);
 }
