@@ -125,3 +125,56 @@
     background-color: var(--primary);
     z-index: -1;
 }
+
+.month-heading:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.prev-month-button, .next-month-button {
+    width: 3rem;
+    height: 3rem;
+}
+
+.next-month-image, .prev-month-image {
+    height: 2rem;
+    fill: var(--primary);
+    align-content: center;
+}
+
+.month-heading {
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+}
+
+.month-display-div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+}
+
+#change-month-div {
+    position: absolute;
+    background-color: rgb(255, 252, 240);
+    top: 100%;
+    z-index: 4;
+    height: fit-content;
+    width: fit-content;
+    padding: 2%;
+    border-radius: 10px;
+}
+
+#change-month-div > ul {
+    list-style: none;
+}
+
+#change-month-div > ul > li {
+    margin: 4%;
+}
+
+#change-month-div > ul > li:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

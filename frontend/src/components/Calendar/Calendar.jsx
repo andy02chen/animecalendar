@@ -1,5 +1,4 @@
 import './Calendar.css'
-import './Month.css';
 import { useState, useEffect } from 'react';
 
 function displayPrevMonth(month, year, setMonth, setYear) {
@@ -18,6 +17,11 @@ function displayNextMonth(month, year, setMonth, setYear) {
     } else {
         setMonth(m => m + 1)
     }
+}
+
+function displaySelectedMonth(month, setMonth) {
+    setMonth(month);
+    document.getElementById("change-month-div").style.display = 'none';
 }
 
 // Get the month start and end dates
@@ -40,6 +44,16 @@ function getMonthDates(year, month) {
     return returnArr;
 }
 
+function displayMonthSelection() {
+    const div = document.getElementById("change-month-div");
+
+    if(div.style.display === 'none') {
+        div.style.display = 'block';
+    } else {
+        div.style.display = 'none';
+    }
+}
+
 function Calendar() {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -57,6 +71,18 @@ function Calendar() {
         "November",
         "December"
     ];
+
+    // When month selection div is expanded but user clicks elsewhere
+    document.addEventListener("click", function(event) {
+        const div = document.getElementById('change-month-div');
+        const monthClicked = document.getElementById('choose-month-div-opener');
+
+        let isClickInside = div.contains(event.target) || monthClicked.contains(event.target);
+    
+        if (!isClickInside) {
+            div.style.display = "none";
+        }
+    });
 
     // Today's Date
     const today = new Date();
@@ -144,8 +170,24 @@ function Calendar() {
                     </button>
                 </div>
                 <div className='month-display-div'>
-                    <div>
-                        <h1 className="month-heading unselectable">{months[month]} {year}</h1>
+                    <div >
+                        <h1 id='choose-month-div-opener' className="month-heading unselectable"
+                        onClick={() => displayMonthSelection()}
+                        >
+                            {months[month]} {year}
+                        </h1>
+                    </div>
+                    <div id='change-month-div' style={{display: 'none'}}>
+                        <ul>
+                            {months.map((monthInList, index) => 
+                                <li key={index} className='unselectable'>
+                                    <h3
+                                    onClick={() => displaySelectedMonth(index, setMonth)}>
+                                        {monthInList}
+                                    </h3>
+                                </li>
+                            )}
+                        </ul>
                     </div>
                 </div>
                 <div className='next-month-button-div'>
