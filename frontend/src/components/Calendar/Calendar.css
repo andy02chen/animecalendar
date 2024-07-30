@@ -11,11 +11,6 @@
     border-bottom-right-radius: 20px;
 }
 
-.prev-month-button-div {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .calendar-main > div {
     width: 85%;
     height: 85%;
@@ -184,4 +179,18 @@
 #change-month-div > ul > li:hover {
     cursor: pointer;
     text-decoration: underline;
+}
+
+.month-div {
+    display: flex;
+}
+
+.month-div > div {
+    flex: 0 0 33.33%;
+}
+
+.month-buttons-div {
+    display: flex;
+    justify-content: center;
+    gap: 2%;
 }
