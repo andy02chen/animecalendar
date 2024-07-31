@@ -1,7 +1,6 @@
 import Calendar from "./Calendar/Calendar";
 import AnimeProgress from "./Anime/AnimeProgress";
 import "./MainComponent.css"
-import Month from './Calendar/Month';
 import Popup from './Alert/Popup'
 
 function MainComponent() {
@@ -15,9 +14,6 @@ function MainComponent() {
 
                 <div className="calendar-div">
                     <div>
-                        <div className="month-div">
-                            <Month/>
-                        </div>
                         <Calendar/>
                     </div>
                 </div>
