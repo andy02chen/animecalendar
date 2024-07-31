@@ -30,6 +30,7 @@
 .day-title {
     color: var(--primary);
     font-family: "Montserrat", sans-serif;
+    font-size: clamp(0.75rem, 2.5vw, 2rem);;
 }
 
 .days-div {
@@ -67,8 +68,8 @@
     position: absolute;
     content: "";
     border-radius: 50%;
-    height: 4rem;
-    width: 4rem;
+    height: clamp(1.5rem, 3.5vw, 4rem);
+    width: clamp(1.5rem, 3.5vw, 4rem);
     top: 50%;
     left: 50%;
     z-index: -1;
@@ -90,6 +91,7 @@
     height: 100%;
     width: 100%;
     align-content: center;
+    font-size: clamp(0.8rem, 2.5vw, 1.5rem);
 }
 
 .days-div ul, .dates-div ul {
