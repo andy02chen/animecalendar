@@ -200,8 +200,12 @@
 }
 
 .month-buttons-div > button {
-    height: 50%;
-    width: 4rem;
+    height: fit-content;
+    width: fit-content;
+    padding: 2%;
     font-size: 1rem;
     color: var(--primary);
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid var(--background);
 }
