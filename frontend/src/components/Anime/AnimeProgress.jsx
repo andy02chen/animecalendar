@@ -378,12 +378,17 @@ function getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeLis
         
         const currAiring = [];
         for(let anime of response.data.anime) {
+            // Separates Currently airing anime
             if(anime.air_status === "currently_airing") {
                 currAiring.push(anime)
+            } 
+            // Removes any stored data in localstorage as anime is finished airing
+            else if (anime.air_status === 'finished_airing') {
+                localStorage.removeItem(anime.id);
             }
         }
         setCurrAiringAnime(currAiring);
-
+        
         // Get user's plan to watch list
         axios.get('/api/get-plan-to-watch')
         .then(response => {
