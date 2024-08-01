@@ -1,24 +1,27 @@
 
 // Delays this week's episode
-function setDelay(anime, setRefreshAnimeDisplay, displayDiv) {
+function setDelay(anime, setRefreshAnimeDisplay, displayDiv, nextEpDate) {
     if(localStorage.getItem(anime) !== null) {
-        localStorage.setItem(anime, Number(localStorage.getItem(anime)) + 1) 
+        const storedDateArrayString = localStorage.getItem(anime);
+        const dateArray = JSON.parse(storedDateArrayString).map(dateString => new Date(dateString));
+        dateArray.push(nextEpDate);
+        localStorage.setItem(anime, JSON.stringify(dateArray));
     } else {
-        localStorage.setItem(anime,1);
+        localStorage.setItem(anime,JSON.stringify([nextEpDate]));
     }
 
     displayDiv('delay',anime);
     setRefreshAnimeDisplay(prevFlag => !prevFlag);
 }
 
-function AnimeDelayEpConfirmation({anime, setRefreshAnimeDisplay, displayDiv}) {
+function AnimeDelayEpConfirmation({anime, setRefreshAnimeDisplay, displayDiv, nextEpDate}) {
 
     return(
-        <div className={'delay'+anime} style={{display:'none'}}>
+        <div className={'delay'+anime.id} style={{display:'none'}}>
             <p className="episode-status">Is this episode really delayed? </p>
             <div className="button-choice-div">
-                <button className="negative-button" onClick={() => displayDiv('delay',anime)}>No</button>
-                <button className="positive-button" onClick={() => setDelay(anime, setRefreshAnimeDisplay, displayDiv)}>Yes</button>
+                <button className="negative-button" onClick={() => displayDiv('delay',anime.id)}>No</button>
+                <button className="positive-button" onClick={() => setDelay(anime.id, setRefreshAnimeDisplay, displayDiv, nextEpDate)}>Yes</button>
             </div>
         </div>
     );

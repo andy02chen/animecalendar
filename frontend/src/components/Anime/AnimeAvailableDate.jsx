@@ -178,7 +178,8 @@ function AnimeAvailableDate({anime}) {
     }
 
     if(localStorage.getItem(anime.id) !== null) {
-        anime.delayed_eps = Number(localStorage.getItem(anime.id));
+        anime.delayed_eps = JSON.parse(localStorage.getItem(anime.id)).length;
+        console.log(localStorage.getItem(anime.id));
     }
 
     let isoTime;
@@ -218,7 +219,10 @@ function AnimeAvailableDate({anime}) {
 
     // When user watches an episode, it will update
     useEffect(() => {
-        anime.delayed_eps = Number(localStorage.getItem(anime.id));
+        anime.delayed_eps = 0;
+        if(localStorage.getItem(anime.id) !== null) {
+            anime.delayed_eps = JSON.parse(localStorage.getItem(anime.id)).length;
+        }
         nextEpDate = new Date(isoTime);
         daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
         nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
@@ -296,7 +300,7 @@ function AnimeAvailableDate({anime}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
                 </div>
             </>
         );
@@ -356,7 +360,7 @@ function AnimeAvailableDate({anime}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
                 </div>
             </>
         );
@@ -399,7 +403,7 @@ function AnimeAvailableDate({anime}) {
                                 }>Watched</button>
                             </div>
                         </div>
-                        <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
                     </>
                     :
                     <>
@@ -431,7 +435,7 @@ function AnimeAvailableDate({anime}) {
                                 }>Watched</button>
                             </div>
                         </div>
-                        <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
                         <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                     </>
                     }
@@ -484,7 +488,7 @@ function AnimeAvailableDate({anime}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime.id} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
                     <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                 </div>
             </>
