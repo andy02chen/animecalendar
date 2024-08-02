@@ -118,6 +118,11 @@ function formatTime(timeRemaining) {
 function AnimeAvailableDate({anime}) {
     const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(false);
     const isCountdownRunning = useRef(false);
+    const storeCountdown = useRef(null);
+    const days = useRef(null);
+    const nextEpInfo = useRef(null);
+    const nextEpDate = useRef(null);
+    let daysToAdd = 0;
 
     // Progress Bar style
     let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
@@ -201,9 +206,7 @@ function AnimeAvailableDate({anime}) {
     let endDateKnown = false;
     // Prevents from re-running when re-render (countdown)
     if(!isCountdownRunning.current) {
-
-        // TODO case when only know number of eps
-        // TODO case when know jack all
+        
         const epsArray = [];
         
         // When number of eps and end date is known 
@@ -217,22 +220,35 @@ function AnimeAvailableDate({anime}) {
             anime = {...anime, eps_array : epsArray}
             endDateKnown = true;
         }
+        // when only number of eps is known and end date is not confirmed
+        else if (anime.eps) {
+            const theStartingDate = new Date(isoTime);
+            for(let i = 0; i < anime.eps; i++) {
+                const epDate = new Date(theStartingDate);
+                epDate.setDate(epDate.getDate() + (7 * i));
+                epsArray.push(epDate);
+            }
+            anime = {...anime, eps_array : epsArray}
+        }
+        
+        // TODO case when know jack all
 
         console.log(anime);
-    }
 
-    // Get next episode date
-    let nextEpDate = new Date(isoTime);
-    let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-    nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
-    
-    // Gets days until next episode release
-    const dateNow = Date.now();
-    let diffMs = nextEpDate - dateNow;
-    let days = diffMs / (1000 * 60 * 60 * 24);
-    
-    // Display information about next episode release
-    let nextEpInfo = nextEpDate.toString().trim().split(' ');
+        // Get next episode date
+        nextEpDate.current = new Date(isoTime);
+        let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
+        nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
+        
+        // Gets days until next episode release
+        const dateNow = Date.now();
+        let diffMs = nextEpDate.current - dateNow;
+        days.current = diffMs / (1000 * 60 * 60 * 24);
+        storeCountdown.current = diffMs;
+        
+        // Display information about next episode release
+        nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
+    }
 
     // When user watches an episode, it will update
     useEffect(() => {
@@ -240,14 +256,11 @@ function AnimeAvailableDate({anime}) {
         if(localStorage.getItem(anime.id) !== null) {
             anime.delayed_eps = JSON.parse(localStorage.getItem(anime.id)).length;
         }
-        nextEpDate = new Date(isoTime);
+        nextEpDate.current = new Date(isoTime);
         daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-        nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
-
-        diffMs = nextEpDate - Date.now();
-        days = diffMs / (1000 * 60 * 60 * 24);
+        nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
         
-        nextEpInfo = nextEpDate.toString().trim().split(' ');
+        nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
 
         progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
         innerProgress = {
@@ -256,19 +269,18 @@ function AnimeAvailableDate({anime}) {
             background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
             borderRadius: "5px 0 0 5px"
         };
-        // setCountdown(diffMs);
     }, [refreshAnimeDisplay]);
 
     // If no information about time is available
     if(anime.broadcast_time === null && anime.start_date !== null) {
-        let nextEpDate = new Date(anime.start_date);
+        nextEpDate.current = new Date(anime.start_date);
         let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-        nextEpDate.setDate(nextEpDate.getDate() + daysToAdd);
+        nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
 
         const dateNow = Date.now();
-        let diffMs = nextEpDate - dateNow;
-        let days = diffMs / (1000 * 60 * 60 * 24);
-        let nextEpInfo = nextEpDate.toString().trim().split(' ');
+        let diffMs = nextEpDate.current - dateNow;
+        days.current = diffMs / (1000 * 60 * 60 * 24);
+        nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
 
         return(
             <>
@@ -278,7 +290,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
-                        {episodeStatusNoBroadcastTime(days, nextEpInfo, anime)}
+                        {episodeStatusNoBroadcastTime(days.current, nextEpInfo.current, anime)}
                         <div className="button-choice-div">
                             <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                             <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
@@ -305,7 +317,7 @@ function AnimeAvailableDate({anime}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
                 </div>
             </>
         );
@@ -328,10 +340,10 @@ function AnimeAvailableDate({anime}) {
         );
     }
 
-    const [countdown, setCountdown] = useState(diffMs);
+    const [countdown, setCountdown] = useState(storeCountdown.current);
 
     useEffect(() => {
-        if(countdown <= 0 || days > 1) {
+        if(countdown <= 0 || countdown > 86400000) {
             isCountdownRunning.current = false;
             return;
         }
@@ -344,7 +356,7 @@ function AnimeAvailableDate({anime}) {
     }, [countdown]);
 
     // Displays next episode status
-    if(days > 1) {
+    if(days.current > 1) {
         return(
             <>
                 <div className="progress-bar-text-div">
@@ -353,7 +365,7 @@ function AnimeAvailableDate({anime}) {
                 </div>
                 <div className="progress-info-div">
                     <div className={anime.id}>
-                        <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` is estimated to air in ${Math.ceil(days)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo[2]} {nextEpInfo[1]} {nextEpInfo[3]}, {nextEpInfo[0]}</span></p>
+                        <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` is estimated to air in ${Math.ceil(days.current)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo.current[2]} {nextEpInfo.current[1]} {nextEpInfo.current[3]}, {nextEpInfo.current[0]}</span></p>
                         <div className="button-choice-div">
                             {endDateKnown ?
                                 <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
@@ -384,12 +396,12 @@ function AnimeAvailableDate({anime}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
                 </div>
             </>
         );
     // Countdown if within 24 hours
-    } else if (days <= 1 && days >= 0) {
+    } else if (days.current <= 1 && days.current >= 0) {
         isCountdownRunning.current = true;
         return(
             <>
@@ -432,7 +444,7 @@ function AnimeAvailableDate({anime}) {
                                 }>Watched</button>
                             </div>
                         </div>
-                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
+                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
                     </>
                     :
                     <>
@@ -464,7 +476,7 @@ function AnimeAvailableDate({anime}) {
                                 }>Watched</button>
                             </div>
                         </div>
-                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
+                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
                         <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                     </>
                     }
@@ -517,7 +529,7 @@ function AnimeAvailableDate({anime}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
                     <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                 </div>
             </>
