@@ -82,22 +82,21 @@ const episodeStatusNoBroadcastTime = ((days, nextEpInfo, anime) => {
         return(
             <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` is estimated to air in ${Math.ceil(days)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo[2]} {nextEpInfo[1]} {nextEpInfo[3]}, {nextEpInfo[0]}</span></p>
         );
-    } else if(days < 0) {
+    } else if(days <= 0) {
         // Available
         return(
             <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
         );
     } else {
         // Available today
-        
         return(
             <p className="episode-status">
                 <span style={{color: "var(--text)", fontWeight: "bold"}}>
                     Ep. {anime.eps_watched + 1}&nbsp;
                 </span>
-                should be available to watch&nbsp;
+                should be available to watch within&nbsp;
                 <span style={{color: "var(--text)", fontWeight: "bold"}}>
-                    today.
+                    24 hours.
                 </span>
             </p>
         );
@@ -233,7 +232,7 @@ function AnimeAvailableDate({anime}) {
         
         // TODO case when know jack all
 
-        console.log(anime);
+        // console.log(anime);
 
         // Get next episode date
         nextEpDate.current = new Date(isoTime);
