@@ -234,14 +234,6 @@ function AnimeAvailableDate({anime}) {
     // Display information about next episode release
     let nextEpInfo = nextEpDate.toString().trim().split(' ');
 
-    // TODO if end date is known
-    // TODO if there are delayed episodes stored remove them and recalculate the episode dates
-    // if(anime.end_date === null && anime.eps) {
-    //     let estEndDate = new Date(isoTime);
-    //     const addDays = 7 * anime.eps;
-    //     anime.end_date = estEndDate.setDate(estEndDate.getDate() + addDays);
-    // }
-
     // When user watches an episode, it will update
     useEffect(() => {
         anime.delayed_eps = 0;
