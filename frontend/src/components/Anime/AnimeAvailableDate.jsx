@@ -203,39 +203,43 @@ function AnimeAvailableDate({anime}) {
     }
 
     let endDateKnown = false;
-    // Prevents from re-running when re-render (countdown)
-    if(!isCountdownRunning.current) {
-        
-        const epsArray = [];
-        
-        // When number of eps and end date is known 
-        if(anime.end_date !== null && anime.eps) {
-            const theStartingDate = new Date(isoTime);
-            for(let i = 0; i < anime.eps; i++) {
-                const epDate = new Date(theStartingDate);
-                epDate.setDate(epDate.getDate() + (7 * i));
-                epsArray.push(epDate);
-            }
-            anime = {...anime, eps_array : epsArray}
-            endDateKnown = true;
-        }
-        // when only number of eps is known and end date is not confirmed
-        else if (anime.eps) {
-            const theStartingDate = new Date(isoTime);
-            for(let i = 0; i < anime.eps; i++) {
-                const epDate = new Date(theStartingDate);
-                epDate.setDate(epDate.getDate() + (7 * i));
-                epsArray.push(epDate);
-            }
-            anime = {...anime, eps_array : epsArray}
-        }
-        
-        // TODO case when know jack all
 
-        // console.log(anime);
+    // When user watches an episode, it will update
+    // TODO need fixing
+    useEffect(() => {
+        if(!isCountdownRunning.current && anime.air_status === 'currently_airing') {
+        
+            const epsArray = [];
+            
+            // When number of eps and end date is known 
+            if(anime.end_date !== null && anime.eps) {
+                const theStartingDate = new Date(isoTime);
+                for(let i = 0; i < anime.eps; i++) {
+                    const epDate = new Date(theStartingDate);
+                    epDate.setDate(epDate.getDate() + (7 * i));
+                    epsArray.push(epDate);
+                }
+                anime.eps_array = epsArray;
+                endDateKnown = true;
+            }
+            // when only number of eps is known and end date is not confirmed
+            else if (anime.eps) {
+                const theStartingDate = new Date(isoTime);
+                for(let i = 0; i < anime.eps; i++) {
+                    const epDate = new Date(theStartingDate);
+                    epDate.setDate(epDate.getDate() + (7 * i));
+                    epsArray.push(epDate);
+                }
+                anime.eps_array = epsArray;
+            }
+
+        }
+            
+        // TODO case when know jack all ( only show the next ep marker)
 
         // Get next episode date
         nextEpDate.current = new Date(isoTime);
+        console.log(anime.eps_watched);
         let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
         nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
         
@@ -246,19 +250,6 @@ function AnimeAvailableDate({anime}) {
         storeCountdown.current = diffMs;
         
         // Display information about next episode release
-        nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
-    }
-
-    // When user watches an episode, it will update
-    useEffect(() => {
-        anime.delayed_eps = 0;
-        if(localStorage.getItem(anime.id) !== null) {
-            anime.delayed_eps = JSON.parse(localStorage.getItem(anime.id)).length;
-        }
-        nextEpDate.current = new Date(isoTime);
-        daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-        nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
-        
         nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
 
         progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
