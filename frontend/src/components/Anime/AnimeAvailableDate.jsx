@@ -116,9 +116,10 @@ function formatTime(timeRemaining) {
 
 function AnimeAvailableDate({anime}) {
     const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(false);
-    const isCountdownRunning = useRef(false);
 
-    const storeCountdown = useRef(null);
+    // Timer for anime that are about air
+    const [countdown, setCountdown] = useState(null);
+
     const days = useRef(null);
     const nextEpInfo = useRef(null);
     const nextEpDate = useRef(null);
@@ -233,7 +234,7 @@ function AnimeAvailableDate({anime}) {
         let diffMs = nextEpDate.current - Date.now();
         days.current = diffMs / (1000 * 60 * 60 * 24);
         setDaysTillRelease(days.current);
-        storeCountdown.current = diffMs;
+        setCountdown(diffMs);
         
         // Display information about next episode release
         nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
@@ -246,16 +247,11 @@ function AnimeAvailableDate({anime}) {
             background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
             borderRadius: "5px 0 0 5px"
         };
-        console.log(anime.title, "useEffect");
     }, [refreshAnimeDisplay]);
-
-    // Timer for anime that are about air
-    const [countdown, setCountdown] = useState(storeCountdown.current);
 
     useEffect(() => {
         // Stops countdown if finished or over 1 day
         if(countdown <= 0 || countdown > 86400000) {
-            isCountdownRunning.current = false;
             return;
         }
 
@@ -265,8 +261,6 @@ function AnimeAvailableDate({anime}) {
 
         return () => clearInterval(intervalId);
     }, [countdown]);
-
-    console.log(anime.title);
 
     if(possiblyInvalidAnime) {
         return(
@@ -373,7 +367,6 @@ function AnimeAvailableDate({anime}) {
         );
     // Countdown if within 24 hours
     } else if (daysTillRelease <= 1 && daysTillRelease >= 0) {
-        isCountdownRunning.current = true;
         return(
             <>
                 <div className="progress-bar-text-div">
