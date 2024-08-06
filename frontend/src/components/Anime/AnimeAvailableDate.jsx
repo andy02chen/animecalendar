@@ -196,22 +196,7 @@ function AnimeAvailableDate({anime}) {
         let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
         const today = new Date();
 
-        // When number of eps and end date is known 
-        // TODO add potential ep delays
-        if(anime.end_date !== null && anime.eps) {
-            const theStartingDate = new Date(isoTime);
-            for(let i = 0; i < anime.eps; i++) {
-                const epDate = new Date(theStartingDate);
-                epDate.setDate(epDate.getDate() + (7 * i));
-                epsArray.push(epDate);
-            }
-            anime.eps_array = epsArray;
-            endDateKnown = true;
-
-            // TODO check that the last ep calculated matches the end date from MAL
-        }
-        // when only number of eps is known and end date is not confirmed
-        else if (anime.eps) {
+        if (anime.eps) {
             const theStartingDate = new Date(isoTime);
             let delaysToAdd = 0;
 
