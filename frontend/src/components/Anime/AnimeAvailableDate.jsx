@@ -179,54 +179,86 @@ function AnimeAvailableDate({anime}) {
             isoTime = `${year}-${month}-${day}T${defaultTime}`;
         }
 
-        // TODO maybe change condition for getting new ep dates
+        // case 1 know end date
+            // check that end date and calculated end date match
+            // display markers matched
+        // case 2 know number of eps
+            // display estimated eps dates markers
+        // case 3 dont know either
+            // only display known/confirmed eps and the next estimated ep
+
         // TODO maybe store these in localStorage to increase load times and performance
+        // TODO maybe case when there are a lot of episodes
         // =========================
         // Gets the anime episode dates and stores them in an array
-        // const epsArray = [];
-        // // When number of eps and end date is known 
-        // if(anime.end_date !== null && anime.eps) {
-        //     const theStartingDate = new Date(isoTime);
-        //     for(let i = 0; i < anime.eps; i++) {
-        //         const epDate = new Date(theStartingDate);
-        //         epDate.setDate(epDate.getDate() + (7 * i));
-        //         epsArray.push(epDate);
-        //     }
-        //     anime.eps_array = epsArray;
-        //     // endDateKnown = true;
-        // }
-        // // when only number of eps is known and end date is not confirmed
-        // else if (anime.eps) {
-        //     const theStartingDate = new Date(isoTime);
-        //     for(let i = 0; i < anime.eps; i++) {
-        //         const epDate = new Date(theStartingDate);
-        //         epDate.setDate(epDate.getDate() + (7 * i));
-        //         epsArray.push(epDate);
-        //     }
-        //     anime.eps_array = epsArray;
-        // }
-        // // When dont know number of eps and dont know end date
-        // else {
-        //     const theStartingDate = new Date(isoTime);
-        //     for(let i = 0; i < anime.eps_watched+1; i++) {
-        //         const epDate = new Date(theStartingDate);
-        //         epDate.setDate(epDate.getDate() + (7 * i));
-        //         epsArray.push(epDate);
-        //     }
-        //     anime.eps_array = epsArray;
-        // }
+        const epsArray = [];
+        const delayEpsDictString = localStorage.getItem(anime.id);
+        let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
+        const today = new Date();
+
+        // When number of eps and end date is known 
+        // TODO add potential ep delays
+        if(anime.end_date !== null && anime.eps) {
+            const theStartingDate = new Date(isoTime);
+            for(let i = 0; i < anime.eps; i++) {
+                const epDate = new Date(theStartingDate);
+                epDate.setDate(epDate.getDate() + (7 * i));
+                epsArray.push(epDate);
+            }
+            anime.eps_array = epsArray;
+            endDateKnown = true;
+
+            // TODO check that the last ep calculated matches the end date from MAL
+        }
+        // when only number of eps is known and end date is not confirmed
+        else if (anime.eps) {
+            const theStartingDate = new Date(isoTime);
+            let delaysToAdd = 0;
+
+            // Calculates estimated release dates for all episodes
+            for(let i = 0; i < anime.eps; i++) {
+                const epDate = new Date(theStartingDate);
+                const delaysThisWeek = delayedEpsDict[`${i}`];
+                let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
+                delaysToAdd = delaysToAdd + addToTotalDelays;
+                epDate.setDate(epDate.getDate() + (7 * (i + delaysToAdd)));
+                epsArray.push(epDate);
+            }
+            anime.eps_array = epsArray;
+        }
+        // When dont know number of eps and dont know end date
+        else {
+            const theStartingDate = new Date(isoTime);
+            let delaysToAdd = 0;
+
+            // Calculates the next episode for the user
+            let weeksToCalculate = 1;
+            for(let i = 0; i < anime.eps_watched + weeksToCalculate; i++) {
+                const epDate = new Date(theStartingDate);
+                const delaysThisWeek = delayedEpsDict[`${i}`];
+                let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
+                delaysToAdd = delaysToAdd + addToTotalDelays;
+                epDate.setDate(epDate.getDate() + (7 * (i + delaysToAdd)));
+                epsArray.push(epDate);
+
+                // If the user is not up to date, the next episode should not be the user's next episode but rather next week episode.
+                if(epDate < today && i === (anime.eps_watched)) {
+                    weeksToCalculate++;
+                }
+            }
+            anime.eps_array = epsArray;
+
+        }
+        console.log(anime);
         // =======================
 
-        // If End date is known
-        if(anime.end_date !== null && anime.eps) {
-            endDateKnown = true;
-        }
+        // Get next episode date OLD
+        // nextEpDate.current = new Date(isoTime);
+        // let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
+        // nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
 
-        // TODO maybe change how the next episode is calculated/retrieved
-        // Get next episode date
-        nextEpDate.current = new Date(isoTime);
-        let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-        nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
+        // Get next episode date NEW
+        nextEpDate.current = anime.eps_array[anime.eps_watched];
         
         // Gets days until next episode release
         let diffMs = nextEpDate.current - Date.now();
@@ -317,8 +349,6 @@ function AnimeAvailableDate({anime}) {
             </>
         );
     }
-
-    console.log(anime);
 
     // Display depending on how many days till release
     if(daysTillRelease > 1) {
