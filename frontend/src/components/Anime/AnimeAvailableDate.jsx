@@ -157,7 +157,6 @@ function AnimeAvailableDate({anime}) {
         }
 
         // If anime has a broadcast time get it for calculations
-        // TODO maybe need to change for monogatari or early exit for no broadcast times
         let isoTime;
         if(anime.broadcast_time !== null) {
             // Get anime broadcast date and time then convert it to local time
@@ -180,7 +179,6 @@ function AnimeAvailableDate({anime}) {
             isoTime = `${year}-${month}-${day}T${defaultTime}`;
         }
 
-        // TODO need fixing
         // TODO maybe change condition for getting new ep dates
         // TODO maybe store these in localStorage to increase load times and performance
         // =========================
@@ -319,6 +317,8 @@ function AnimeAvailableDate({anime}) {
             </>
         );
     }
+
+    console.log(anime);
 
     // Display depending on how many days till release
     if(daysTillRelease > 1) {
