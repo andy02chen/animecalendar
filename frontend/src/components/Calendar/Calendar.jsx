@@ -175,7 +175,7 @@ function Calendar() {
                         <ul>
                             {months.map((monthInList, index) => 
                                 <li key={index} className='unselectable'>
-                                    <h3
+                                    <h3 className='month-selection-heading'
                                     onClick={() => displaySelectedMonth(index, setMonth)}>
                                         {monthInList}
                                     </h3>

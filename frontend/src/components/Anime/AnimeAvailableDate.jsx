@@ -179,17 +179,13 @@ function AnimeAvailableDate({anime}) {
             isoTime = `${year}-${month}-${day}T${defaultTime}`;
         }
 
-        // case 1 know end date
-            // check that end date and calculated end date match
-            // display markers matched
-        // case 2 know number of eps
-            // display estimated eps dates markers
-        // case 3 dont know either
-            // only display known/confirmed eps and the next estimated ep
+        // TODO maybe store these in localStorage the first time the user loads the page
+            // Do not need to continue to calculate this afterwards
+            // store in local first time -> get last date -> calculate and compare with next week ep
+            // if not match recalculate and store, if match do nothing
+        // TODO maybe case when there are a lot of episodes for case like One Piece
+        // TODO make a way for the user to only display the dates from the past year, month, or no limit
 
-        // TODO maybe store these in localStorage to increase load times and performance
-        // TODO maybe case when there are a lot of episodes
-        // =========================
         // Gets the anime episode dates and stores them in an array
         const epsArray = [];
         const delayEpsDictString = localStorage.getItem(anime.id);
@@ -211,7 +207,7 @@ function AnimeAvailableDate({anime}) {
             }
             anime.eps_array = epsArray;
         }
-        // When dont know number of eps and dont know end date
+        // When dont know number of eps
         else {
             const theStartingDate = new Date(isoTime);
             let delaysToAdd = 0;
@@ -232,17 +228,9 @@ function AnimeAvailableDate({anime}) {
                 }
             }
             anime.eps_array = epsArray;
-
         }
-        console.log(anime);
-        // =======================
 
-        // Get next episode date OLD
-        // nextEpDate.current = new Date(isoTime);
-        // let daysToAdd = 7 * (anime.eps_watched + anime.delayed_eps);
-        // nextEpDate.current.setDate(nextEpDate.current.getDate() + daysToAdd);
-
-        // Get next episode date NEW
+        // Get next episode date
         nextEpDate.current = anime.eps_array[anime.eps_watched];
         
         // Gets days until next episode release

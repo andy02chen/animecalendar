@@ -30,7 +30,7 @@
 .day-title {
     color: var(--primary);
     font-family: "Montserrat", sans-serif;
-    font-size: clamp(0.75rem, 2.5vw, 2rem);;
+    font-size: clamp(0.75rem, 2.5vw, 2rem);
 }
 
 .days-div {
@@ -128,11 +128,6 @@
     text-decoration: underline;
 }
 
-/* .prev-month-button, .next-month-button {
-    width: 3rem;
-    height: 3rem;
-} */
-
 .next-month-image, .prev-month-image {
     height: 1.5rem;
     fill: var(--primary);
@@ -178,6 +173,26 @@
     margin-bottom: 4%;
 }
 
+@media (max-width: 1100px) {
+    #change-month-div > ul > li {
+        color: var(--text);
+        flex: 0 0 50%;
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+}
+
+@media (max-width: 600px) {
+    #change-month-div > ul > li {
+        color: var(--text);
+        flex: 0 0 100%;
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+}
+
 #change-month-div > ul > li:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -208,4 +223,8 @@
     text-decoration: none;
     border-radius: 5px;
     border: 1px solid var(--background);
+}
+
+.month-selection-heading {
+    font-size: clamp(0.8rem, 1.2vw, 1.25rem);
 }
