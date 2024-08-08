@@ -1,15 +1,29 @@
 import Calendar from "./Calendar/Calendar";
 import AnimeProgress from "./Anime/AnimeProgress";
-import "./MainComponent.css"
-import Popup from './Alert/Popup'
+import "./MainComponent.css";
+import Popup from './Alert/Popup';
+import { useState } from "react";
 
 function MainComponent() {
+    const [animeInfo, setAnimeInfo] = useState({});
+
+    function handleData(data) {
+        setAnimeInfo((prevData) => (
+            {
+                ...prevData,
+                [data.id] : data,
+            }
+        ));
+    }
+
+    console.log(animeInfo);
+
     return(
         <>
             <Popup/>
             <div className='main-div'>
                 <div className="anime-progress-div">
-                    <AnimeProgress/>
+                    <AnimeProgress handleData={handleData}/>
                 </div>
 
                 <div className="calendar-div">
