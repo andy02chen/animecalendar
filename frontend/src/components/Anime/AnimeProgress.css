@@ -226,7 +226,6 @@
 .anime-list-title {
     color: var(--text);
     font-family: 'Montserrat', sans-serif;
-    /* font-size: clamp(0.75rem, 2vw + 1rem, 1.5rem) */
     width: 90%;
 }
 
@@ -353,8 +352,8 @@
 
 .anime-marker {
     position: absolute;
-    height: 10px;
-    width: 10px;
+    height: 12px;
+    width: 12px;
     border-radius: 100%;
     right: 0%;
 }

@@ -195,7 +195,7 @@ function AnimeAvailableDate({anime, handleData}) {
         const theStartingDate = new Date(isoTime);
         let delaysToAdd = 0;
 
-        if(anime.eps_array.length === 0) {
+        if(anime.eps_array.length === 0 && anime.air_status === 'currently_airing') {
             if (anime.eps) {
                 // Calculates estimated release dates for all episodes
                 for(let i = 0; i < anime.eps; i++) {

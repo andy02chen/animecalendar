@@ -18,6 +18,14 @@
     --text-gray: rgb(168, 168, 168);
 }
 
+.loading-div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .unselectable {
     -webkit-user-select: none;
     -moz-user-select: none;

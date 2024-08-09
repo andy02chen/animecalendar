@@ -237,8 +237,8 @@ const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox
 
 function generateRandomColour() {
     const hue = Math.floor(Math.random() * 360);
-    const saturation = 70 + Math.random() * 30;
-    const lightness = 50 + Math.random() * 30;
+    const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
+    const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
     
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
@@ -246,7 +246,12 @@ function generateRandomColour() {
 const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
     // Generate and store a random colour for the marker
     displayAnime.forEach(anime => {
-        anime["colorMarker"] = generateRandomColour();
+        // If anime is currently airing, then give it a color
+        if(anime.air_status === "currently_airing") {
+            anime["colorMarker"] = generateRandomColour()
+        } else {
+            anime['colorMarker'] = null;
+        }
     });
 
     return(
