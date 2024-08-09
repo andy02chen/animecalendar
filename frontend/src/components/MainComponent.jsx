@@ -16,8 +16,6 @@ function MainComponent() {
         ));
     }
 
-    console.log(animeInfo);
-
     return(
         <>
             <Popup/>
@@ -28,7 +26,7 @@ function MainComponent() {
 
                 <div className="calendar-div">
                     <div>
-                        <Calendar/>
+                        <Calendar animeData={animeInfo}/>
                     </div>
                 </div>
             </div>

@@ -240,7 +240,9 @@ function AnimeAvailableDate({anime, handleData}) {
         setCountdown(diffMs);
         
         // Display information about next episode release
-        nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
+        if(nextEpDate.current) {
+            nextEpInfo.current = nextEpDate.current.toString().trim().split(' ');
+        }
 
         // Set Progress bar styling
         progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
@@ -265,6 +267,25 @@ function AnimeAvailableDate({anime, handleData}) {
         return () => clearInterval(intervalId);
     }, [countdown]);
 
+    // User has completed the anime
+    if(anime.eps === anime.eps_watched) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    <p className="episode-status">
+                    <span style={{color: "var(--text)", fontWeight: "bold"}}>Completed 🎉</span>
+                    </p>
+                </div>
+            </>
+        );
+    }
+
+    // TODO button to allow user to move back to plan to watch
+    // Anime is not yet airing
     if(possiblyInvalidAnime) {
         return(
             <>
@@ -281,6 +302,7 @@ function AnimeAvailableDate({anime, handleData}) {
         );
     }
 
+    // Anime Does not have a broadcast time
     if(animeNoBroadcastTime) {
         return(
             <>

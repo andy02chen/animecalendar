@@ -247,7 +247,7 @@ img {
     }
 
     .anime-list-title {
-        font-size: 1.7rem;
+        font-size: 1.2rem;
     }
 
     .episode-status {
@@ -261,7 +261,7 @@ img {
 
 @media screen and (max-width: 600px) {
     .anime-list-title {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
     .episode-status {
@@ -280,7 +280,7 @@ img {
 /* Mobile */
 @media screen and (max-width: 500px) {
     .anime-list-title {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     .episode-status {

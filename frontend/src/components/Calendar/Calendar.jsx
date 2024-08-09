@@ -54,7 +54,8 @@ function displayMonthSelection() {
     }
 }
 
-function Calendar() {
+function Calendar({animeData}) {
+    console.log(animeData);
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
     const months = [

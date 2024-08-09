@@ -235,7 +235,20 @@ const planToWatchDivHTML = ((setGotRequest,setTrigger, unclickable, hideCheckBox
     );
 });
 
+function generateRandomColour() {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 70 + Math.random() * 30;
+    const lightness = 50 + Math.random() * 30;
+    
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
 const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
+    // Generate and store a random colour for the marker
+    displayAnime.forEach(anime => {
+        anime["colorMarker"] = generateRandomColour();
+    });
+
     return(
         <>
             <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' 
@@ -254,6 +267,7 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
                             <div className='anime'>
                                 <div className='anime-top-div'>
                                     <h1 className='anime-list-title'>{anime.title}</h1>
+                                    <div className='anime-marker' style={{backgroundColor : `${anime.colorMarker}`}}></div>
                                 </div>
                                 <div className='anime-bot-div'>
                                     <div>
