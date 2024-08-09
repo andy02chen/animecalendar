@@ -2,18 +2,19 @@ import Calendar from "./Calendar/Calendar";
 import AnimeProgress from "./Anime/AnimeProgress";
 import "./MainComponent.css";
 import Popup from './Alert/Popup';
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 function MainComponent() {
-    const [animeInfo, setAnimeInfo] = useState({});
+    const animeInfo = useRef(new Map());
+    const numberOfWatchingAnime = useRef(0);
+    const [ready, setReady] = useState(false);
 
     function handleData(data) {
-        setAnimeInfo((prevData) => (
-            {
-                ...prevData,
-                [data.id] : data,
-            }
-        ));
+        animeInfo.current.set(data.id, data);
+
+        if(animeInfo.current.size === numberOfWatchingAnime.current) {
+            setReady(true);
+        }
     }
 
     return(
@@ -21,12 +22,12 @@ function MainComponent() {
             <Popup/>
             <div className='main-div'>
                 <div className="anime-progress-div">
-                    <AnimeProgress handleData={handleData}/>
+                    <AnimeProgress handleData={handleData} setNumberOfWatchingAnime={numberOfWatchingAnime}/>
                 </div>
 
                 <div className="calendar-div">
                     <div>
-                        <Calendar animeData={animeInfo}/>
+                        <Calendar animeData={animeInfo} readyToDisplay={ready}/>
                     </div>
                 </div>
             </div>
