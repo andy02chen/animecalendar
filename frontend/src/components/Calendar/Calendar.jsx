@@ -150,8 +150,6 @@ function Calendar({animeData}) {
     }, [year]);
 
     useEffect(() => {
-        console.log(markersMap.current);
-
         [startDate, endDate, prevMonthStart, 
             prevMonthDate, nextMonthStart, nextMonthDay] = getMonthDates(year, month);
 
@@ -207,8 +205,26 @@ function Calendar({animeData}) {
 
         // Array of next month dates
         const pushNextMonthDates = [];
+
+        if(month === 11) {
+            monthDateString = 1;
+            yearDateString = year+1;
+        } else {
+            monthDateString = month+2;
+            yearDateString = year;
+        }
+        
         for(let i = lengthCalendar; i < 42 ; i++) {
-            pushNextMonthDates.push(nextMonthStart++);
+            const dateString = createDateString(nextMonthStart,monthDateString,yearDateString);
+
+            const displayMarkers = markersMap.current.get(dateString);
+            const arrPush = [];
+            arrPush.push(nextMonthStart++);
+
+            if(displayMarkers) {
+                arrPush.push(displayMarkers);
+            }
+            pushNextMonthDates.push(arrPush);
         }
 
         setInactiveDays(pushInactiveDays);
@@ -308,7 +324,18 @@ function Calendar({animeData}) {
                             {nextMonthDates.map((date, index) => 
                                 <li key={index} className='inactive-date'>
                                     <div>
-                                        <p>{date}</p>
+                                        {date.length === 1 ?
+                                            <p>{date[0]}</p>
+                                            :
+                                            <>
+                                                <p>
+                                                    {date[0]}
+                                                </p>
+                                                {date[1].map((color, index) =>
+                                                    <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                )}
+                                            </>
+                                        }
                                     </div>
                                 </li>
                             )}
