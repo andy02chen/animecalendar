@@ -239,7 +239,7 @@ function generateRandomColour() {
     const hue = Math.floor(Math.random() * 360);
     const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
     const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
-    
+
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
@@ -248,9 +248,9 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
     displayAnime.forEach(anime => {
         // If anime is currently airing, then give it a color
         if(anime.air_status === "currently_airing") {
-            anime["colorMarker"] = generateRandomColour()
-        } else {
-            anime['colorMarker'] = null;
+            if(localStorage.getItem(`${anime.id}Colour`) === null) {
+                localStorage.setItem(`${anime.id}Colour`, generateRandomColour());
+            }
         }
     });
 
@@ -272,7 +272,7 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
                             <div className='anime'>
                                 <div className='anime-top-div'>
                                     <h1 className='anime-list-title'>{anime.title}</h1>
-                                    <div className='anime-marker' style={{backgroundColor : `${anime.colorMarker}`}}></div>
+                                    <div className='anime-marker' style={{backgroundColor : `${localStorage.getItem(anime.id+'Colour')}`}}></div>
                                 </div>
                                 <div className='anime-bot-div'>
                                     <div>
