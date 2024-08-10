@@ -124,16 +124,11 @@ function Calendar({animeData}) {
     const [nextMonthDates, setNextMonthDates] = useState([]);
 
     // To store the dates and the episode releases
-    const markersMap = new Map();
+    const markersMap = useRef(new Map());
 
     // When the year changes need to empty the map
     useEffect(() => {
-        markersMap.clear();
-    }, [year]);
-
-    useEffect(() => {
-        markersMap.clear();
-        
+        markersMap.current.clear();
         const startOfYear = new Date(`1/1/${year}`);
 
         // Loop through the store the releases the map
@@ -142,18 +137,20 @@ function Calendar({animeData}) {
                 const dropTime = formatDate(date);
 
                 if(date >= startOfYear) {
-                    if(markersMap.has(dropTime)) {
-                        const array = markersMap.get(dropTime);
+                    if(markersMap.current.has(dropTime)) {
+                        const array = markersMap.current.get(dropTime);
                         array.push(localStorage.getItem(id+"Colour"));
-                        markersMap.set(dropTime, array);
+                        markersMap.current.set(dropTime, array);
                     } else {
-                        markersMap.set(dropTime, [localStorage.getItem(id+'Colour')]);
+                        markersMap.current.set(dropTime, [localStorage.getItem(id+'Colour')]);
                     }
                 }
             }
         }
+    }, [year]);
 
-        console.log(markersMap);
+    useEffect(() => {
+        console.log(markersMap.current);
 
         [startDate, endDate, prevMonthStart, 
             prevMonthDate, nextMonthStart, nextMonthDay] = getMonthDates(year, month);
@@ -177,7 +174,7 @@ function Calendar({animeData}) {
             for(let i = prevMonthDate - prevMonthStart; i <= prevMonthDate; i++) {
                 const dateString = createDateString(i,monthDateString,yearDateString);
 
-                const displayMarkers = markersMap.get(dateString);
+                const displayMarkers = markersMap.current.get(dateString);
                 const arrPush = [];
                 arrPush.push(i);
                 if(displayMarkers) {
@@ -188,12 +185,22 @@ function Calendar({animeData}) {
             }
         }
 
-        console.log(pushInactiveDays);
-
         // Array of curr month dates
         const pushCurrMonthDates = [];
+        monthDateString = month+1;
+        yearDateString = year;
         for(let i = startDate; i <= endDate; i++) {
-            pushCurrMonthDates.push(i);
+
+            const dateString = createDateString(i,monthDateString,yearDateString);
+
+            const displayMarkers = markersMap.current.get(dateString);
+            const arrPush = [];
+            arrPush.push(i);
+            if(displayMarkers) {
+                arrPush.push(displayMarkers);
+            }
+
+            pushCurrMonthDates.push(arrPush);
         }
 
         let lengthCalendar = pushInactiveDays.length + pushCurrMonthDates.length;
@@ -277,14 +284,24 @@ function Calendar({animeData}) {
                                                 )}
                                             </>
                                         }
-                                        
                                     </div>
                                 </li>
                             )}
                             {currMonthDates.map((date, index) => 
-                                <li key={index} className={date === todayDay && month === todayMonth & year === todayYear ? "today": null}>
+                                <li key={index} className={date[0] === todayDay && month === todayMonth & year === todayYear ? "today": null}>
                                     <div>
-                                        <p>{date}</p>
+                                        {date.length === 1 ?
+                                            <p>{date[0]}</p>
+                                            :
+                                            <>
+                                                <p>
+                                                    {date[0]}
+                                                </p>
+                                                {date[1].map((color, index) =>
+                                                    <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                )}
+                                            </>
+                                        }
                                     </div>
                                 </li>
                             )}
