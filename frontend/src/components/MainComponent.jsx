@@ -8,11 +8,13 @@ function MainComponent() {
     const animeInfo = useRef(new Map());
     const numberOfWatchingAnime = useRef(0);
     const [ready, setReady] = useState(false);
+    const [renderAllComponents, setRenderAllComponents] = useState(0);
 
     function handleData(data) {
-        if(animeInfo.current.get(data.id) === undefined) {
-            animeInfo.current.set(data.id, data);
-        }
+        // if(animeInfo.current.get(data.id) === undefined) {
+        //     animeInfo.current.set(data.id, data);
+        // }
+        animeInfo.current.set(data.id, data);
 
         if(animeInfo.current.size === numberOfWatchingAnime.current) {
             setReady(true);
@@ -24,7 +26,7 @@ function MainComponent() {
             <Popup/>
             <div className='main-div'>
                 <div className="anime-progress-div">
-                    <AnimeProgress handleData={handleData} setNumberOfWatchingAnime={numberOfWatchingAnime}/>
+                    <AnimeProgress handleData={handleData} setNumberOfWatchingAnime={numberOfWatchingAnime} setRenderAllComponents={setRenderAllComponents}/>
                 </div>
 
                 <div className="calendar-div">
@@ -37,7 +39,7 @@ function MainComponent() {
                         </>
                     :
                         <div>
-                            <Calendar animeData={animeInfo}/>
+                            <Calendar animeData={animeInfo} renderAllComponents={renderAllComponents}/>
                         </div>
                     }
                 </div>

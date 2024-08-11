@@ -71,7 +71,7 @@ function createDateString(day,month,year) {
     return `${dayString}/${monthString}/${year}`;
 }
 
-function Calendar({animeData}) {
+function Calendar({animeData, renderAllComponents}) {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const months = [
         "January",
@@ -128,6 +128,7 @@ function Calendar({animeData}) {
 
     // When the year changes need to empty the map
     useEffect(() => {
+        console.log('a');
         markersMap.current.clear();
         const startOfYear = new Date(`1/1/${year}`);
 
@@ -147,7 +148,7 @@ function Calendar({animeData}) {
                 }
             }
         }
-    }, [year]);
+    }, [year, renderAllComponents]);
 
     useEffect(() => {
         [startDate, endDate, prevMonthStart, 
@@ -230,7 +231,7 @@ function Calendar({animeData}) {
         setInactiveDays(pushInactiveDays);
         setCurrMonthDates(pushCurrMonthDates);
         setNextMonthDates(pushNextMonthDates);
-    }, [month]);
+    }, [month, renderAllComponents]);
 
     return(
         <>

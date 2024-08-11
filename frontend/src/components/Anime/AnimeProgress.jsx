@@ -243,7 +243,7 @@ function generateRandomColour() {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
-const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) => {
+const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime, setRenderAllComponents) => {
     // Generate and store a random colour for the marker
     displayAnime.forEach(anime => {
         // If anime is currently airing, then give it a color
@@ -280,7 +280,7 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
                                     </div>
 
                                     <div id={anime.id+'ep-details-div'} className='anime-bot-ep'>
-                                        <AnimeAvailableDate anime={anime} handleData={handleData}/>
+                                        <AnimeAvailableDate anime={anime} handleData={handleData} setRenderAllComponents={setRenderAllComponents}/>
                                     </div>
 
                                     <div id={anime.id+'update-spinner'} className='update-div'>
@@ -300,7 +300,7 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
 });
 
 // Displays weekly anime
-const renderContent = (setNumberOfWatchingAnime, handleData, setTrigger, notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
+const renderContent = (setRenderAllComponents, setNumberOfWatchingAnime, handleData, setTrigger, notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime) => {
     // Returns error message if failed get request
     if(failedRequest) {
         const popup = document.getElementById("error-popup");
@@ -321,7 +321,7 @@ const renderContent = (setNumberOfWatchingAnime, handleData, setTrigger, notYetA
             if(displayAnime.length > 0 && displayPlanToWatch.length === 0) {
                 return(
                     <>
-                        {displayAnime.length > 0 ? watchingDivHTML(handleData, true, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                        {displayAnime.length > 0 ? watchingDivHTML(handleData, true, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime, setRenderAllComponents) : null}
                     </>
                 );
             }
@@ -346,7 +346,7 @@ const renderContent = (setNumberOfWatchingAnime, handleData, setTrigger, notYetA
             else if (displayAnime.length > 0 && displayPlanToWatch.length > 0) {
                 return(
                     <>
-                        {displayAnime.length > 0 ? watchingDivHTML(handleData, false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                        {displayAnime.length > 0 ? watchingDivHTML(handleData, false, true, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime, setRenderAllComponents) : null}
                         {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, true,displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                     </>
                 );
@@ -364,8 +364,7 @@ const renderContent = (setNumberOfWatchingAnime, handleData, setTrigger, notYetA
         } else if (weeklyAnime.length > 0 && planToWatchAnimeList.length === 0) {
             return(
                 <>
-                    {watchingDivHTML(handleData, true, currAiringAnime.length === 0, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime)}
-                    {/* {displayAnime.length > 0 ? watchingDivHTML(false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null} */}
+                    {watchingDivHTML(handleData, true, currAiringAnime.length === 0, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime, setRenderAllComponents)}
                 </>
             );
         // case when user only has anime in plan to watch
@@ -379,7 +378,7 @@ const renderContent = (setNumberOfWatchingAnime, handleData, setTrigger, notYetA
             // Displays list of anime
             return(
                 <>
-                    {displayAnime.length > 0 ? watchingDivHTML(handleData, false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime) : null}
+                    {displayAnime.length > 0 ? watchingDivHTML(handleData, false, false, displayAnime, currAiringAnime, weeklyAnime, setDisplayAnime, setRenderAllComponents) : null}
                     {displayPlanToWatch.length > 0 ? planToWatchDivHTML(setGotRequest,setTrigger, false, false, displayPlanToWatch, notYetAiredList, planToWatchAnimeList, setPlanToWatch) : null}
                 </>
             );
@@ -485,7 +484,7 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-function AnimeProgress({handleData, setNumberOfWatchingAnime}) {
+function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllComponents}) {
     const [displayAnime, setDisplayAnime] = useState([]);
     const [weeklyAnime, setWeeklyAnime] = useState([]);
     const [gotRequest, setGotRequest] = useState(false);
@@ -549,7 +548,7 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime}) {
             </div>
             <div className='progress-div'>
                     {gotRequest ?
-                        renderContent(setNumberOfWatchingAnime, handleData, setTrigger, notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
+                        renderContent(setRenderAllComponents, setNumberOfWatchingAnime, handleData, setTrigger, notYetAiredList,planToWatchAnimeList,displayPlanToWatch,currAiringAnime, weeklyAnime, displayAnime, failedRequest,setPlanToWatch, setWeeklyAnime, setDisplayAnime, setFailedRequest, setGotRequest, setNotYetAiredList, setPlanToWatchAnimeList, setCurrAiringAnime)
                         :
                         <div className='message-div'>
                             <svg className='loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>

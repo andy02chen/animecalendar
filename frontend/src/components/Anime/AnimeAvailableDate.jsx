@@ -48,7 +48,7 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
         )
         .then(response => {
             anime.eps_watched++;
-            setRefreshAnimeDisplay(prevFlag => !prevFlag);
+            setRefreshAnimeDisplay(c => c);
             updateFeedback.style.display = "none";
             updateFeedback2.style.display = "flex";
         })
@@ -114,8 +114,8 @@ function formatTime(timeRemaining) {
     return `${hours >= 1 ? hours+":" : ""}${mins >= 1 || hours >= 0 ? mins+":" : ""}${sec}`;
 }
 
-function AnimeAvailableDate({anime, handleData}) {
-    const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(false);
+function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
+    const [refreshAnimeDisplay, setRefreshAnimeDisplay] = useState(0);
 
     // Timer for anime that are about air
     const [countdown, setCountdown] = useState(null);
@@ -124,6 +124,7 @@ function AnimeAvailableDate({anime, handleData}) {
     const nextEpInfo = useRef(null);
     const nextEpDate = useRef(null);
     const [daysTillRelease, setDaysTillRelease] = useState(null);
+    const recalculateDates = useRef(refreshAnimeDisplay);
 
     let endDateKnown = false;
     let progress = anime.eps === 0 ? 60: (anime.eps_watched / anime.eps) * 100;
@@ -151,9 +152,12 @@ function AnimeAvailableDate({anime, handleData}) {
             return;
         }
 
+        // TODO i think there is an error here
+        // if the same episode is delayed im pretty sure it should increment rather than stay as 1
         // Get delay episode length to offset calculation
         if(localStorage.getItem(anime.id) !== null) {
-            anime.delayed_eps = JSON.parse(localStorage.getItem(anime.id)).length;
+            // console.log(Object.keys(JSON.parse(localStorage.getItem(anime.id))).length);
+            anime.delayed_eps = Object.keys(JSON.parse(localStorage.getItem(anime.id))).length;
         }
 
         // If anime has a broadcast time get it for calculations
@@ -195,7 +199,8 @@ function AnimeAvailableDate({anime, handleData}) {
         const theStartingDate = new Date(isoTime);
         let delaysToAdd = 0;
 
-        if(anime.eps_array.length === 0 && anime.air_status === 'currently_airing') {
+        if((anime.eps_array.length === 0 || recalculateDates !== refreshAnimeDisplay) && anime.air_status === 'currently_airing') {
+            recalculateDates.current = refreshAnimeDisplay;
             if (anime.eps) {
                 // Calculates estimated release dates for all episodes
                 for(let i = 0; i < anime.eps; i++) {
@@ -339,7 +344,7 @@ function AnimeAvailableDate({anime, handleData}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                 </div>
             </>
         );
@@ -386,7 +391,7 @@ function AnimeAvailableDate({anime, handleData}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                 </div>
             </>
         );
@@ -433,7 +438,7 @@ function AnimeAvailableDate({anime, handleData}) {
                                 }>Watched</button>
                             </div>
                         </div>
-                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
+                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                     </>
                     :
                     <>
@@ -465,7 +470,7 @@ function AnimeAvailableDate({anime, handleData}) {
                                 }>Watched</button>
                             </div>
                         </div>
-                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
+                        <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                         <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                     </>
                     }
@@ -518,7 +523,7 @@ function AnimeAvailableDate({anime, handleData}) {
                             }>Watched</button>
                         </div>
                     </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current}/>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                     <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
                 </div>
             </>
