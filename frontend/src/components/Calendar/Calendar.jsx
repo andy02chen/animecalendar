@@ -296,9 +296,11 @@ function Calendar({animeData, renderAllComponents}) {
                                                 <p>
                                                     {date[0]}
                                                 </p>
-                                                {date[1].map((color, index) =>
-                                                    <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
-                                                )}
+                                                <div className='markers-div'>
+                                                    {date[1].map((color, index) =>
+                                                        <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                    )}
+                                                </div>
                                             </>
                                         }
                                     </div>
@@ -314,9 +316,11 @@ function Calendar({animeData, renderAllComponents}) {
                                                 <p>
                                                     {date[0]}
                                                 </p>
-                                                {date[1].map((color, index) =>
-                                                    <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
-                                                )}
+                                                <div className='markers-div'>
+                                                    {date[1].map((color, index) =>
+                                                        <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                    )}
+                                                </div>
                                             </>
                                         }
                                     </div>
@@ -332,9 +336,11 @@ function Calendar({animeData, renderAllComponents}) {
                                                 <p>
                                                     {date[0]}
                                                 </p>
-                                                {date[1].map((color, index) =>
-                                                    <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
-                                                )}
+                                                <div className='markers-div'>
+                                                    {date[1].map((color, index) =>
+                                                        <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                    )}
+                                                </div>
                                             </>
                                         }
                                     </div>

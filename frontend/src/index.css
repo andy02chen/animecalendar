@@ -267,6 +267,11 @@ img {
     .progress-bar-text {
         font-size: 1.5rem;
     }
+
+    .anime-date-marker {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 @media screen and (max-width: 600px) {
@@ -311,6 +316,12 @@ img {
 
     .anime-progress-checkbox {
         font-size: 0.85rem;
+    }
+
+    .anime-date-marker {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
     }
 }
 

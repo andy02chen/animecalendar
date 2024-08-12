@@ -101,7 +101,7 @@
     user-select: none;
 }
 
-.dates-list li div::before {
+.dates-list > li > div::before {
     content: "";
     position: absolute;
     height: clamp(1.5rem, 3.5vw, 4rem);
@@ -237,11 +237,19 @@
 }
 
 .anime-date-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.markers-div {
     position: absolute;
     top: 75%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+    height: auto;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
