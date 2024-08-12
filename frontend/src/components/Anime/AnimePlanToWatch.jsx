@@ -41,6 +41,7 @@ const moveToWatchingDiv = ((anime,setTrigger, setGotRequest) => {
 
 function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
     const air_status = anime.air_status;
+    const monthString = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     // if anime is currently airing
     if(air_status === "currently_airing") {
@@ -249,7 +250,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                             }
                         </p>
                         <p className='episode-status'>
-                            This anime is set to release sometime in <span className='white-bold'>{month} {year}</span>.
+                            This anime is set to release sometime in <span className='white-bold'>{monthString[month-1]} {year}</span>.
                         </p>
                     </>
                 );

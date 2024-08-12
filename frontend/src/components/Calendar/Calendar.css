@@ -114,9 +114,9 @@
     transition: background-color 0.3s ease-in-out;
 }
 
-.dates-list > li > div:hover {
+/* .dates-list > li > div:hover {
     cursor: pointer;
-}
+} */
 
 .dates-list > li > div:hover::before {
     background-color: var(--primary);
