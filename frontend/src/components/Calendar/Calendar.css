@@ -227,6 +227,11 @@
     border: 1px solid var(--background);
 }
 
+.month-buttons-div > button:hover {
+    cursor: pointer;
+    background-color: var(--text-light-gray) ;
+}
+
 .month-selection-heading {
     font-size: clamp(0.8rem, 1.2vw, 1.25rem);
 }
