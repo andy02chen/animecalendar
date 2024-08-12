@@ -26,7 +26,7 @@ function displayDiv(divClassName, anime) {
 }
 
 // Updates the number of episodes watched on MyAnimeList
-function updateStatus(anime, setRefreshAnimeDisplay) {
+function updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents) {
 
     // Display rating div if last episode
     if(anime.eps_watched === (anime.eps - 1) && anime.eps !== 0) {
@@ -48,7 +48,8 @@ function updateStatus(anime, setRefreshAnimeDisplay) {
         )
         .then(response => {
             anime.eps_watched++;
-            setRefreshAnimeDisplay(c => c);
+            setRefreshAnimeDisplay(c => c + 1);
+            setRenderAllComponents(c => c + 1);
             updateFeedback.style.display = "none";
             updateFeedback2.style.display = "flex";
         })
@@ -199,7 +200,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
         const theStartingDate = new Date(isoTime);
         let delaysToAdd = 0;
 
-        if((anime.eps_array.length === 0 || recalculateDates !== refreshAnimeDisplay) && anime.air_status === 'currently_airing') {
+        if((anime.eps_array.length === 0 || recalculateDates.current !== refreshAnimeDisplay) && anime.air_status === 'currently_airing') {
             recalculateDates.current = refreshAnimeDisplay;
             if (anime.eps) {
                 // Calculates estimated release dates for all episodes
@@ -323,7 +324,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                             <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
                                 onClick={(event) => {
                                     clearTimeout(event.target.timeoutId);
-                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
                                     document.getElementById(anime.id+'show-watched-button').style.display = "block";
                                     event.target.style.display = "none";
                                 }}>Confirm?</button>
@@ -370,7 +371,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                             <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
                                 onClick={(event) => {
                                     clearTimeout(event.target.timeoutId);
-                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
                                     document.getElementById(anime.id+'show-watched-button').style.display = "block";
                                     event.target.style.display = "none";
                                 }}>Confirm?</button>
@@ -417,7 +418,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                                 <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
                                     onClick={(event) => {
                                         clearTimeout(event.target.timeoutId);
-                                        updateStatus(anime, setRefreshAnimeDisplay);
+                                        updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
                                         document.getElementById(anime.id+'show-watched-button').style.display = "block";
                                         event.target.style.display = "none";
                                     }}>Confirm?</button>
@@ -449,7 +450,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                                 <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
                                     onClick={(event) => {
                                         clearTimeout(event.target.timeoutId);
-                                        updateStatus(anime, setRefreshAnimeDisplay);
+                                        updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
                                         document.getElementById(anime.id+'show-watched-button').style.display = "block";
                                         event.target.style.display = "none";
                                     }}>Confirm?</button>
@@ -502,7 +503,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                             <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
                                 onClick={(event) => {
                                     clearTimeout(event.target.timeoutId);
-                                    updateStatus(anime, setRefreshAnimeDisplay);
+                                    updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
                                     document.getElementById(anime.id+'show-watched-button').style.display = "block";
                                     event.target.style.display = "none";
                                 }}>Confirm?</button>
