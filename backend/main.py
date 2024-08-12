@@ -293,6 +293,8 @@ def weekly_anime():
 
                     else:
                         details['end_date'] = None
+
+                    details['eps_array'] = []
                     
                     data_to_return['anime'].append(details)
 

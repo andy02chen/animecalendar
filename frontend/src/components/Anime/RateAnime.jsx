@@ -32,7 +32,7 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         updateFeedback2.style.display = "flex";
         anime.eps_watched = anime.eps;
         displayDiv('rating',anime.id);
-        setRefreshAnimeDisplay(prevFlag => !prevFlag);
+        setRefreshAnimeDisplay(c => c);
         localStorage.removeItem(anime.id);
     })
     .catch(error => {

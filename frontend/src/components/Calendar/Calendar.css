@@ -30,7 +30,7 @@
 .day-title {
     color: var(--primary);
     font-family: "Montserrat", sans-serif;
-    font-size: clamp(0.75rem, 2.5vw, 2rem);;
+    font-size: clamp(0.75rem, 2.5vw, 2rem);
 }
 
 .days-div {
@@ -101,11 +101,11 @@
     user-select: none;
 }
 
-.dates-list li div::before {
+.dates-list > li > div::before {
     content: "";
     position: absolute;
-    height: 4rem;
-    width: 4rem;
+    height: clamp(1.5rem, 3.5vw, 4rem);
+    width: clamp(1.5rem, 3.5vw, 4rem);
     border-radius: 50%;
     background-color: none;
     top: 50%;
@@ -114,24 +114,21 @@
     transition: background-color 0.3s ease-in-out;
 }
 
-.dates-list li div:hover {
+.dates-list > li > div:hover {
     cursor: pointer;
 }
 
-.dates-list li div:hover::before {
+.dates-list > li > div:hover::before {
     background-color: var(--primary);
     z-index: -1;
+    height: clamp(1.5rem, 3.5vw, 4rem);
+    width: clamp(1.5rem, 3.5vw, 4rem);
 }
 
 .month-heading:hover {
     cursor: pointer;
     text-decoration: underline;
 }
-
-/* .prev-month-button, .next-month-button {
-    width: 3rem;
-    height: 3rem;
-} */
 
 .next-month-image, .prev-month-image {
     height: 1.5rem;
@@ -178,6 +175,26 @@
     margin-bottom: 4%;
 }
 
+@media (max-width: 1100px) {
+    #change-month-div > ul > li {
+        color: var(--text);
+        flex: 0 0 50%;
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+}
+
+@media (max-width: 600px) {
+    #change-month-div > ul > li {
+        color: var(--text);
+        flex: 0 0 100%;
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+}
+
 #change-month-div > ul > li:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -208,4 +225,31 @@
     text-decoration: none;
     border-radius: 5px;
     border: 1px solid var(--background);
+}
+
+.month-buttons-div > button:hover {
+    cursor: pointer;
+    background-color: var(--text-light-gray) ;
+}
+
+.month-selection-heading {
+    font-size: clamp(0.8rem, 1.2vw, 1.25rem);
+}
+
+.anime-date-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.markers-div {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
