@@ -18,6 +18,10 @@
     --text-gray: rgb(168, 168, 168);
 }
 
+.not-yet-implemented:hover {
+    cursor: not-allowed;
+}
+
 .loading-div {
     height: 100%;
     width: 100%;

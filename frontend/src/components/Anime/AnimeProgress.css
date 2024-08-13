@@ -199,6 +199,8 @@
     overflow: hidden;
     position: absolute;
     right: 0;
+    z-index: 11;
+    background-color: black;
 }
 
 #settings-options-div {
