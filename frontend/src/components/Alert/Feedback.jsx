@@ -4,7 +4,14 @@ const email='andy02chen@gmail.com';
 
 function copyEmail() {
     navigator.clipboard.writeText(email);
-    alert("Copied To Clipboard");
+    
+    const emailDiv = document.getElementById('copied-email-div');
+    emailDiv.classList.add('show');
+    emailDiv.style.display = "block";
+    setTimeout(() => {
+        emailDiv.classList.remove('show');
+        setTimeout(() => emailDiv.style.display = "none", 500);
+    }, 2000);
 }
 
 function closeFeedBack() {
@@ -14,7 +21,11 @@ function closeFeedBack() {
 function Feedback() {
 
     return(
+            
         <div className='gray-screen' id='feedback-show-div' style={{display: "none"}}>
+            <div id='copied-email-div' style={{display: "none"}}>
+                <p>Copied to clipboard</p>
+            </div>
             <div className='feedback-div'>
                 <h2 className="feedback-title">Got Feedback?</h2>
                 <p className="feedback-text">
