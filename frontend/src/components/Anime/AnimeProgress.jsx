@@ -516,10 +516,13 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllCompon
     document.addEventListener("click", function(event) {
         const div = document.getElementById('settings-options-div');
         const username = document.getElementById('settings-div-show-btn')
+        const settingsDiv = document.getElementById("settings-dropdown");
         let isClickInside = div.contains(event.target) || username.contains(event.target);
     
         if (!isClickInside) {
             div.style.display = "none";
+            settingsDiv.style.borderBottom = "none";
+            settingsDiv.style.borderLeft = "none";
         }
     });
 

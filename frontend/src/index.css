@@ -232,6 +232,10 @@ img {
     .calendar-div {
         flex: 0 0 65%;
     }
+
+    .feedback-div {
+        width: 60%;
+    }
 }
 
 /* Tablets */
@@ -275,6 +279,11 @@ img {
     .anime-date-marker {
         width: 8px;
         height: 8px;
+    }
+
+    /* TODO position in middle after figuring out how to make the grayscreen cover the whole screen */
+    .feedback-div {
+        width: 60%;
     }
 }
 

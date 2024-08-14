@@ -25,7 +25,7 @@ function MainComponent() {
     return(
         <>
             <Popup/>
-            <div className='main-div'>
+            <div className='main-div' id="main-div">
                 <div className="anime-progress-div">
                     <AnimeProgress handleData={handleData} setNumberOfWatchingAnime={numberOfWatchingAnime} setRenderAllComponents={setRenderAllComponents}/>
                 </div>

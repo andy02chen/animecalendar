@@ -15,7 +15,8 @@ function copyEmail() {
 }
 
 function closeFeedBack() {
-    document.getElementById('feedback-show-div').style.display = "none";
+    const feedbackDiv = document.getElementById('feedback-show-div');
+    feedbackDiv.style.display = "none";
 }
 
 function Feedback() {
@@ -30,8 +31,6 @@ function Feedback() {
                 <h2 className="feedback-title">Got Feedback?</h2>
                 <p className="feedback-text">
                     If you have any feedback or suggestions for improvements, please contact me using one of the options below.<br/>
-                    If there's a feature from "Announcements" that you're particularly eager to see implemented and you've been waiting for a while, please feel free to reach out. 
-                    I'll do my best to provide you with an estimate of when it might be available.<br/>
                     For bug reports, please provide as much detail as possible on how to recreate the issue, or include a video recording if you can.
                     This will help me diagnose and resolve the issue more effectively.<br/><br/>
                     <span style={{fontWeight: "bold"}}>Contact Options:</span><br/>

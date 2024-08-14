@@ -8,6 +8,7 @@ function Popup() {
         const consentGiven = localStorage.getItem('consentGiven');
         if (!consentGiven) {
             setIsVisible(true);
+            document.getElementById('main-div').style.overflow = 'hidden';
         } else {
             setIsVisible(false);
         }
@@ -15,11 +16,13 @@ function Popup() {
 
     const handleAccept = () => {
         setIsVisible(false);
+        document.getElementById('main-div').style.overflow = 'auto';
     };
 
     const handleAcceptForever = () => {
         localStorage.setItem('consentGiven', 'true');
         setIsVisible(false);
+        document.getElementById('main-div').style.overflow = 'auto';
     };
 
     return(
