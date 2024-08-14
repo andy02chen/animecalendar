@@ -281,7 +281,14 @@ img {
         height: 8px;
     }
 
-    /* TODO position in middle after figuring out how to make the grayscreen cover the whole screen */
+    .popup-localStorage {
+        width: 70%;
+    }
+
+    .popup-localStorage-title {
+        font-size: 1.2rem;
+    }
+
     .feedback-div {
         width: 60%;
     }

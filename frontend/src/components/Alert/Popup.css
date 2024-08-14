@@ -9,6 +9,8 @@
     padding: 1%;
     border-radius: 15px;
     text-align: left;
+    max-height: 50vh;
+    overflow-y: auto;
 }
 
 .popup-localStorage-title {
