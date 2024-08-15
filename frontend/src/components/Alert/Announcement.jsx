@@ -1,0 +1,82 @@
+import { useEffect, useState } from 'react';
+import './Announcement.css';
+
+const closeAnnouncement = () => {
+    document.getElementById('announcement-div').style.display = "none";
+};
+
+function Announcement() {
+
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        // Check if user has already seen the announcement
+        // Hide the red indicator if they have
+        // User can still read announcment if they choose to
+
+        const hasSeen = localStorage.getItem('seenAnnouncement');
+        if (hasSeen === 'true') {
+            // document.getElementById('announcement-button').classList.add('hide-indicator');
+            // document.getElementById('settings-div-show-btn').classList.add('hide-indicator');
+        }
+    }, []);
+
+    return(
+        (isVisible &&
+            <div className="gray-screen" id="announcement-div" style={{display: "none"}}>
+                <div className="feedback-div">
+                    <h2 className="feedback-title">Welcome to the Version 1.0 Launch!</h2>
+                    <p className="announcement-text">
+                        Hey there! Thanks for checking out my website. This is my first time launching a site, so please bear with me if you encounter any issues.
+                        For being a legend and taking time to read this, please click <a className='feedback-link' href='https://www.youtube.com/watch?v=xvFZjo5PgG0' target='_blank'>here</a> for login reward!
+                        <br/><br/>
+                        This site is designed to complement the MyAnimeList app. As a fellow MAL user, I found that while the anime tracker is useful, it can be a bit lacking. 
+                        Keeping track of episode release dates has become a challenge, especially when watching multiple seasonal anime. That's why I created this site—to make tracking and managing your anime experience a bit easier.
+                        <br/><br/>
+                    </p>
+                    <h3 className='announcement-mini-title'>
+                        A few things to note:
+                    </h3>
+                    <p className="announcement-text">
+                        - This site calculates and displays additional anime information but doesn't replace MAL.<br/>
+                        - It updates your anime progress and uses MAL data to calculate release dates and countdowns.<br/>
+                        - You'll still need to manage your lists on MAL.<br/>
+                        - I'm planning to keep improving the site.
+                    </p>
+                    <br/>
+                    <h3 className='announcement-mini-title'>
+                        Here's a few things that I plan to address in future updates:
+                    </h3>
+                    <p className='announcement-minier-title'>
+                        Known Issues:
+                    </p>
+                    <p className="announcement-text">
+                        - Landscape view on mobiles or devices with small screen heights<br/>
+                        - Page Zoom issues<br/>
+                    </p>
+                    <br/>
+                    <p className='announcement-minier-title'>
+                        Planned Updates (In no particular order):
+                    </p>
+                    <p className="announcement-text">
+                        - Option to change anime marker colours (If you know the MAL ID and can find localStorage, you can reroll)<br/>
+                        - Light Mode<br/>
+                        - Animated month transitions and scroll controls<br/>
+                        - Sync preferences and anime delayed data across devices (currently stored locally)<br/>
+                        - User statistic on delayed episodes (If enough users)<br/>
+                        - Expandable calendar dates for more information<br/>
+                        - Option to revert delayed episodes<br/><br/>
+
+                        I appreciate your support and feedback as I continue to refine and enhance the site. Enjoy!
+                    </p>
+                    
+                    <div>
+                        <button className='close-feedback' onClick={() => closeAnnouncement()}>Close</button>
+                    </div>
+                </div>
+            </div>
+        )
+    );
+}
+
+export default Announcement;

@@ -36,8 +36,8 @@ function Popup() {
                         Your anime tracking data will not be saved across devices. (May change in a future update)
                     </p>
                     <div className="popup-button-div">
-                        <button onClick={handleAccept}>Accept</button>
-                        <button onClick={handleAcceptForever}>Accept and Don't show again</button>
+                        <button onClick={() => handleAccept()}>Accept</button>
+                        <button onClick={() => handleAcceptForever()}>Accept and Don't show again</button>
                     </div>
                 </div>
             </div>

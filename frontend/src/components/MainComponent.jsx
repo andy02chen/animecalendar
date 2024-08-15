@@ -4,6 +4,7 @@ import "./MainComponent.css";
 import Popup from './Alert/Popup';
 import { useState, useRef, useEffect } from "react";
 import Feedback from "./Alert/Feedback";
+import Announcement from "./Alert/Announcement";
 
 function MainComponent() {
     const animeInfo = useRef(new Map());
@@ -12,9 +13,6 @@ function MainComponent() {
     const [renderAllComponents, setRenderAllComponents] = useState(0);
 
     function handleData(data) {
-        // if(animeInfo.current.get(data.id) === undefined) {
-        //     animeInfo.current.set(data.id, data);
-        // }
         animeInfo.current.set(data.id, data);
 
         if(animeInfo.current.size === numberOfWatchingAnime.current) {
@@ -46,6 +44,7 @@ function MainComponent() {
                 </div>
             </div>
             <Feedback/>
+            <Announcement/>
         </>
     );
 }
