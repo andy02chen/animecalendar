@@ -5,6 +5,7 @@ import HomePage from './components/Pages/HomePage.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Alert from './components/Alert/Alert.jsx'
+import GuestPage from './components/Pages/GuestPage.jsx'
 
 const router = createBrowserRouter([
   {

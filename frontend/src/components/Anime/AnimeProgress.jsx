@@ -391,6 +391,7 @@ function getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeLis
     setGotRequest(false);
     axios.get('/api/get-weekly-anime')
     .then(response => {
+        console.log(response);
         const storeAnime = response.data.anime;
         setWeeklyAnime(storeAnime);
         setDisplayAnime(storeAnime);
