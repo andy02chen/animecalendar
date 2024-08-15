@@ -3,10 +3,12 @@ import './Announcement.css';
 
 const closeAnnouncement = () => {
     document.getElementById('announcement-div').style.display = "none";
+    document.getElementById('main-div').style.overflow = 'auto';
 };
 
 function Announcement() {
-
+    // TODO edit when update
+    const version = "1.0";
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -15,9 +17,9 @@ function Announcement() {
         // User can still read announcment if they choose to
 
         const hasSeen = localStorage.getItem('seenAnnouncement');
-        if (hasSeen === 'true') {
-            // document.getElementById('announcement-button').classList.add('hide-indicator');
-            // document.getElementById('settings-div-show-btn').classList.add('hide-indicator');
+        if (hasSeen === version) {
+            document.getElementById('announcement-button').classList.add('hide-indicator');
+            document.getElementById('settings-div-show-btn').classList.add('hide-indicator');
         }
     }, []);
 
@@ -28,7 +30,6 @@ function Announcement() {
                     <h2 className="feedback-title">Welcome to the Version 1.0 Launch!</h2>
                     <p className="announcement-text">
                         Hey there! Thanks for checking out my website. This is my first time launching a site, so please bear with me if you encounter any issues.
-                        For being a legend and taking time to read this, please click <a className='feedback-link' href='https://www.youtube.com/watch?v=xvFZjo5PgG0' target='_blank'>here</a> for login reward!
                         <br/><br/>
                         This site is designed to complement the MyAnimeList app. As a fellow MAL user, I found that while the anime tracker is useful, it can be a bit lacking. 
                         Keeping track of episode release dates has become a challenge, especially when watching multiple seasonal anime. That's why I created this site—to make tracking and managing your anime experience a bit easier.
@@ -59,7 +60,7 @@ function Announcement() {
                         Planned Updates (In no particular order):
                     </p>
                     <p className="announcement-text">
-                        - Option to change anime marker colours (If you know the MAL ID and can find localStorage, you can reroll)<br/>
+                        - Option to change anime marker colours<br/>
                         - Light Mode<br/>
                         - Animated month transitions and scroll controls<br/>
                         - Sync preferences and anime delayed data across devices (currently stored locally)<br/>

@@ -17,6 +17,7 @@ function copyEmail() {
 function closeFeedBack() {
     const feedbackDiv = document.getElementById('feedback-show-div');
     feedbackDiv.style.display = "none";
+    document.getElementById('main-div').style.overflow = 'auto';
 }
 
 function Feedback() {

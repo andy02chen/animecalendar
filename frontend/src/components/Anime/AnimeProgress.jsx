@@ -475,14 +475,15 @@ function displaySettings() {
 
 function showFeedbackDiv() {
     const feedbackDiv = document.getElementById('feedback-show-div');
+    document.getElementById('main-div').style.overflow = 'hidden';
     if(feedbackDiv.style.display === "none") {
         feedbackDiv.style.display = "flex";
     }
 }
 
-// TODO display the announcement div
 function showAnnouncement() {
-    localStorage.setItem('seenAnnouncement', true);
+    document.getElementById('main-div').style.overflow = 'hidden';
+    localStorage.setItem('seenAnnouncement', "1.0");
     document.getElementById('announcement-button').classList.add('hide-indicator');
     document.getElementById('settings-div-show-btn').classList.add('hide-indicator');
     document.getElementById('announcement-div').style.display = "flex";
