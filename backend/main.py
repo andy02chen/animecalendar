@@ -476,6 +476,9 @@ def refreshUsersTokens():
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
+        if user_session_id == "guest":
+            return '', 204
+
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:

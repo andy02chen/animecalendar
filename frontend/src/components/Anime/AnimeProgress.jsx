@@ -391,7 +391,6 @@ function getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeLis
     setGotRequest(false);
     axios.get('/api/get-weekly-anime')
     .then(response => {
-        console.log(response);
         const storeAnime = response.data.anime;
         setWeeklyAnime(storeAnime);
         setDisplayAnime(storeAnime);
@@ -577,7 +576,15 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllCompon
                         searchAnime(event,weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList)
                     } className='search-weekly-anime' type='text' placeholder='Search for an anime title from your watchlist'/>
                 </div>
-                <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>
+                    {getCookie("session") === "guest" ?
+                        <p className="release-note">
+                            You are in guest mode and currently viewing <a className='feedback-link' href='https://myanimelist.net/profile/ZNEAK300?q=ZNEAK300&cat=user' target='_blank'>Andy's</a> anime watchlist.
+                        </p>
+                    :
+                        <p className="release-note">
+                            Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform.
+                        </p>
+                    }
             </div>
             <div className='progress-div'>
                     {gotRequest ?
