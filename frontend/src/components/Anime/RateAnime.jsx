@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { MyContext } from "../Pages/HomePage";
 
 // Updates the number of episodes watched on MyAnimeList
 function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
@@ -60,29 +61,36 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
 
 function RateAnime({anime, setRefreshAnimeDisplay, displayDiv}) {
     const [rating, setRating] = useState(1);
+    const userContext = useContext(MyContext);
 
     const handleInput = (event) => {
         setRating(event.target.value);
     }
 
     return(
-        <div className={'rating'+anime.id} style={{display:'none'}}>
-            <p className="episode-status">Would you like to leave a rating?</p>
-            <div>
-                <input
-                    style={{width: "80%"}}
-                    onChange={handleInput} id="rating-slider" 
-                    type="range" 
-                    min="1" 
-                    max="10" 
-                    defaultValue={rating}/>
-                <p style={{fontSize: "1.5rem", color: "var(--text)", fontWeight: "700"}} id="rating-output">{rating}</p>
-            </div>
-            <div className="button-choice-div">
-                <button className="negative-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay, 0, displayDiv)}>Skip</button>
-                <button className="positive-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay, rating, displayDiv)}>Confirm</button>
-            </div>
-        </div>
+        <>
+            {userContext === "Guest" ?
+                null
+                :
+                <div className={'rating'+anime.id} style={{display:'none'}}>
+                    <p className="episode-status">Would you like to leave a rating?</p>
+                    <div>
+                        <input
+                            style={{width: "80%"}}
+                            onChange={handleInput} id="rating-slider" 
+                            type="range" 
+                            min="1" 
+                            max="10" 
+                            defaultValue={rating}/>
+                        <p style={{fontSize: "1.5rem", color: "var(--text)", fontWeight: "700"}} id="rating-output">{rating}</p>
+                    </div>
+                    <div className="button-choice-div">
+                        <button className="negative-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay, 0, displayDiv)}>Skip</button>
+                        <button className="positive-button" onClick={() => updateStatus(anime, setRefreshAnimeDisplay, rating, displayDiv)}>Confirm</button>
+                    </div>
+                </div>
+            }
+        </>
     );
 }
 
