@@ -41,12 +41,15 @@ function Auth() {
                         </>
                         :
                         <>
-                            <button onClick={() => {
-                                document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                                authRedirect();
-                            }} className='login-button'>Login with MAL</button>
-                            <br></br>
-                            <button onClick={() => guestRedirect()}>Continue as Guest</button>
+                            <div className='demo-div'>
+                                <div className='login-choice-div'>
+                                    <button onClick={() => {
+                                        document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                        authRedirect();
+                                    }} className='login-button'>Login with MAL</button>
+                                    <button onClick={() => guestRedirect()}>Continue as Guest</button>
+                                </div>
+                            </div>
                         </>
                     }
                 </>
@@ -58,6 +61,9 @@ function Auth() {
                     </div>
                 </>
             }
+            <div className='contact-div'>
+                <h1>Contact</h1>
+            </div>
         </div>
     );
 }
