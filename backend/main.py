@@ -96,12 +96,20 @@ def delete_user_session():
         return jsonify({"error": "rate limit exceeded"}), 429
 
     session_id = request.cookies.get("session")
-    found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
 
-    found_user.session_id = None
-    db.session.commit()
+    if session_id:
+        if session_id == 'guest':
+            return jsonify({"redirect_url": "/"}), 200
 
-    return jsonify({"redirect_url": "/"}), 200
+        found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+
+        if found_user:
+            found_user.session_id = None
+            db.session.commit()
+
+            return jsonify({"redirect_url": "/"}), 200
+
+    return jsonify({"redirect_url": "/"}), 401
 
 
 # Function for checking expiry time

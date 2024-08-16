@@ -497,6 +497,10 @@ function logOut() {
             document.cookie = 'session=; Max-Age=-99999999;';
             window.location.href = response.data.redirect_url;
         })
+        .catch(error => {
+            localStorage.setItem('errorMsgDiv', '4');
+            window.location.href = '/';
+        });
 }
 
 function getCookie(name) {
