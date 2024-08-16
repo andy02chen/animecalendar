@@ -1,9 +1,10 @@
 import './AnimeProgress.css'
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import AnimeAvailableDate from './AnimeAvailableDate';
 import defaultpfp from '../imgs/defaultpfp.png';
 import AnimePlanToWatch from './AnimePlanToWatch';
+import { MyContext } from '../Pages/HomePage';
 
 // Searches weekly anime and displays them
 function searchAnime(event, weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList) {
@@ -521,6 +522,8 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllCompon
 
     const [trigger, setTrigger] = useState(0);
 
+    const userContext = useContext(MyContext);
+
     useEffect(() => {
         getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeList,setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest,setCurrAiringAnime,setNumberOfWatchingAnime);
     },[trigger]);
@@ -580,7 +583,7 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllCompon
                         searchAnime(event,weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList)
                     } className='search-weekly-anime' type='text' placeholder='Search for an anime title from your watchlist'/>
                 </div>
-                    {getCookie("session") === "guest" ?
+                    {userContext === "Guest" ?
                         <p className="release-note">
                             You are in guest mode and currently viewing <a className='feedback-link' href='https://myanimelist.net/profile/ZNEAK300?q=ZNEAK300&cat=user' target='_blank'>Andy's</a> anime watchlist.
                         </p>

@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import AnimeDelayEpConfirmation from "./AnimeDelayEpConfirmation";
 import RateAnime from "./RateAnime";
 import "./AnimeAvailableDate.css"
+import { MyContext } from "../Pages/HomePage";
 
 // Displays div with classname
 function displayDiv(divClassName, anime) {
@@ -120,6 +121,8 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
 
     // Timer for anime that are about air
     const [countdown, setCountdown] = useState(null);
+
+    const userContext = useContext(MyContext);
 
     const days = useRef(null);
     const nextEpInfo = useRef(null);
@@ -319,31 +322,35 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                 <div className="progress-info-div">
                     <div className={anime.id}>
                         {episodeStatusNoBroadcastTime(days.current, nextEpInfo.current, anime)}
-                        <div className="button-choice-div">
-                            <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
-                                onClick={(event) => {
-                                    clearTimeout(event.target.timeoutId);
-                                    updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
-                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
-                                    event.target.style.display = "none";
-                                }}>Confirm?</button>
-                            <button id={anime.id+'show-watched-button'} className="positive-button" 
-                                onClick={(event) => {
-                                    event.target.style.display = "none";
-                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
-                                    confirmButton.style.display = "block";
+                        {userContext === 'Guest' ?
+                            null
+                            :
+                            <div className="button-choice-div">
+                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                                <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                    onClick={(event) => {
+                                        clearTimeout(event.target.timeoutId);
+                                        updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
+                                        document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                        event.target.style.display = "none";
+                                    }}>Confirm?</button>
+                                <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                    onClick={(event) => {
+                                        event.target.style.display = "none";
+                                        const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                        confirmButton.style.display = "block";
 
-                                    const timeoutId = setTimeout(() => {
-                                        confirmButton.style.display = "none";
-                                        event.target.classList.add('bounce');
-                                        event.target.style.display = "block";
-                                    }, 3000);
+                                        const timeoutId = setTimeout(() => {
+                                            confirmButton.style.display = "none";
+                                            event.target.classList.add('bounce');
+                                            event.target.style.display = "block";
+                                        }, 3000);
 
-                                    confirmButton.timeoutId = timeoutId;
-                                }
-                            }>Watched</button>
-                        </div>
+                                        confirmButton.timeoutId = timeoutId;
+                                    }
+                                }>Watched</button>
+                            </div>
+                        }
                     </div>
                     <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                 </div>
@@ -362,53 +369,9 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                 <div className="progress-info-div">
                     <div className={anime.id}>
                         <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` is estimated to air in ${Math.ceil(daysTillRelease)} days on `}<span style={{color: "var(--text)", fontWeight: "bold"}}>{nextEpInfo.current[2]} {nextEpInfo.current[1]} {nextEpInfo.current[3]}, {nextEpInfo.current[0]}</span></p>
-                        <div className="button-choice-div">
-                            {endDateKnown ?
-                                <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
-                                :
-                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                            }
-                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
-                                onClick={(event) => {
-                                    clearTimeout(event.target.timeoutId);
-                                    updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
-                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
-                                    event.target.style.display = "none";
-                                }}>Confirm?</button>
-                            <button id={anime.id+'show-watched-button'} className="positive-button" 
-                                onClick={(event) => {
-                                    event.target.style.display = "none";
-                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
-                                    confirmButton.style.display = "block";
-
-                                    const timeoutId = setTimeout(() => {
-                                        confirmButton.style.display = "none";
-                                        event.target.classList.add('bounce');
-                                        event.target.style.display = "block";
-                                    }, 3000);
-
-                                    confirmButton.timeoutId = timeoutId;
-                                }
-                            }>Watched</button>
-                        </div>
-                    </div>
-                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
-                </div>
-            </>
-        );
-    // Countdown if within 24 hours
-    } else if (daysTillRelease <= 1 && daysTillRelease >= 0) {
-        return(
-            <>
-                <div className="progress-bar-text-div">
-                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
-                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
-                </div>
-                <div className="progress-info-div">
-                    {countdown > 0 ? 
-                    <>
-                        <div className={anime.id}>
-                            <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> is estimated to air in <span style={{color: "var(--text)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> 
+                        {userContext === "Guest" ?
+                            null
+                            :
                             <div className="button-choice-div">
                                 {endDateKnown ?
                                     <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
@@ -438,6 +401,58 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                                     }
                                 }>Watched</button>
                             </div>
+                        }
+                    </div>
+                    <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
+                </div>
+            </>
+        );
+    // Countdown if within 24 hours
+    } else if (daysTillRelease <= 1 && daysTillRelease >= 0) {
+        return(
+            <>
+                <div className="progress-bar-text-div">
+                    <p className="progress-bar-text">{anime.eps_watched} / {anime.eps === 0 ? '?' : anime.eps} ep</p>
+                    <div className="bar-itself" style={outerProgress}><div style={innerProgress}></div></div>
+                </div>
+                <div className="progress-info-div">
+                    {countdown > 0 ? 
+                    <>
+                        <div className={anime.id}>
+                            <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> is estimated to air in <span style={{color: "var(--text)", fontWeight: "bold"}}>{formatTime(countdown)}</span></p> 
+                            {userContext === "Guest" ?
+                                null
+                                :
+                                <div className="button-choice-div">
+                                    {endDateKnown ?
+                                        <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
+                                        :
+                                        <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                                    }
+                                    <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                        onClick={(event) => {
+                                            clearTimeout(event.target.timeoutId);
+                                            updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
+                                            document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                            event.target.style.display = "none";
+                                        }}>Confirm?</button>
+                                    <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                        onClick={(event) => {
+                                            event.target.style.display = "none";
+                                            const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                            confirmButton.style.display = "block";
+
+                                            const timeoutId = setTimeout(() => {
+                                                confirmButton.style.display = "none";
+                                                event.target.classList.add('bounce');
+                                                event.target.style.display = "block";
+                                            }, 3000);
+
+                                            confirmButton.timeoutId = timeoutId;
+                                        }
+                                    }>Watched</button>
+                                </div>
+                            }
                         </div>
                         <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                     </>
@@ -445,31 +460,35 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                     <>
                         <div className={anime.id}>
                             <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span> {` available to watch now`}</p>
-                            <div className="button-choice-div">
-                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                                <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
-                                    onClick={(event) => {
-                                        clearTimeout(event.target.timeoutId);
-                                        updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
-                                        document.getElementById(anime.id+'show-watched-button').style.display = "block";
-                                        event.target.style.display = "none";
-                                    }}>Confirm?</button>
-                                <button id={anime.id+'show-watched-button'} className="positive-button" 
-                                    onClick={(event) => {
-                                        event.target.style.display = "none";
-                                        const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
-                                        confirmButton.style.display = "block";
+                            {userContext === "Guest" ?
+                                null
+                                :
+                                <div className="button-choice-div">
+                                    <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
+                                    <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                        onClick={(event) => {
+                                            clearTimeout(event.target.timeoutId);
+                                            updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
+                                            document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                            event.target.style.display = "none";
+                                        }}>Confirm?</button>
+                                    <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                        onClick={(event) => {
+                                            event.target.style.display = "none";
+                                            const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                            confirmButton.style.display = "block";
 
-                                        const timeoutId = setTimeout(() => {
-                                            confirmButton.style.display = "none";
-                                            event.target.classList.add('bounce');
-                                            event.target.style.display = "block";
-                                        }, 3000);
+                                            const timeoutId = setTimeout(() => {
+                                                confirmButton.style.display = "none";
+                                                event.target.classList.add('bounce');
+                                                event.target.style.display = "block";
+                                            }, 3000);
 
-                                        confirmButton.timeoutId = timeoutId;
-                                    }
-                                }>Watched</button>
-                            </div>
+                                            confirmButton.timeoutId = timeoutId;
+                                        }
+                                    }>Watched</button>
+                                </div>
+                            }
                         </div>
                         <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                         <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
@@ -494,35 +513,39 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
                         :
                             <p className="episode-status"><span style={{color: "var(--text)", fontWeight: "bold"}}>Ep. {anime.eps_watched + 1}</span>{` available to watch now`}</p>
                         }
-                        <div className="button-choice-div">
-                            {finishedAiring ?
-                                <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
-                                :
-                                <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
-                            }
-                            <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
-                                onClick={(event) => {
-                                    clearTimeout(event.target.timeoutId);
-                                    updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
-                                    document.getElementById(anime.id+'show-watched-button').style.display = "block";
-                                    event.target.style.display = "none";
-                                }}>Confirm?</button>
-                            <button id={anime.id+'show-watched-button'} className="positive-button" 
-                                onClick={(event) => {
-                                    event.target.style.display = "none";
-                                    const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
-                                    confirmButton.style.display = "block";
-
-                                    const timeoutId = setTimeout(() => {
-                                        confirmButton.style.display = "none";
-                                        event.target.classList.add('bounce');
-                                        event.target.style.display = "block";
-                                    }, 3000);
-
-                                    confirmButton.timeoutId = timeoutId;
+                        {userContext === "Guest" ?
+                            null
+                            :
+                            <div className="button-choice-div">
+                                {finishedAiring ?
+                                    <button style={{cursor:"not-allowed"}} className="negative-button" onClick={() => {displayDiv('delay', anime.id)}} disabled>Delayed</button>
+                                    :
+                                    <button className="negative-button" onClick={() => {displayDiv('delay', anime.id)}}>Delayed</button>
                                 }
-                            }>Watched</button>
-                        </div>
+                                <button id={anime.id+'confirm-watched-button'} style={{display: "none"}} className="positive-button"
+                                    onClick={(event) => {
+                                        clearTimeout(event.target.timeoutId);
+                                        updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents);
+                                        document.getElementById(anime.id+'show-watched-button').style.display = "block";
+                                        event.target.style.display = "none";
+                                    }}>Confirm?</button>
+                                <button id={anime.id+'show-watched-button'} className="positive-button" 
+                                    onClick={(event) => {
+                                        event.target.style.display = "none";
+                                        const confirmButton = document.getElementById(anime.id+'confirm-watched-button');
+                                        confirmButton.style.display = "block";
+
+                                        const timeoutId = setTimeout(() => {
+                                            confirmButton.style.display = "none";
+                                            event.target.classList.add('bounce');
+                                            event.target.style.display = "block";
+                                        }, 3000);
+
+                                        confirmButton.timeoutId = timeoutId;
+                                    }
+                                }>Watched</button>
+                            </div>
+                        }
                     </div>
                     <AnimeDelayEpConfirmation anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv} nextEpDate={nextEpDate.current} setRenderAllComponents={setRenderAllComponents}/>
                     <RateAnime anime={anime} setRefreshAnimeDisplay={setRefreshAnimeDisplay} displayDiv={displayDiv}/>
