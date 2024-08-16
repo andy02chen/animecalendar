@@ -42,7 +42,10 @@ function Auth() {
                         :
                         <>
                             <div className='demo-div'>
+                                <div className='screenshots-div'></div>
+                                <div className='div-line'></div>
                                 <div className='login-choice-div'>
+                                    <p>For a better experience:</p>
                                     <button onClick={() => {
                                         document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                         authRedirect();
