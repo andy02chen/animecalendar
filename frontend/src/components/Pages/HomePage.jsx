@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, createContext} from 'react'
 import axios from "axios"
 import MainComponent from '../MainComponent'
+
 function loginRedirect() {
     window.location.href = `/a`
 }
@@ -33,9 +34,12 @@ const refreshTime = tokenExpiry - refreshBuffer;
 // const refreshTime = 5000;
 let refreshInterval;
 
+export const MyContext = createContext("");
+
 function HomePage() {
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [hasLoaded, setLoaded] = useState(false);    
+    const [hasLoaded, setLoaded] = useState(false);
+    const [user, setUser] = useState("");
 
     // Calls API to check if user is logged in
     useEffect(() => {
@@ -46,6 +50,8 @@ function HomePage() {
 
                 document.cookie = `username=${response.data.username};`
                 document.cookie = `pfp=${response.data.picture};`
+
+                setUser(response.data.username);
 
                 if(response.data.loggedIn) {
                     refreshInterval = setInterval(refreshAccessToken,refreshTime);
@@ -63,9 +69,9 @@ function HomePage() {
             {hasLoaded ?
                 <>
                     {isLoggedIn ?
-                        <>
+                        <MyContext.Provider value={user}>
                             <MainComponent/>
-                        </>
+                        </MyContext.Provider>
                         :
                         <>
                             {loginRedirect()}

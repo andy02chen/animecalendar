@@ -7,7 +7,11 @@ function authRedirect() {
 }
 
 function homepageRedirect() {
-    window.location.href = `/home`
+    window.location.href = `/home`;
+}
+
+function guestRedirect() {
+    window.location.href = '/guest';
 }
 
 function Auth() {
@@ -42,7 +46,7 @@ function Auth() {
                                 authRedirect();
                             }} className='login-button'>Login with MAL</button>
                             <br></br>
-                            <button>Continue as Guest</button>
+                            <button onClick={() => guestRedirect()}>Continue as Guest</button>
                         </>
                     }
                 </>

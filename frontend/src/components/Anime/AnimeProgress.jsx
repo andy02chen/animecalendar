@@ -1,9 +1,10 @@
 import './AnimeProgress.css'
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import AnimeAvailableDate from './AnimeAvailableDate';
 import defaultpfp from '../imgs/defaultpfp.png';
 import AnimePlanToWatch from './AnimePlanToWatch';
+import { MyContext } from '../Pages/HomePage';
 
 // Searches weekly anime and displays them
 function searchAnime(event, weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList) {
@@ -254,6 +255,8 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
         }
     });
 
+    const userContext = useContext(MyContext);
+
     return(
         <>
             <div onClick={unclickable ? undefined :() => expandCurrWatchingDiv()} id='curr-watching-animes-div' 
@@ -283,11 +286,15 @@ const watchingDivHTML = ((handleData, unclickable, hideCheckBox, displayAnime, c
                                         <AnimeAvailableDate anime={anime} handleData={handleData} setRenderAllComponents={setRenderAllComponents}/>
                                     </div>
 
-                                    <div id={anime.id+'update-spinner'} className='update-div'>
-                                        <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
-                                        <p>Updating...</p>
-                                    </div>
+                                    {userContext === "Guest" ?
+                                        null
+                                        :
+                                        <div id={anime.id+'update-spinner'} className='update-div'>
+                                            <svg className="update-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                            <path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
+                                            <p>Updating...</p>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             {index === displayAnime.length - 1 ? <div></div> : <div className='anime-div-bar'></div> }
@@ -497,6 +504,10 @@ function logOut() {
             document.cookie = 'session=; Max-Age=-99999999;';
             window.location.href = response.data.redirect_url;
         })
+        .catch(error => {
+            localStorage.setItem('errorMsgDiv', '4');
+            window.location.href = '/';
+        });
 }
 
 function getCookie(name) {
@@ -516,6 +527,8 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllCompon
     const [notYetAiredList, setNotYetAiredList] = useState([]);
 
     const [trigger, setTrigger] = useState(0);
+
+    const userContext = useContext(MyContext);
 
     useEffect(() => {
         getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeList,setWeeklyAnime,setDisplayAnime,setFailedRequest,setGotRequest,setCurrAiringAnime,setNumberOfWatchingAnime);
@@ -576,7 +589,15 @@ function AnimeProgress({handleData, setNumberOfWatchingAnime, setRenderAllCompon
                         searchAnime(event,weeklyAnime, setDisplayAnime, setPlanToWatch, planToWatchAnimeList)
                     } className='search-weekly-anime' type='text' placeholder='Search for an anime title from your watchlist'/>
                 </div>
-                <p className="release-note">Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform. </p>
+                    {userContext === "Guest" ?
+                        <p className="release-note">
+                            You are in guest mode and currently viewing <a className='feedback-link' href='https://myanimelist.net/profile/ZNEAK300?q=ZNEAK300&cat=user' target='_blank'>Andy's</a> anime watchlist.
+                        </p>
+                    :
+                        <p className="release-note">
+                            Note: The release times are based on MyAnimeList data and may not reflect availability on your chosen streaming platform.
+                        </p>
+                    }
             </div>
             <div className='progress-div'>
                     {gotRequest ?

@@ -96,12 +96,20 @@ def delete_user_session():
         return jsonify({"error": "rate limit exceeded"}), 429
 
     session_id = request.cookies.get("session")
-    found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
 
-    found_user.session_id = None
-    db.session.commit()
+    if session_id:
+        if session_id == 'guest':
+            return jsonify({"redirect_url": "/"}), 200
 
-    return jsonify({"redirect_url": "/"}), 200
+        found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+
+        if found_user:
+            found_user.session_id = None
+            db.session.commit()
+
+            return jsonify({"redirect_url": "/"}), 200
+
+    return jsonify({"redirect_url": "/"}), 401
 
 
 # Function for checking expiry time
@@ -140,6 +148,63 @@ def plan_to_watch():
     # Find user using session id
     user_session_id = request.cookies.get('session')
     if user_session_id:
+        if user_session_id == "guest":
+            mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=plan_to_watch&
+            sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast,start_season&nsfw=true
+            &limit=1000'''
+            headers = {
+                'X-MAL-CLIENT-ID': f'{client_id}'
+            }
+
+            response = requests.get(mal_get_anime, headers=headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_to_return = {'plan_to_watch':[]}
+
+                for anime in data['data']:
+                    details = {}
+                    details['title'] = anime['node']['title']
+                    details['id'] = anime['node']['id']
+
+                    if 'main_picture' in anime['node']:
+                        details['img'] = anime['node']['main_picture']['medium']
+
+                    else:
+                        details['img'] = None
+
+                    details['air_status'] = anime['node']['status']
+
+                    # Get anime season
+                    if 'start_season' in anime['node']:
+                        details['season'] = anime['node']['start_season']['season'],str(anime['node']['start_season']['year'])
+
+                    else:
+                        details['season'] = None
+
+                    # Get anime start date
+                    if 'start_date' in anime['node']:
+                        details['start_date'] = anime['node']['start_date']
+
+                    else:
+                        details['start_date'] = None
+
+                    if 'broadcast' in anime['node']:
+                        if 'start_time' in anime['node']['broadcast']:
+                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                        else:
+                            details['broadcast_time'] = None
+
+                    else:
+                        details['broadcast_time'] = None
+                        
+                    data_to_return['plan_to_watch'].append(details)
+
+                return data_to_return
+
+            return 'Unable to get plan to watch anime from MAL',500
+
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
@@ -228,7 +293,73 @@ def weekly_anime():
 
     # Find user using session id
     user_session_id = request.cookies.get('session')
+
+    # TODO Guest user should get details for ZNEAK300
     if user_session_id:
+        if user_session_id == 'guest':
+            mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=watching&
+            sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true'''
+            headers = {
+                'X-MAL-CLIENT-ID': f'{client_id}'
+            }
+
+            response = requests.get(mal_get_anime, headers=headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_to_return = {'anime':[]}
+                for anime in data['data']:
+                    details = {}
+                    details['title'] = anime['node']['title']
+                    details['id'] = anime['node']['id']
+
+                    if 'start_date' in anime['node']:
+                        details['start_date'] = anime['node']['start_date']
+
+                    else:
+                        details['start_date'] = None
+
+                    if 'main_picture' in anime['node']:
+                        details['img'] = anime['node']['main_picture']['medium']
+
+                    else:
+                        details['img'] = None
+
+                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
+
+                    if 'num_episodes' in anime['node']:
+                        details['eps'] = anime['node']['num_episodes']
+
+                    else:
+                        details['eps'] = 0
+
+                    if 'broadcast' in anime['node']:
+                        if 'start_time' in anime['node']['broadcast']:
+                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+                        else:
+                            details['broadcast_time'] = None
+
+                    else:
+                        details['broadcast_time'] = None
+
+                    details['delayed_eps'] = 0
+                    details['air_status'] = anime['node']['status']
+
+                    if 'end_date' in anime['node']:
+                        details['end_date'] = anime['node']['end_date']
+
+                    else:
+                        details['end_date'] = None
+
+                    details['eps_array'] = []
+                    
+                    data_to_return['anime'].append(details)
+
+                return data_to_return
+
+            return 'Unable to get anime watchlist from MAL',500
+
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
@@ -323,6 +454,13 @@ def protectedRoute():
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
+        if user_session_id == "guest":
+            return jsonify({
+                'loggedIn':True,
+                'username': 'Guest',
+                'picture': None
+            })
+
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
@@ -346,6 +484,9 @@ def refreshUsersTokens():
     user_session_id = request.cookies.get('session')
 
     if user_session_id:
+        if user_session_id == "guest":
+            return '', 204
+
         find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
 
         if find_user:
@@ -607,6 +748,13 @@ def oauth():
                 ''')
 
     return redirect('/')
+
+# Guest page
+@app.route('/guest')
+def guestLogin():
+    response = redirect('/home')
+    response.set_cookie('session', "guest")
+    return response
 
 if __name__ == '__main__':
     with app.app_context():
