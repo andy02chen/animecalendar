@@ -1,5 +1,7 @@
 import axios from "axios";
 import CountDown from "./Countdown";
+import { useContext } from "react";
+import { MyContext } from "../Pages/HomePage";
 
 // Moves anime from plan to watch div into watching and updates status on MyAnimeList
 const moveToWatchingDiv = ((anime,setTrigger, setGotRequest) => {
@@ -43,6 +45,8 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
     const air_status = anime.air_status;
     const monthString = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+    const userContext = useContext(MyContext);
+
     // if anime is currently airing
     if(air_status === "currently_airing") {
         return(
@@ -61,33 +65,37 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                     <span style={{textDecoration: "underline", color: "var(--text)"}}>currently</span>
                     &nbsp;airing.
                 </p>
-                <div className='ptw-button-div'>
-                    <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"
-                        onClick={(event) => {
-                            event.target.style.display = "none";
-                            const confirmButton = document.getElementById(anime.id+'ptw-button2');
-                            confirmButton.style.display = "block";
+                {userContext === "Guest" ?
+                    null
+                    :
+                    <div className='ptw-button-div'>
+                        <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"
+                            onClick={(event) => {
+                                event.target.style.display = "none";
+                                const confirmButton = document.getElementById(anime.id+'ptw-button2');
+                                confirmButton.style.display = "block";
 
-                            const timeoutId = setTimeout(() => {
-                                confirmButton.style.display = "none";
-                                event.target.classList.add('bounce');
-                                event.target.style.display = "block";
-                            }, 3000);
+                                const timeoutId = setTimeout(() => {
+                                    confirmButton.style.display = "none";
+                                    event.target.classList.add('bounce');
+                                    event.target.style.display = "block";
+                                }, 3000);
 
-                            confirmButton.timeoutId = timeoutId;
-                        }}
-                        >
-                        Started Watching
-                    </button>
-                    <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
-                        onClick={(event) => {
-                            clearTimeout(event.target.timeoutId);
-                            moveToWatchingDiv(anime,setTrigger, setGotRequest);
-                        }}
-                        >
-                        Confirm?
-                    </button>
-                </div>
+                                confirmButton.timeoutId = timeoutId;
+                            }}
+                            >
+                            Started Watching
+                        </button>
+                        <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
+                            onClick={(event) => {
+                                clearTimeout(event.target.timeoutId);
+                                moveToWatchingDiv(anime,setTrigger, setGotRequest);
+                            }}
+                            >
+                            Confirm?
+                        </button>
+                    </div>
+                }
             </div>
         );
     }
@@ -318,34 +326,38 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                     <span style={{textDecoration: 'underline', color: "var(--text)"}}>finished</span>
                     &nbsp;airing.
                 </p>
-                <div className='ptw-button-div'>
-                    <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"
-                        onClick={(event) => {
-                            event.target.style.display = "none";
-                            const confirmButton = document.getElementById(anime.id+'ptw-button2');
-                            confirmButton.style.display = "block";
+                {userContext === "Guest" ?
+                    null
+                    :
+                    <div className='ptw-button-div'>
+                        <button id={anime.id + 'ptw-button1'} className="positive-button add-to-watching-button"
+                            onClick={(event) => {
+                                event.target.style.display = "none";
+                                const confirmButton = document.getElementById(anime.id+'ptw-button2');
+                                confirmButton.style.display = "block";
 
-                            const timeoutId = setTimeout(() => {
-                                confirmButton.style.display = "none";
-                                event.target.classList.add('bounce');
-                                event.target.style.display = "block";
-                            }, 3000);
+                                const timeoutId = setTimeout(() => {
+                                    confirmButton.style.display = "none";
+                                    event.target.classList.add('bounce');
+                                    event.target.style.display = "block";
+                                }, 3000);
 
-                            confirmButton.timeoutId = timeoutId;
-                        }}
-                        >
-                        Started Watching
-                    </button>
-                    <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
-                        onClick={(event) => {
-                            clearTimeout(event.target.timeoutId);
-                            moveToWatchingDiv(anime,setTrigger, setGotRequest);
-                            setGotRequest(false);
-                        }}
-                        >
-                        Confirm?
-                    </button>
-                </div>
+                                confirmButton.timeoutId = timeoutId;
+                            }}
+                            >
+                            Started Watching
+                        </button>
+                        <button id={anime.id + 'ptw-button2'} style={{display: 'none'}}className="positive-button add-to-watching-button"
+                            onClick={(event) => {
+                                clearTimeout(event.target.timeoutId);
+                                moveToWatchingDiv(anime,setTrigger, setGotRequest);
+                                setGotRequest(false);
+                            }}
+                            >
+                            Confirm?
+                        </button>
+                    </div>
+                }
             </div>
         );
     }
