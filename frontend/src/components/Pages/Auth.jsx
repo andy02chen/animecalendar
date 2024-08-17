@@ -45,12 +45,17 @@ function Auth() {
                                 <div className='screenshots-div'></div>
                                 <div className='div-line'></div>
                                 <div className='login-choice-div'>
-                                    <p>For a better experience:</p>
-                                    <button onClick={() => {
-                                        document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                                        authRedirect();
-                                    }} className='login-button'>Login with MAL</button>
-                                    <button onClick={() => guestRedirect()}>Continue as Guest</button>
+                                    <div className='mal-choice-div'>
+                                        <p>For a better experience:</p>
+                                        <button onClick={() => {
+                                            document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                            authRedirect();
+                                        }} className='login-button'>Login with MAL</button>
+                                    </div>
+                                    <div className='choice-div-line'></div>
+                                    <div className='guest-choice-div'>
+                                        <button onClick={() => guestRedirect()}>Continue as Guest</button>
+                                    </div>
                                 </div>
                             </div>
                         </>
