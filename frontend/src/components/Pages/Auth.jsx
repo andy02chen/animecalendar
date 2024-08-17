@@ -58,6 +58,9 @@ function Auth() {
                                     </div>
                                 </div>
                             </div>
+                            <div className='contact-div'>
+                                <h1>Contact</h1>
+                            </div>
                         </>
                     }
                 </>
@@ -69,9 +72,7 @@ function Auth() {
                     </div>
                 </>
             }
-            <div className='contact-div'>
-                <h1>Contact</h1>
-            </div>
+            
         </div>
     );
 }
