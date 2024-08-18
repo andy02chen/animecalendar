@@ -9,7 +9,7 @@
 }
 
 .contact-div {
-    background-color: var(--primary);
+    background-color: var(--primary-dark);
     height: 10vh;
     width: 100%;
     min-height: 100px;
@@ -102,8 +102,23 @@
     justify-content: space-evenly;
     padding-top: 5%;
     padding-bottom: 5%;
+    height: 80%;
+    width: 90%;
+    background-color: hsla(209, 78%, 14%, 0.875);
+    border-radius: 20px;
+}
+
+.main-page-image {
     height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 425px;
+    background-image: url("../imgs/background1.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
 }
 
 .div-line {
@@ -125,14 +140,43 @@
 
 .demo-image {
     max-width: 100%;
+    max-height: 100%;
+    width: auto;
     height: auto;
     border-radius: 10px;
+    object-fit: contain;
+}
+
+.credit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.credit-link {
+    text-decoration: none;
+}
+
+.credit-link:hover {
+    cursor: pointer;
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.credit-link:visited {
+    color: var(--text);
 }
 
 @media screen and (max-width: 767px) {
     .demo-div {
         flex-direction: column-reverse;
         gap: 5%;
+        min-height: 800px;
+    }
+
+    .main-page-image {
         min-height: 800px;
     }
 
