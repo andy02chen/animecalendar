@@ -39,8 +39,7 @@ function Announcement() {
                         A few things to note:
                     </h3>
                     <p className="announcement-text">
-                        - This site calculates and displays additional anime information but doesn't replace MAL.<br/>
-                        - It updates your anime progress and uses MAL data to calculate release dates and countdowns.<br/>
+                        - This site updates your anime progress and uses MAL data to calculate release dates and countdowns.<br/>
                         - You'll still need to manage your lists on MAL.<br/>
                         - I'm planning to keep improving the site.
                     </p>
@@ -53,7 +52,7 @@ function Announcement() {
                     </p>
                     <p className="announcement-text">
                         - Landscape view on mobiles or devices with small screen heights<br/>
-                        - Page Zoom issues<br/>
+                        - Page Zoom issues on Calendar page<br/>
                     </p>
                     <br/>
                     <p className='announcement-minier-title'>
