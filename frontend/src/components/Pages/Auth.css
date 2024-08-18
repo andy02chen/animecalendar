@@ -114,11 +114,19 @@
 }
 
 .screenshots-div {
-    background-color: white;
+    background-color: transparent;
     height: 90%;
     width: 50vw;
     min-height: 300px;
-    /* min-width: 200px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
 
 @media screen and (max-width: 767px) {
@@ -135,7 +143,7 @@
     }
 
     .screenshots-div {
-        background-color: white;
+        background-color: transparent;
         height: 100%;
         width: 80%;
     }

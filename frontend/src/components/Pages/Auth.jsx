@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import axios from "axios"
 import './Auth.css'
+import demo1 from '../imgs/demo/demo-1.png';
+import demo2 from '../imgs/demo/demo-2.png';
+import demo3 from '../imgs/demo/demo-3.png';
+import demo4 from '../imgs/demo/demo-4.png';
+import demo5 from '../imgs/demo/demo-5.png';
+import demo6 from '../imgs/demo/demo-6.png';
+import demo7 from '../imgs/demo/demo-7.png';
 
 function authRedirect() {
     window.location.href = `/auth`;
@@ -29,6 +36,28 @@ function discordRedirect() {
 function Auth() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [hasLoaded, setLoaded] = useState(false);
+    const [imageIndex, setImageIndex] = useState(0);
+
+    const imgArr = [
+        demo1,
+        demo2,
+        demo3,
+        demo4,
+        demo5,
+        demo6,
+        demo7,
+    ];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const shuffledImages = shuffleArray(imgArr);
+
 
     // Calls API to check if user is logged in
     useEffect(() => {
@@ -40,6 +69,14 @@ function Auth() {
             .catch(error => {
                 setLoaded(true);
             });
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setImageIndex((prevIndex) => (prevIndex + 1) % shuffledImages.length);
+        }, 3000);
+
+        return () => clearInterval(interval);
     }, []);
 
     // Redirects to home page if logged in
@@ -54,7 +91,9 @@ function Auth() {
                         :
                         <>
                             <div className='demo-div'>
-                                <div className='screenshots-div'></div>
+                                <div className='screenshots-div'>
+                                    <img className='demo-image' src={shuffledImages[imageIndex]} alt={`Demo Image ${imageIndex}`} />
+                                </div>
                                 <div className='div-line'></div>
                                 <div className='login-choice-div'>
                                     <div className='mal-choice-div'>
