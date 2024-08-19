@@ -29,11 +29,13 @@
 .anime-progress-div {
     flex: 0 0 25%;
     height: 100%;
+    min-height: 100vh;
     text-align: center;
     display: flex;
     flex-direction: column;
     background-color: var(--background-div);
     border: 1px solid var(--primary);
+    overflow-y: auto;
 }
 
 .calendar-div {

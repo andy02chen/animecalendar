@@ -4,6 +4,7 @@
     background-color: var(--primary-darker);
     display: flex;
     flex-direction: column;
+    min-height: 600px;
 }
 
 #anime-list-div-watching {

@@ -44,17 +44,6 @@ function Announcement() {
                         - I'm planning to keep improving the site.
                     </p>
                     <br/>
-                    <h3 className='announcement-mini-title'>
-                        Here's a few things that I plan to address in future updates:
-                    </h3>
-                    <p className='announcement-minier-title'>
-                        Known Issues:
-                    </p>
-                    <p className="announcement-text">
-                        - Landscape view on mobiles or devices with small screen heights<br/>
-                        - Page Zoom issues on Calendar page<br/>
-                    </p>
-                    <br/>
                     <p className='announcement-minier-title'>
                         Planned Updates (In no particular order):
                     </p>

@@ -481,6 +481,13 @@ function displaySettings() {
 function showFeedbackDiv() {
     const feedbackDiv = document.getElementById('feedback-show-div');
     document.getElementById('main-div').style.overflow = 'hidden';
+
+    const userDropDown = document.getElementById("settings-options-div");
+    const settingsDiv = document.getElementById("settings-dropdown");
+    userDropDown.style.display = "none";
+    settingsDiv.style.borderBottom = "none";
+    settingsDiv.style.borderLeft = "none";
+
     if(feedbackDiv.style.display === "none") {
         feedbackDiv.style.display = "flex";
     }
@@ -492,6 +499,12 @@ function showAnnouncement() {
     document.getElementById('announcement-button').classList.add('hide-indicator');
     document.getElementById('settings-div-show-btn').classList.add('hide-indicator');
     document.getElementById('announcement-div').style.display = "flex";
+
+    const userDropDown = document.getElementById("settings-options-div");
+    const settingsDiv = document.getElementById("settings-dropdown");
+    userDropDown.style.display = "none";
+    settingsDiv.style.borderBottom = "none";
+    settingsDiv.style.borderLeft = "none";
 }
 
 function logOut() {
