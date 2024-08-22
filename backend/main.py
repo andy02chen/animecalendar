@@ -23,6 +23,13 @@ client_secret = os.getenv('CLIENT_SECRET')
 
 cipher_suite = Fernet(encryption_key)
 
+# Function for getting session cookie
+def get_session_id():
+    return request.cookies.get('session')
+
+def find_user_function(user_session_id):
+    return User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+
 # Function for updating the number of episodes watched on MyAnimeList
 @app.route('/api/update-anime', methods=["POST"])
 def updateStatus():
@@ -31,10 +38,11 @@ def updateStatus():
         return jsonify({"error": "rate limit exceeded"}), 429
 
     # Find user using session id
-    user_session_id = request.cookies.get('session')
+    user_session_id = get_session_id()
+    print(f"Session ID: {user_session_id}") 
     if user_session_id:
-        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
-
+        find_user = find_user_function(user_session_id)
+        print(f"USER: {find_user}") 
         if find_user:
             msg, code = check_expiry()
 
@@ -294,7 +302,6 @@ def weekly_anime():
     # Find user using session id
     user_session_id = request.cookies.get('session')
 
-    # TODO Guest user should get details for ZNEAK300
     if user_session_id:
         if user_session_id == 'guest':
             mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=watching&
