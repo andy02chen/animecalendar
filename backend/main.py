@@ -51,7 +51,14 @@ def updateStatus():
                 return msg, code
 
             data = request.get_json()
+
+            if 'anime-id' not in data:
+                return '', 400
+
             anime_id = data['anime-id']
+
+            if 'eps-watched' not in data:
+                return '', 400
             eps_watched = int(data['eps-watched']) + 1
 
             mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
@@ -59,6 +66,9 @@ def updateStatus():
             headers = {
                 'Authorization': f'Bearer {mal_access_token}'
             }
+
+            if 'completed' not in data:
+                return '', 400
 
             body = {}
             # If Completed
