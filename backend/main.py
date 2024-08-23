@@ -39,10 +39,8 @@ def updateStatus():
 
     # Find user using session id
     user_session_id = get_session_id()
-    print(f"Session ID: {user_session_id}") 
     if user_session_id:
         find_user = find_user_function(user_session_id)
-        print(f"USER: {find_user}") 
         if find_user:
             msg, code = check_expiry()
 
@@ -62,7 +60,12 @@ def updateStatus():
             eps_watched = int(data['eps-watched']) + 1
 
             mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
-            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+
+            get_user_access_token = cipher_suite.decrypt(find_user.access_token)
+            if not get_user_access_token:
+                return '', 401
+
+            mal_access_token = get_user_access_token.decode()
             headers = {
                 'Authorization': f'Bearer {mal_access_token}'
             }
@@ -105,6 +108,7 @@ def updateStatus():
     
     return '', 400
 
+# TODO write test for this onwards
 # Function for deleting user from the database
 @app.route('/api/logout', methods=["DELETE"])
 def delete_user_session():
