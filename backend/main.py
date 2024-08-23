@@ -108,7 +108,7 @@ def updateStatus():
     
     return '', 400
 
-# TODO write test for this onwards
+
 # Function for deleting user from the database
 @app.route('/api/logout', methods=["DELETE"])
 def delete_user_session():
@@ -116,13 +116,13 @@ def delete_user_session():
     if is_rate_limited(request.remote_addr, request.endpoint, limit=5, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
-    session_id = request.cookies.get("session")
+    session_id = get_session_id()
 
     if session_id:
         if session_id == 'guest':
             return jsonify({"redirect_url": "/"}), 200
 
-        found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+        found_user = find_user_function(session_id)
 
         if found_user:
             found_user.session_id = None
@@ -130,9 +130,11 @@ def delete_user_session():
 
             return jsonify({"redirect_url": "/"}), 200
 
+        return jsonify({"redirect_url": "/"}), 401
+
     return jsonify({"redirect_url": "/"}), 401
 
-
+# TODO write test for this onwards
 # Function for checking expiry time
 # Calls function for refreshing if expired
 def check_expiry():
