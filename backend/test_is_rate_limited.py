@@ -28,7 +28,7 @@ def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
 @patch('main.db.session.add')
 @patch('main.RateLimit.query')
 @patch('main.hash_text')
-def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
+def test_on_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
     mock_hash_text.return_value = 'hashed_ip'
     mock_query.filter_by.return_value.filter.return_value.count.return_value = 10
 
@@ -42,7 +42,7 @@ def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
 @patch('main.db.session.add')
 @patch('main.RateLimit.query')
 @patch('main.hash_text')
-def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
+def test_above_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
     mock_hash_text.return_value = 'hashed_ip'
     mock_query.filter_by.return_value.filter.return_value.count.return_value = 15
 

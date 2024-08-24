@@ -96,7 +96,7 @@ def test_user_token_expired(mock_expiry, mock_find_user, mock_get_session,mock_r
 @patch('main.find_user_function')
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
-def test_user_token_expired(mock_decrypt, mock_expiry, mock_find_user, mock_get_session,mock_rate_limit, client):
+def test_user_token_not_found(mock_decrypt, mock_expiry, mock_find_user, mock_get_session,mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_get_session.return_value = "fake_session_id"
     mock_find_user.return_value = MockUser(token="fake_token")
@@ -135,7 +135,7 @@ def test_found_user_mal_error(mock_request_get, mock_decrypt, mock_expiry, mock_
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
 @patch('main.requests.get')
-def test_found_user_mal_error(mock_request_get, mock_decrypt, mock_expiry, mock_find_user, mock_get_session,mock_rate_limit, client):
+def test_found_user_success(mock_request_get, mock_decrypt, mock_expiry, mock_find_user, mock_get_session,mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_get_session.return_value = "fake_session_id"
     mock_find_user.return_value = MockUser(token="fake_token")

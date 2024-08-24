@@ -84,7 +84,7 @@ def test_update_anime_sucess(mock_requests_patch, mock_access_token, mock_expiry
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
 @patch('main.requests.patch')
-def test_update_anime_sucess(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+def test_update_anime_unsuccessful(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_session_id.return_value = "fake_session"
     mock_user_query.return_value = MagicMock(access_token='fake_access_token')
@@ -123,7 +123,7 @@ def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_e
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
 @patch('main.requests.patch')
-def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+def test_update_anime_no_eps_watched(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_session_id.return_value = "fake_session"
     mock_user_query.return_value = MagicMock(access_token='fake_access_token')
@@ -140,7 +140,7 @@ def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_e
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
 @patch('main.requests.patch')
-def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+def test_update_anime_no_score(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_session_id.return_value = "fake_session"
     mock_user_query.return_value = MagicMock(access_token='fake_access_token')
@@ -162,7 +162,7 @@ def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_e
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
 @patch('main.requests.patch')
-def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+def test_update_anime_no_completed_status(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_session_id.return_value = "fake_session"
     mock_user_query.return_value = MagicMock(access_token='fake_access_token')
@@ -183,7 +183,7 @@ def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_e
 @patch('main.check_expiry')
 @patch('main.cipher_suite.decrypt')
 @patch('main.requests.patch')
-def test_update_anime_no_anime_id(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+def test_update_anime_no_access_token(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
     mock_rate_limit.return_value = False
     mock_session_id.return_value = "fake_session"
     mock_user_query.return_value = MagicMock(access_token='fake_access_token')
