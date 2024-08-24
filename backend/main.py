@@ -167,6 +167,7 @@ def is_rate_limited(ip, endpoint, limit, period):
     return recent_requests >= limit
 
 # TODO write test for this onwards
+# TODO make a new function for sorting the anime data and test it
 # Function gets user's plan to watch list
 @app.route('/api/get-plan-to-watch', methods=["GET"])
 def plan_to_watch():
@@ -175,7 +176,7 @@ def plan_to_watch():
         return jsonify({"error": "rate limit exceeded"}), 429
 
     # Find user using session id
-    user_session_id = request.cookies.get('session')
+    user_session_id = get_session_id()
     if user_session_id:
         if user_session_id == "guest":
             mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=plan_to_watch&
@@ -234,7 +235,7 @@ def plan_to_watch():
 
             return 'Unable to get plan to watch anime from MAL',500
 
-        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        find_user = find_user_function(user_session_id)
 
         if find_user:
             msg, code = check_expiry()
@@ -247,7 +248,13 @@ def plan_to_watch():
             mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=plan_to_watch&
             sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast,start_season&nsfw=true
             &limit=1000'''
-            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+
+            get_user_access_token = cipher_suite.decrypt(find_user.access_token)
+            if not get_user_access_token:
+                return 'Unknown Error occured. Please try again or re-log.',500
+
+            mal_access_token = get_user_access_token.decode()
+
             headers = {
                 'Authorization': f'Bearer {mal_access_token}'
             }
