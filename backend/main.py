@@ -134,13 +134,19 @@ def delete_user_session():
 
     return jsonify({"redirect_url": "/"}), 401
 
-# TODO write test for this onwards
 # Function for checking expiry time
 # Calls function for refreshing if expired
 def check_expiry():
     # Get user using session id
-    session_id = request.cookies.get("session")
-    found_user = User.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+    session_id = get_session_id()
+
+    if not session_id:
+        return '', 401
+
+    found_user = find_user_function(session_id)
+
+    if not found_user:
+        return '', 401
 
     # Check if it has expired
     curr_time = int(time.time())
@@ -157,6 +163,7 @@ def is_rate_limited(ip, endpoint, limit, period):
     recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
     return recent_requests >= limit
 
+# TODO write test for this onwards
 # Function gets user's plan to watch list
 @app.route('/api/get-plan-to-watch', methods=["GET"])
 def plan_to_watch():
