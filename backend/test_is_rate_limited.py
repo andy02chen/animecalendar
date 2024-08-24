@@ -10,21 +10,42 @@ def client():
         with app.test_client() as client:
             yield client
 
+# Case 1: Below the limit
+@patch('main.db.session.commit')
+@patch('main.db.session.add')
 @patch('main.RateLimit.query')
 @patch('main.hash_text')
-def test_is_rate_limited(mock_hash_text, mock_query, client):
+def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
     mock_hash_text.return_value = 'hashed_ip'
-
-    # Mocking the query count
     mock_query.filter_by.return_value.filter.return_value.count.return_value = 5
 
-    # Case 1: Below the limit
     assert not is_rate_limited('127.0.0.1', '/api/test', limit=10, period=60)
+    mock_add.assert_called_once()
+    mock_commit.assert_called_once()
 
-    # Case 2: At the limit
+# Case 2: At the limit
+@patch('main.db.session.commit')
+@patch('main.db.session.add')
+@patch('main.RateLimit.query')
+@patch('main.hash_text')
+def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
+    mock_hash_text.return_value = 'hashed_ip'
     mock_query.filter_by.return_value.filter.return_value.count.return_value = 10
-    assert is_rate_limited('127.0.0.1', '/api/test', limit=10, period=60)
 
-    # Case 3: Above the limit
-    mock_query.filter_by.return_value.filter.return_value.count.return_value = 15
     assert is_rate_limited('127.0.0.1', '/api/test', limit=10, period=60)
+    mock_add.assert_called_once()
+    mock_commit.assert_called_once()
+
+# Case 3: Above the limit
+
+@patch('main.db.session.commit')
+@patch('main.db.session.add')
+@patch('main.RateLimit.query')
+@patch('main.hash_text')
+def test_below_limit(mock_hash_text, mock_query, mock_add, mock_commit, client):
+    mock_hash_text.return_value = 'hashed_ip'
+    mock_query.filter_by.return_value.filter.return_value.count.return_value = 15
+
+    assert is_rate_limited('127.0.0.1', '/api/test', limit=10, period=60)
+    mock_add.assert_called_once()
+    mock_commit.assert_called_once()

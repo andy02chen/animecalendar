@@ -161,6 +161,9 @@ def check_expiry():
 def is_rate_limited(ip, endpoint, limit, period):
     period_start = int(time.time()) - period
     recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
+    new_request = RateLimit(ip=hash_text(ip, ip_salt), endpoint=endpoint)
+    db.session.add(new_request)
+    db.session.commit()
     return recent_requests >= limit
 
 # TODO write test for this onwards
@@ -170,10 +173,6 @@ def plan_to_watch():
     # Check limit
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
-
-    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
-    db.session.add(new_request)
-    db.session.commit()
 
     # Find user using session id
     user_session_id = request.cookies.get('session')
