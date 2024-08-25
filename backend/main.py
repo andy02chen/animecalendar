@@ -166,8 +166,59 @@ def is_rate_limited(ip, endpoint, limit, period):
     db.session.commit()
     return recent_requests >= limit
 
-# TODO write test for this onwards
-# TODO make a new function for sorting the anime data and test it
+# Function for filtering plan to watch anime
+def filter_plan_to_watch_anime(data):
+    data_to_return = []
+    for anime in data['data']:
+        details = {}
+
+        if 'title' not in anime['node']:
+            continue
+        details['title'] = anime['node']['title']
+
+        if 'id' not in anime['node']:
+            continue
+        details['id'] = anime['node']['id']
+
+        if 'main_picture' in anime['node']:
+            details['img'] = anime['node']['main_picture']['medium']
+
+        else:
+            details['img'] = None
+
+        if 'status' not in anime['node']:
+            continue
+        
+        details['air_status'] = anime['node']['status']
+
+        # Get anime season
+        if 'start_season' in anime['node']:
+            details['season'] = anime['node']['start_season']['season'],str(anime['node']['start_season']['year'])
+
+        else:
+            details['season'] = None
+
+        # Get anime start date
+        if 'start_date' in anime['node']:
+            details['start_date'] = anime['node']['start_date']
+
+        else:
+            details['start_date'] = None
+
+        if 'broadcast' in anime['node']:
+            if 'start_time' in anime['node']['broadcast']:
+                details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+            else:
+                details['broadcast_time'] = None
+
+        else:
+            details['broadcast_time'] = None
+        
+        data_to_return.append(details)
+
+    return data_to_return
+
 # Function gets user's plan to watch list
 @app.route('/api/get-plan-to-watch', methods=["GET"])
 def plan_to_watch():
@@ -189,48 +240,8 @@ def plan_to_watch():
             response = requests.get(mal_get_anime, headers=headers)
 
             if response.status_code == 200:
-                data = response.json()
-                data_to_return = {'plan_to_watch':[]}
-
-                for anime in data['data']:
-                    details = {}
-                    details['title'] = anime['node']['title']
-                    details['id'] = anime['node']['id']
-
-                    if 'main_picture' in anime['node']:
-                        details['img'] = anime['node']['main_picture']['medium']
-
-                    else:
-                        details['img'] = None
-
-                    details['air_status'] = anime['node']['status']
-
-                    # Get anime season
-                    if 'start_season' in anime['node']:
-                        details['season'] = anime['node']['start_season']['season'],str(anime['node']['start_season']['year'])
-
-                    else:
-                        details['season'] = None
-
-                    # Get anime start date
-                    if 'start_date' in anime['node']:
-                        details['start_date'] = anime['node']['start_date']
-
-                    else:
-                        details['start_date'] = None
-
-                    if 'broadcast' in anime['node']:
-                        if 'start_time' in anime['node']['broadcast']:
-                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
-
-                        else:
-                            details['broadcast_time'] = None
-
-                    else:
-                        details['broadcast_time'] = None
-                        
-                    data_to_return['plan_to_watch'].append(details)
-
+                data = filter_plan_to_watch_anime(response.json())
+                data_to_return = {'plan_to_watch': data}
                 return data_to_return
 
             return 'Unable to get plan to watch anime from MAL',500
@@ -263,47 +274,7 @@ def plan_to_watch():
 
             if response.status_code == 200:
                 data = response.json()
-                data_to_return = {'plan_to_watch':[]}
-
-                for anime in data['data']:
-                    details = {}
-                    details['title'] = anime['node']['title']
-                    details['id'] = anime['node']['id']
-
-                    if 'main_picture' in anime['node']:
-                        details['img'] = anime['node']['main_picture']['medium']
-
-                    else:
-                        details['img'] = None
-
-                    details['air_status'] = anime['node']['status']
-
-                    # Get anime season
-                    if 'start_season' in anime['node']:
-                        details['season'] = anime['node']['start_season']['season'],str(anime['node']['start_season']['year'])
-
-                    else:
-                        details['season'] = None
-
-                    # Get anime start date
-                    if 'start_date' in anime['node']:
-                        details['start_date'] = anime['node']['start_date']
-
-                    else:
-                        details['start_date'] = None
-
-                    if 'broadcast' in anime['node']:
-                        if 'start_time' in anime['node']['broadcast']:
-                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
-
-                        else:
-                            details['broadcast_time'] = None
-
-                    else:
-                        details['broadcast_time'] = None
-                        
-                    data_to_return['plan_to_watch'].append(details)
-
+                data_to_return = {'plan_to_watch':filter_plan_to_watch_anime(data)}
                 return data_to_return
 
             return 'Unable to get plan to watch anime from MAL',500
@@ -316,6 +287,7 @@ def plan_to_watch():
     # User not logged in
     return redirect('/')
 
+# TODO write test for this onwards
 # Functions gets user's weekly watching anime
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
