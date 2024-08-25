@@ -19,7 +19,6 @@ def test_rate_limit_exceeded(mock_rate_limit, client):
     assert response.json == {"error": "rate limit exceeded"}
 
 # Test no session ID
-
 @patch('main.is_rate_limited')
 @patch('main.get_session_id')
 def test_no_session_id(mock_session_id,mock_rate_limit,client):
@@ -196,3 +195,25 @@ def test_update_anime_no_access_token(mock_requests_patch, mock_access_token, mo
 
     response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'score': 10})
     assert response.status_code == 401
+
+# Test sucessful update - not completed
+@patch('main.is_rate_limited')
+@patch('main.get_session_id')
+@patch('main.find_user_function')
+@patch('main.check_expiry')
+@patch('main.cipher_suite.decrypt')
+@patch('main.requests.patch')
+def test_update_anime_sucess_not_completed(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+    mock_rate_limit.return_value = False
+    mock_session_id.return_value = "fake_session"
+    mock_user_query.return_value = MagicMock(access_token='fake_access_token')
+    mock_access_token.return_value = b"fake_access_token"
+    mock_expiry.return_value = '',100
+
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_requests_patch.return_value = mock_response
+
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': False, 'score': 10})
+    assert response.status_code == 200
+    mock_requests_patch.assert_called_once()

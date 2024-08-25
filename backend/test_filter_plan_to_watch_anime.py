@@ -233,7 +233,7 @@ def test_no_title():
     assert filter_plan_to_watch_anime(data) == expected_output
 
 # Missing id (should not be possible)
-def test_no_title():
+def test_no_id():
     data = {
         'data': [
             {

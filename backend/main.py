@@ -93,7 +93,7 @@ def updateStatus():
             else:
                 body = {
                     "num_watched_episodes": eps_watched,
-                    "status" : data['status']
+                    "status" : "watching"
                 }
 
             response = requests.patch(mal_update_anime, headers=headers, data=body)
@@ -295,12 +295,8 @@ def weekly_anime():
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
-    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
-    db.session.add(new_request)
-    db.session.commit()
-
     # Find user using session id
-    user_session_id = request.cookies.get('session')
+    user_session_id = get_session_id()
 
     if user_session_id:
         if user_session_id == 'guest':
@@ -367,7 +363,7 @@ def weekly_anime():
 
             return 'Unable to get anime watchlist from MAL',500
 
-        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        find_user = find_user_function(user_session_id)
 
         if find_user:
             msg, code = check_expiry()
@@ -378,7 +374,8 @@ def weekly_anime():
             
             mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
             sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true'''
-            mal_access_token = cipher_suite.decrypt(find_user.access_token).decode()
+            user_token = cipher_suite.decrypt(find_user.access_token)
+            mal_access_token = user_token.decode()
             headers = {
                 'Authorization': f'Bearer {mal_access_token}'
             }
@@ -453,10 +450,6 @@ def weekly_anime():
 def protectedRoute():
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
-
-    new_request = RateLimit(ip=hash_text(request.remote_addr, ip_salt), endpoint=request.endpoint)
-    db.session.add(new_request)
-    db.session.commit()
 
     user_session_id = request.cookies.get('session')
 
