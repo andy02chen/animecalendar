@@ -288,6 +288,7 @@ def plan_to_watch():
     return redirect('/')
 
 # TODO write test for this onwards
+# TODO Refactor - make new function for filtering anime
 # Functions gets user's weekly watching anime
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
