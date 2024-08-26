@@ -169,8 +169,15 @@ def is_rate_limited(ip, endpoint, limit, period):
 # Function for filtering plan to watch anime
 def filter_plan_to_watch_anime(data):
     data_to_return = []
+
+    if 'data' not in data:
+        return []
+
     for anime in data['data']:
         details = {}
+
+        if 'node' not in anime:
+            continue
 
         if 'title' not in anime['node']:
             continue
@@ -181,7 +188,11 @@ def filter_plan_to_watch_anime(data):
         details['id'] = anime['node']['id']
 
         if 'main_picture' in anime['node']:
-            details['img'] = anime['node']['main_picture']['medium']
+            if 'medium' in anime['node']['main_picture']:
+                details['img'] = anime['node']['main_picture']['medium']
+
+            else:
+                details['img'] = None
 
         else:
             details['img'] = None
@@ -287,8 +298,83 @@ def plan_to_watch():
     # User not logged in
     return redirect('/')
 
-# TODO write test for this onwards
-# TODO Refactor - make new function for filtering anime
+# Function for filtering user's currently watching anime
+def filter_watching_anime(data):
+    data_to_return = []
+
+    if 'data' not in data:
+        return []
+
+    for anime in data['data']:
+        details = {}
+
+        if 'node' not in anime:
+            continue
+
+        if 'title' not in anime['node']:
+            continue
+        details['title'] = anime['node']['title']
+
+        if 'id' not in anime['node']:
+            continue
+        details['id'] = anime['node']['id']
+
+        if 'start_date' in anime['node']:
+            details['start_date'] = anime['node']['start_date']
+
+        else:
+            details['start_date'] = None
+
+        if 'main_picture' in anime['node']:
+            if 'medium' in anime['node']['main_picture']:
+                details['img'] = anime['node']['main_picture']['medium']
+
+            else:
+                details['img'] = None
+
+        else:
+            details['img'] = None
+
+        if 'list_status' not in anime:
+            continue
+        if 'num_episodes_watched' not in anime['list_status']:
+            continue
+
+        details['eps_watched'] = anime['list_status']['num_episodes_watched']
+
+        if 'num_episodes' in anime['node']:
+            details['eps'] = anime['node']['num_episodes']
+
+        else:
+            details['eps'] = 0
+
+        if 'broadcast' in anime['node']:
+            if 'start_time' in anime['node']['broadcast']:
+                details['broadcast_time'] = anime['node']['broadcast']['start_time']
+
+            else:
+                details['broadcast_time'] = None
+
+        else:
+            details['broadcast_time'] = None
+
+        details['delayed_eps'] = 0
+
+        if 'status' not in anime['node']:
+            continue
+        details['air_status'] = anime['node']['status']
+
+        if 'end_date' in anime['node']:
+            details['end_date'] = anime['node']['end_date']
+
+        else:
+            details['end_date'] = None
+
+        details['eps_array'] = []
+        data_to_return.append(details)
+
+    return data_to_return
+
 # Functions gets user's weekly watching anime
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
@@ -310,56 +396,8 @@ def weekly_anime():
             response = requests.get(mal_get_anime, headers=headers)
 
             if response.status_code == 200:
-                data = response.json()
-                data_to_return = {'anime':[]}
-                for anime in data['data']:
-                    details = {}
-                    details['title'] = anime['node']['title']
-                    details['id'] = anime['node']['id']
-
-                    if 'start_date' in anime['node']:
-                        details['start_date'] = anime['node']['start_date']
-
-                    else:
-                        details['start_date'] = None
-
-                    if 'main_picture' in anime['node']:
-                        details['img'] = anime['node']['main_picture']['medium']
-
-                    else:
-                        details['img'] = None
-
-                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
-
-                    if 'num_episodes' in anime['node']:
-                        details['eps'] = anime['node']['num_episodes']
-
-                    else:
-                        details['eps'] = 0
-
-                    if 'broadcast' in anime['node']:
-                        if 'start_time' in anime['node']['broadcast']:
-                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
-
-                        else:
-                            details['broadcast_time'] = None
-
-                    else:
-                        details['broadcast_time'] = None
-
-                    details['delayed_eps'] = 0
-                    details['air_status'] = anime['node']['status']
-
-                    if 'end_date' in anime['node']:
-                        details['end_date'] = anime['node']['end_date']
-
-                    else:
-                        details['end_date'] = None
-
-                    details['eps_array'] = []
-                    
-                    data_to_return['anime'].append(details)
-
+                data = filter_watching_anime(response.json())
+                data_to_return = {'anime': data}
                 return data_to_return
 
             return 'Unable to get anime watchlist from MAL',500
@@ -384,56 +422,8 @@ def weekly_anime():
             response = requests.get(mal_get_anime, headers=headers)
             
             if response.status_code == 200:
-                data = response.json()
-                data_to_return = {'anime':[]}
-                for anime in data['data']:
-                    details = {}
-                    details['title'] = anime['node']['title']
-                    details['id'] = anime['node']['id']
-
-                    if 'start_date' in anime['node']:
-                        details['start_date'] = anime['node']['start_date']
-
-                    else:
-                        details['start_date'] = None
-
-                    if 'main_picture' in anime['node']:
-                        details['img'] = anime['node']['main_picture']['medium']
-
-                    else:
-                        details['img'] = None
-
-                    details['eps_watched'] = anime['list_status']['num_episodes_watched']
-
-                    if 'num_episodes' in anime['node']:
-                        details['eps'] = anime['node']['num_episodes']
-
-                    else:
-                        details['eps'] = 0
-
-                    if 'broadcast' in anime['node']:
-                        if 'start_time' in anime['node']['broadcast']:
-                            details['broadcast_time'] = anime['node']['broadcast']['start_time']
-
-                        else:
-                            details['broadcast_time'] = None
-
-                    else:
-                        details['broadcast_time'] = None
-
-                    details['delayed_eps'] = 0
-                    details['air_status'] = anime['node']['status']
-
-                    if 'end_date' in anime['node']:
-                        details['end_date'] = anime['node']['end_date']
-
-                    else:
-                        details['end_date'] = None
-
-                    details['eps_array'] = []
-                    
-                    data_to_return['anime'].append(details)
-
+                data = filter_watching_anime(response.json())
+                data_to_return = {'anime': data}
                 return data_to_return
 
             return 'Unable to get anime watchlist from MAL',500
@@ -446,6 +436,7 @@ def weekly_anime():
     # User not logged in
     return redirect('/')
 
+# TODO write test for this onwards
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():

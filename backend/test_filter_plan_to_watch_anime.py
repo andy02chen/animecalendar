@@ -1,6 +1,46 @@
 import pytest
 from main import filter_plan_to_watch_anime
 
+# Test no node in data
+def test_no_node():
+    data = {
+        'data': [
+            {
+                "anime": {
+                    "id": 52701,
+                    "title": "Dungeon Meshi",
+                    "main_picture": {
+                        "medium": "https://cdn.myanimelist.net/images/anime/1711/142478.jpg",
+                        "large": "https://cdn.myanimelist.net/images/anime/1711/142478l.jpg"
+                    },
+                    "start_date": "2024-01-04",
+                    "end_date": "2024-06-13",
+                    "status": "finished_airing",
+                    "num_episodes": 24,
+                    "broadcast": {
+                        "day_of_the_week": "thursday",
+                        "start_time": "22:30"
+                    },
+                    "start_season": {
+                        "year": 2024,
+                        "season": "winter"
+                    }
+                },
+                "list_status": {
+                    "status": "plan_to_watch",
+                    "score": 0,
+                    "num_episodes_watched": 0,
+                    "is_rewatching": False,
+                    "updated_at": "2024-06-22T01:25:56+00:00"
+                }
+            }
+        ]
+    }
+    expected_output = [
+    ]
+    
+    assert filter_plan_to_watch_anime(data) == expected_output
+
 # Basic test with all fields
 def test_filter_plan_to_watch_anime_basic():
     data = {
@@ -81,6 +121,55 @@ def test_no_main_picture():
         }
         ]
     }
+    expected_output = [
+        {
+            'title': 'Dungeon Meshi',
+            'id': 52701,
+            'img': None,
+            'air_status': 'finished_airing',
+            'season': ('winter', '2024'),
+            'start_date': '2024-01-04',
+            'broadcast_time': '22:30'
+        }
+    ]
+    
+    assert filter_plan_to_watch_anime(data) == expected_output
+
+# Missing Main_picture
+def test_no_main_picture2():
+    data = {
+        'data': [
+            {
+                "node": {
+                    "id": 52701,
+                    "title": "Dungeon Meshi",
+                    "main_picture": {
+                        "large": "https://cdn.myanimelist.net/images/anime/1711/142478l.jpg"
+                    },
+                    "start_date": "2024-01-04",
+                    "end_date": "2024-06-13",
+                    "status": "finished_airing",
+                    "num_episodes": 24,
+                    "broadcast": {
+                        "day_of_the_week": "thursday",
+                        "start_time": "22:30"
+                    },
+                    "start_season": {
+                        "year": 2024,
+                        "season": "winter"
+                    }
+                },
+                "list_status": {
+                    "status": "plan_to_watch",
+                    "score": 0,
+                    "num_episodes_watched": 0,
+                    "is_rewatching": False,
+                    "updated_at": "2024-06-22T01:25:56+00:00"
+                }
+            }
+        ]
+    }
+
     expected_output = [
         {
             'title': 'Dungeon Meshi',
@@ -238,6 +327,15 @@ def test_empty():
     data = {
         'data': [
         ]
+    }
+    expected_output = [
+    ]
+    
+    assert filter_plan_to_watch_anime(data) == expected_output
+
+# Empty Data
+def test_empty2():
+    data = {
     }
     expected_output = [
     ]
