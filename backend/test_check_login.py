@@ -1,6 +1,6 @@
 import pytest
 from flask import json
-from main import app, check_expiry
+from main import app
 from unittest.mock import patch, MagicMock
 import time
 

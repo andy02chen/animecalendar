@@ -436,7 +436,6 @@ def weekly_anime():
     # User not logged in
     return redirect('/')
 
-# TODO write test for this onwards
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():
@@ -470,22 +469,19 @@ def protectedRoute():
 @app.route('/api/refresh-token', methods=["PUT"])
 def refreshUsersTokens():
     # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=2, period=60):
+    if is_rate_limited(request.remote_addr, request.endpoint, limit=4, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
-    user_session_id = request.cookies.get('session')
+    user_session_id = get_session_id()
 
     if user_session_id:
         if user_session_id == "guest":
             return '', 204
 
-        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        find_user = find_user_function(user_session_id)
 
         if find_user:
-            user_auth_username = find_user.user_id
-            user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
-
-            if refreshTokens(user_to_refresh):
+            if refreshTokens(find_user):
                 return '', 204
 
             else:
@@ -498,6 +494,7 @@ def refreshUsersTokens():
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
 
+# TODO write test for this onwards
 # Function for refreshing
 def refreshTokens(user_to_refresh):
     # Refresh the access token
