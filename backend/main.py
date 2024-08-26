@@ -443,7 +443,7 @@ def protectedRoute():
     if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
         return jsonify({"error": "rate limit exceeded"}), 429
 
-    user_session_id = request.cookies.get('session')
+    user_session_id = get_session_id()
 
     if user_session_id:
         if user_session_id == "guest":
@@ -453,7 +453,7 @@ def protectedRoute():
                 'picture': None
             })
 
-        find_user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        find_user = find_user_function(user_session_id)
 
         if find_user:
             return jsonify({
