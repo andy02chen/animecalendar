@@ -494,7 +494,6 @@ def refreshUsersTokens():
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
 
-# TODO write test for this onwards
 # Function for refreshing
 def refreshTokens(user_to_refresh):
     # Refresh the access token
@@ -527,24 +526,20 @@ def refreshTokens(user_to_refresh):
 @app.route('/')
 def checkSession():
     # Check if user session exists
-    user_session_id = request.cookies.get("session")
+    user_session_id = get_session_id()
 
     if user_session_id:
-        user_id = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        user_id = find_user_function(user_session_id)
         
         # Refresh access and refresh token if the user already exists before redirecting to home page
         if user_id:
-            # Get user id using session id
-            user_auth_username = user_id.user_id
-
-            # Get refresh token using user id
-            user_to_refresh = User.query.filter_by(user_id=user_auth_username).first()
-
-            if refreshTokens(user_to_refresh):
+            if refreshTokens(user_id):
                 return redirect("/home")
 
             else:
-                return "Error with refreshing token"
+                response = redirect("/a")
+                response.set_cookie('session', '', expires=0)
+                return response
 
         else:
             response = redirect("/a")
@@ -554,7 +549,8 @@ def checkSession():
     # Login the user for the first time
     else:
         return redirect("/a")
-
+        
+# TODO write test for this onwards
 # Generates a random state
 def generateRandomState(length = 32):
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
