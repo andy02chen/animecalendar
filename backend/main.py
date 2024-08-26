@@ -549,8 +549,8 @@ def checkSession():
     # Login the user for the first time
     else:
         return redirect("/a")
-        
-# TODO write test for this onwards
+
+
 # Generates a random state
 def generateRandomState(length = 32):
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -575,11 +575,11 @@ def generateCodeChallenge(length = 128):
 # Redirect when user logs in with MAL
 @app.route('/auth')
 def auth():
-    user_session_id = request.cookies.get("session")
+    user_session_id = get_session_id()
 
     if user_session_id:
         # Check if session id is assigned to user
-        user = User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+        user = find_user_function(user_session_id)
 
         if user:
             return redirect("/home")
@@ -596,7 +596,6 @@ def auth():
     salt = uuid.uuid4().hex
     new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=hash_text(session.sid,session_salt), state_salt=salt)
     db.session.add(new_user_auth)
-
     db.session.commit()
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
@@ -605,6 +604,7 @@ def auth():
     response.set_cookie('session', session.sid)
     return response
 
+# TODO Last function to test
 # Redirect from OAuth
 @app.route('/oauth/callback')
 def oauth():
@@ -737,9 +737,12 @@ def oauth():
 # Guest page
 @app.route('/guest')
 def guestLogin():
-    response = redirect('/home')
-    response.set_cookie('session', "guest")
-    return response
+    if get_session_id() == 'guest':
+        response = redirect('/home')
+        response.set_cookie('session', "guest")
+        return response
+
+    return redirect('/')
 
 if __name__ == '__main__':
     with app.app_context():
