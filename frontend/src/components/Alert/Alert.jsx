@@ -42,7 +42,7 @@ function Alert() {
                     <span className="close-button-popup" onClick={() => closePopup()}>&times;</span>
                 </div>
                 <div className="popup-content">
-                    <p id="popup-error-message" className='popup-text'>Rate Limit Exceeded. Please stop spamming and try again later.</p>
+                    <p id="popup-error-message" className='popup-text'>An error occurred. You may have exceeded the rate limit. Please wait a moment before trying again. If the issue persists, try re-logging or attempting again later.</p>
                 </div>
             </div>
         );
