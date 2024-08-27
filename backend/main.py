@@ -604,6 +604,12 @@ def auth():
     response.set_cookie('session', session.sid)
     return response
 
+def query_auth(session_id, session_salt):
+    return Auth.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+
+def find_user_by_name(user_username):
+    return User.query.filter_by(user_id=user_username).first()
+
 # TODO Last function to test
 # Redirect from OAuth
 @app.route('/oauth/callback')
@@ -614,8 +620,38 @@ def oauth():
     authorization_code = request.args.get('code')
 
     if returned_state and authorization_code:
-        session_id = request.cookies.get('session')
-        find_auth = Auth.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+        session_id = get_session_id()
+        if not session_id:
+            return render_template_string('''
+                    <html>
+                        <head>
+                            <script type="text/javascript">
+                                localStorage.setItem('errorMsgDiv', True);
+                                window.location.href = "/a";
+                            </script>
+                        </head>
+                        <body>
+                            <h1>Redirecting...</h1>
+                        </body>
+                    </html>
+                ''')
+
+        find_auth = query_auth(session_id, session_salt)
+        if not find_auth:
+            return render_template_string('''
+                    <html>
+                        <head>
+                            <script type="text/javascript">
+                                localStorage.setItem('errorMsgDiv', True);
+                                window.location.href = "/a";
+                            </script>
+                        </head>
+                        <body>
+                            <h1>Redirecting...</h1>
+                        </body>
+                    </html>
+                ''')
+
         auth_salt = find_auth.state_salt
         find_auth_state = find_auth.oauth_state
 
@@ -663,7 +699,7 @@ def oauth():
                         user_image = user_data['picture']
 
                     # Check if user already exists
-                    find_user = User.query.filter_by(user_id=user_username).first()
+                    find_user = find_user_by_name(user_username)
 
                     if find_user:
                         find_user.access_token = cipher_suite.encrypt(mal_access_token.encode())
