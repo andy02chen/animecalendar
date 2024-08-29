@@ -65,11 +65,11 @@ function updateStatus(anime, setRefreshAnimeDisplay, setRenderAllComponents) {
             } else {
                 axios.delete('/api/logout')
                 .then(response => {
-                    document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-                    document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+                    document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure; path=/';
+                    document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure; path=/';
 
                     localStorage.setItem('errorMsgDiv', true);
-                    document.cookie = 'session=; Max-Age=-99999999;';
+                    document.cookie = 'session=; Max-Age=-99999999; SameSite=Lax; Secure; path=/';
                     window.location.href = response.data.redirect_url;
                 });
             }

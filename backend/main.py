@@ -292,7 +292,7 @@ def plan_to_watch():
 
         # User not found
         response = redirect("/")
-        response.set_cookie('session', '', expires=0)
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
         return response
 
     # User not logged in
@@ -430,7 +430,7 @@ def weekly_anime():
 
         # User not found
         response = redirect("/")
-        response.set_cookie('session', '', expires=0)
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
         return response
 
     # User not logged in
@@ -538,12 +538,12 @@ def checkSession():
 
             else:
                 response = redirect("/a")
-                response.set_cookie('session', '', expires=0)
+                response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
                 return response
 
         else:
             response = redirect("/a")
-            response.set_cookie('session', '', expires=0)
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
             return response
         
     # Login the user for the first time
@@ -586,7 +586,7 @@ def auth():
 
         # Delete cookie
         response = redirect("/")
-        response.set_cookie('session', '', expires=0)
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
         return response
 
     oauth_state = generateRandomState()
@@ -598,7 +598,7 @@ def auth():
     db.session.add(new_user_auth)
     db.session.commit()
 
-    auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=http://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
+    auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=https://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
     response = redirect(auth_url)
     response.set_cookie('session', session.sid)
@@ -669,7 +669,7 @@ def oauth():
                 'client_secret': client_secret,
                 'grant_type': 'authorization_code',
                 'code': authorization_code,
-                'redirect_uri': 'http://localhost:5173/oauth/callback',
+                'redirect_uri': 'https://localhost:5173/oauth/callback',
                 'code_verifier': code_verifier
             }
             response = requests.post(url, headers=headers, data=data)
@@ -773,9 +773,10 @@ def oauth():
 # Guest page
 @app.route('/guest')
 def guestLogin():
-    if get_session_id() == 'guest':
+    session_id = get_session_id()
+    if session_id == 'guest' or session_id == None:
         response = redirect('/home')
-        response.set_cookie('session', "guest")
+        response.set_cookie('session', "guest", secure=True, httponly=True, samesite='Lax')
         return response
 
     return redirect('/')

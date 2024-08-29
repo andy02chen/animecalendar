@@ -101,7 +101,7 @@ function Auth() {
                                         <div className='mal-choice-div'>
                                             <p>For a better experience:</p>
                                             <button onClick={() => {
-                                                document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                                document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax; Secure; path=/';
                                                 authRedirect();
                                             }} className='login-button'>Login with MAL</button>
                                         </div>

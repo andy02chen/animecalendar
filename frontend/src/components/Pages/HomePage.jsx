@@ -15,9 +15,9 @@ function refreshAccessToken() {
         axios.delete('/api/logout')
         .then(response => {
             localStorage.setItem('errorMsgDiv', true);
-            document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-            document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-            document.cookie = 'session=; Max-Age=-99999999;';
+            document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure; path=/';
+            document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure; path=/';
+            document.cookie = 'session=; Max-Age=-99999999; SameSite=Lax; Secure; path=/';
             window.location.href = response.data.redirect_url;
         })
     })
@@ -48,8 +48,8 @@ function HomePage() {
                 setLoggedIn(response.data.loggedIn);
                 setLoaded(true);
 
-                document.cookie = `username=${response.data.username};`
-                document.cookie = `pfp=${response.data.picture};`
+                document.cookie = `username=${response.data.username}; SameSite=Lax; Secure; path=/`
+                document.cookie = `pfp=${response.data.picture}; SameSite=Lax; Secure; path=/`
 
                 setUser(response.data.username);
 
