@@ -1,7 +1,6 @@
 from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string
 from cryptography.fernet import Fernet
 from config import app, db
-from flask_session import Session
 import pkce
 import os
 from dotenv import load_dotenv
@@ -12,6 +11,8 @@ import base64
 import time
 import hashlib
 import uuid
+import secrets
+import string
 
 load_dotenv()
 
@@ -292,7 +293,7 @@ def plan_to_watch():
 
         # User not found
         response = redirect("/")
-        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
         return response
 
     # User not logged in
@@ -430,7 +431,7 @@ def weekly_anime():
 
         # User not found
         response = redirect("/")
-        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
         return response
 
     # User not logged in
@@ -538,12 +539,12 @@ def checkSession():
 
             else:
                 response = redirect("/a")
-                response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
+                response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
                 return response
 
         else:
             response = redirect("/a")
-            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
             return response
         
     # Login the user for the first time
@@ -572,6 +573,12 @@ def generateCodeChallenge(length = 128):
 
     return result
 
+def generateNewSession(length=32):
+    # characters = string.ascii_letters + string.digits + string.punctuation
+    characters = string.ascii_letters + string.digits
+    session_string = ''.join(secrets.choice(characters) for _ in range(length))
+    return session_string
+
 # Redirect when user logs in with MAL
 @app.route('/auth')
 def auth():
@@ -586,7 +593,7 @@ def auth():
 
         # Delete cookie
         response = redirect("/")
-        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax')
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
         return response
 
     oauth_state = generateRandomState()
@@ -594,14 +601,15 @@ def auth():
 
     # Hashes State and Encrypts code challenge before storing
     salt = uuid.uuid4().hex
-    new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=hash_text(session.sid,session_salt), state_salt=salt)
+    got_session = generateNewSession()
+    new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=hash_text(got_session,session_salt), state_salt=salt)
     db.session.add(new_user_auth)
     db.session.commit()
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=https://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
     response = redirect(auth_url)
-    response.set_cookie('session', session.sid)
+    response.set_cookie('session', got_session, secure=True, httponly=True, samesite='Lax', path='/')
     return response
 
 def query_auth(session_id, session_salt):
@@ -610,7 +618,6 @@ def query_auth(session_id, session_salt):
 def find_user_by_name(user_username):
     return User.query.filter_by(user_id=user_username).first()
 
-# TODO Last function to test
 # Redirect from OAuth
 @app.route('/oauth/callback')
 def oauth():
@@ -626,7 +633,7 @@ def oauth():
                     <html>
                         <head>
                             <script type="text/javascript">
-                                localStorage.setItem('errorMsgDiv', True);
+                                localStorage.setItem('errorMsgDiv', "True");
                                 window.location.href = "/a";
                             </script>
                         </head>
@@ -642,7 +649,7 @@ def oauth():
                     <html>
                         <head>
                             <script type="text/javascript">
-                                localStorage.setItem('errorMsgDiv', True);
+                                localStorage.setItem('errorMsgDiv', "True");
                                 window.location.href = "/a";
                             </script>
                         </head>
@@ -776,7 +783,7 @@ def guestLogin():
     session_id = get_session_id()
     if session_id == 'guest' or session_id == None:
         response = redirect('/home')
-        response.set_cookie('session', "guest", secure=True, httponly=True, samesite='Lax')
+        response.set_cookie('session', "guest", expires=0, secure=True, httponly=True, samesite='Lax', path='/')
         return response
 
     return redirect('/')
@@ -787,3 +794,4 @@ if __name__ == '__main__':
         db.create_all()
     
     app.run(debug=True,port=5000)
+    # app.run(debug=True,port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))

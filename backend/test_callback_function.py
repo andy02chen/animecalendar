@@ -36,7 +36,7 @@ def test_no_session(mock_session, client):
     mock_session.return_value = None
     response = client.get('/oauth/callback?state=correct_state&code=correct_code')
     assert response.status_code == 200
-    assert b'localStorage.setItem(\'errorMsgDiv\', True);' in response.data
+    assert b'localStorage.setItem(\'errorMsgDiv\', "True");' in response.data
     assert b'window.location.href = "/a";' in response.data
     assert b'<h1>Redirecting...</h1>' in response.data
 
@@ -49,7 +49,7 @@ def test_no_session_match(mock_auth, mock_session, client):
 
     response = client.get('/oauth/callback?state=correct_state&code=correct_code')
     assert response.status_code == 200
-    assert b'localStorage.setItem(\'errorMsgDiv\', True);' in response.data
+    assert b'localStorage.setItem(\'errorMsgDiv\', "True");' in response.data
     assert b'window.location.href = "/a";' in response.data
     assert b'<h1>Redirecting...</h1>' in response.data
 
