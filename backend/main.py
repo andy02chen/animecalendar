@@ -793,5 +793,5 @@ if __name__ == '__main__':
         # db.drop_all()
         db.create_all()
     
-    app.run(debug=True,port=5000)
-    # app.run(debug=True,port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    # app.run(debug=True,port=5000)
+    app.run(debug=True,port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))

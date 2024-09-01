@@ -310,6 +310,10 @@ img {
     .month-heading {
         font-size: 1.5rem;
     }
+
+    .credit, .created {
+        font-size: 0.8rem;
+    }
 }
 
 /* Mobile */
@@ -342,6 +346,10 @@ img {
         width: 5px;
         height: 5px;
         border-radius: 50%;
+    }
+
+    .credit, .created {
+        font-size: 0.7rem;
     }
 }
 
