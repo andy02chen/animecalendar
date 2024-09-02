@@ -79,6 +79,10 @@ img {
     background: #555;
 }
 
+::-webkit-scrollbar-corner {
+    background-color: #333333;
+}
+
 @media screen and (max-width: 1980px) {
     .release-note {
         font-size: 0.9rem;

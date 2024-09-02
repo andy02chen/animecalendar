@@ -783,7 +783,7 @@ def guestLogin():
     session_id = get_session_id()
     if session_id == 'guest' or session_id == None:
         response = redirect('/home')
-        response.set_cookie('session', "guest", expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+        response.set_cookie('session', "guest", secure=True, httponly=True, samesite='Lax', path='/')
         return response
 
     return redirect('/')
