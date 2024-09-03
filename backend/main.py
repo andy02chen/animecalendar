@@ -21,6 +21,7 @@ session_salt = os.getenv("SESSION_SALT")
 ip_salt = os.getenv("IP_SALT")
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
+API_URL = os.getenv("API_URL")
 
 cipher_suite = Fernet(encryption_key)
 
@@ -612,7 +613,7 @@ def auth():
     db.session.add(new_user_auth)
     db.session.commit()
 
-    auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=https://localhost:5000/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
+    auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri={API_URL}/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
     response = redirect(auth_url)
     response.set_cookie('session', got_session, secure=True, httponly=True, samesite='Lax', path='/')
@@ -682,7 +683,7 @@ def oauth():
                 'client_secret': client_secret,
                 'grant_type': 'authorization_code',
                 'code': authorization_code,
-                'redirect_uri': 'https://localhost:5000/oauth/callback',
+                'redirect_uri': f'{API_URL}/oauth/callback',
                 'code_verifier': code_verifier
             }
             response = requests.post(url, headers=headers, data=data)

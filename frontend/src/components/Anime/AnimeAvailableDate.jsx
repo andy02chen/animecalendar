@@ -156,11 +156,8 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
             return;
         }
 
-        // TODO i think there is an error here
-        // if the same episode is delayed im pretty sure it should increment rather than stay as 1
         // Get delay episode length to offset calculation
         if(localStorage.getItem(anime.id) !== null) {
-            // console.log(Object.keys(JSON.parse(localStorage.getItem(anime.id))).length);
             anime.delayed_eps = Object.keys(JSON.parse(localStorage.getItem(anime.id))).length;
         }
 

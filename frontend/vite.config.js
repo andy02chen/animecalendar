@@ -34,12 +34,12 @@ export default defineConfig({
     https: {
       key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
       cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
-      rejectUnauthorized: false, // Add this line to bypass SSL certificate verification
+      rejectUnauthorized: false,
     },
     proxy: {
       '/auth': {
         target: "https://localhost:5000",
-        secure: false,  // Add this line to bypass SSL certificate verification
+        secure: false,
         changeOrigin: true
       },
       '/api': {
