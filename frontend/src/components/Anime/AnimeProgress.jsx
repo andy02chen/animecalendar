@@ -524,7 +524,6 @@ function logOut() {
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    console.log(value, parts);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 

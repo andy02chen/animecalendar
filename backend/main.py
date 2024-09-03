@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string
+from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string, send_from_directory, render_template
 from cryptography.fernet import Fernet
 from config import app, db
 import pkce
@@ -23,6 +23,12 @@ client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
 
 cipher_suite = Fernet(encryption_key)
+
+# React Router should be doing this
+@app.route('/a')
+@app.route('/home')
+def serve_react_pages():
+    return render_template('index.html')
 
 # Function for getting session cookie
 def get_session_id():
@@ -606,7 +612,7 @@ def auth():
     db.session.add(new_user_auth)
     db.session.commit()
 
-    auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=https://localhost:5173/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
+    auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri=https://localhost:5000/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
     response = redirect(auth_url)
     response.set_cookie('session', got_session, secure=True, httponly=True, samesite='Lax', path='/')
@@ -676,7 +682,7 @@ def oauth():
                 'client_secret': client_secret,
                 'grant_type': 'authorization_code',
                 'code': authorization_code,
-                'redirect_uri': 'https://localhost:5173/oauth/callback',
+                'redirect_uri': 'https://localhost:5000/oauth/callback',
                 'code_verifier': code_verifier
             }
             response = requests.post(url, headers=headers, data=data)
@@ -794,4 +800,5 @@ if __name__ == '__main__':
         db.create_all()
     
     # app.run(debug=True,port=5000)
-    app.run(debug=True,port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    app.run(debug=False, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    # app.run(debug=True,port=5000, ssl_context='adhoc')
