@@ -42,7 +42,7 @@ def test_no_session(mock_session, client):
 
 # no matching session
 @patch('main.get_session_id')
-@patch('main.Auth.query.filter_by')
+@patch('main.query_auth')
 def test_no_session_match(mock_auth, mock_session, client):
     mock_session.return_value = "fake_session"
     mock_auth.return_value = None
