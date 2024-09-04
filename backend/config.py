@@ -10,7 +10,9 @@ CORS(app)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "sqlalchemy"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sessions.db'
+db_path = os.path.abspath('../data/sessions.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+app.config['SESSION_COOKIE_SECURE'] = True
 
 db = SQLAlchemy(app)
 app.config['SESSION_SQLALCHEMY'] = db
