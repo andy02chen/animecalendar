@@ -2,8 +2,10 @@ from config import db
 from uuid import uuid4
 import time
 
-def get_uid():
-    return uuid4().hex
+def clear_table():
+    db.session.query(Auth).delete()
+    db.session.query(RateLimit).delete()
+    db.session.commit()
 
 class Auth(db.Model):
     session_id = db.Column(db.String(), unique=True)

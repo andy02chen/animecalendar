@@ -6,13 +6,15 @@ import os
 from dotenv import load_dotenv
 from random import randrange
 import requests
-from models import db, User, Auth, RateLimit
+from models import db, User, Auth, RateLimit, clear_table
 import base64
 import time
 import hashlib
 import uuid
 import secrets
 import string
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 
 load_dotenv()
 
@@ -24,6 +26,24 @@ client_secret = os.getenv('CLIENT_SECRET')
 API_URL = os.getenv("API_URL")
 
 cipher_suite = Fernet(encryption_key)
+
+# For clearing tables
+scheduler = BackgroundScheduler()
+
+def clear_table_job():
+    with app.app_context():
+        clear_table()
+
+scheduler.add_job(
+    func=clear_table_job,
+    trigger=IntervalTrigger(minutes=30),
+    id='clear_table_job',
+    name='Clear table every 30 minutes',
+    replace_existing=True
+)
+
+scheduler.start()
+
 
 # React Router should be doing this
 @app.route('/a')
@@ -797,9 +817,6 @@ def guestLogin():
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.drop_all()
         db.create_all()
     
-    # app.run(debug=True,port=5000)
-    app.run(debug=False, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
-    # app.run(debug=True,port=5000, ssl_context='adhoc')
+    app.run(debug=True, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
