@@ -491,123 +491,142 @@ def weekly_anime():
         app.logger.error(f"Unexpected error in weekly_anime function: {e}")
         return 'Unable to get weekly anime from MAL. Please report issue if it continues happening.', 500
 
-#TODO
 # Function checks to ensure that the user is allowed to visited route
 @app.route('/api/check-login', methods=["GET"])
 def protectedRoute():
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
-        return jsonify({"error": "rate limit exceeded"}), 429
+    try:
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+            return jsonify({"error": "rate limit exceeded"}), 429
 
-    user_session_id = get_session_id()
+        user_session_id = get_session_id()
 
-    if user_session_id:
-        if user_session_id == "guest":
-            return jsonify({
-                'loggedIn':True,
-                'username': 'Guest',
-                'picture': None
-            })
+        if user_session_id:
+            if user_session_id == "guest":
+                return jsonify({
+                    'loggedIn':True,
+                    'username': 'Guest',
+                    'picture': None
+                })
 
-        find_user = find_user_function(user_session_id)
+            find_user = find_user_function(user_session_id)
 
-        if find_user:
-            return jsonify({
-                'loggedIn':True,
-                'username': find_user.user_id,
-                'picture': find_user.pfp
-            })
+            if find_user:
+                return jsonify({
+                    'loggedIn':True,
+                    'username': find_user.user_id,
+                    'picture': find_user.pfp
+                })
 
+            return jsonify({'loggedIn':False}), 400
+        
         return jsonify({'loggedIn':False})
-    
-    return jsonify({'loggedIn':False})
+
+    except Exception as e:
+        app.logger.error(f"Unexpected error in protectedRoute: {e}")
+        return jsonify({'loggedIn':False}), 400
 
 # Endpoint for refreshing the user's access token
 @app.route('/api/refresh-token', methods=["PUT"])
 def refreshUsersTokens():
-    # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=4, period=60):
-        return jsonify({"error": "rate limit exceeded"}), 429
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=4, period=60):
+            return jsonify({"error": "rate limit exceeded"}), 429
 
-    user_session_id = get_session_id()
+        user_session_id = get_session_id()
 
-    if user_session_id:
-        if user_session_id == "guest":
-            return '', 204
-
-        find_user = find_user_function(user_session_id)
-
-        if find_user:
-            if refreshTokens(find_user):
+        if user_session_id:
+            if user_session_id == "guest":
                 return '', 204
 
-            else:
-                return 'There was an error from MAL servers. Please try logging in again later. If this error persists, please report bug.', 403
+            find_user = find_user_function(user_session_id)
+
+            if find_user:
+                if refreshTokens(find_user):
+                    return '', 204
+
+                else:
+                    app.logger.error("Error refreshing tokens for a user")
+                    return 'There was an error from MAL servers. Please try logging in again later. If this error persists, please report bug.', 403
+
+            return '', 401
 
         return '', 401
 
-    return '', 401
+    except Exception as e:
+        app.logger.error("Unexpected error in refreshUserTokens")
+        return '', 401
 
 def hash_text(text, salt):
     return hashlib.sha256(text.encode() + salt.encode()).hexdigest()
 
 # Function for refreshing
 def refreshTokens(user_to_refresh):
-    # Refresh the access token
-    url = 'https://myanimelist.net/v1/oauth2/token'
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    try:
+        # Refresh the access token
+        url = 'https://myanimelist.net/v1/oauth2/token'
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-    data = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'grant_type': 'refresh_token',
-        'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token).decode()
-    }
-    
-    response = requests.post(url, headers=headers, data=data)
-    if response.status_code == 200:
-        token_data = response.json()
+        data = {
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'grant_type': 'refresh_token',
+            'refresh_token':cipher_suite.decrypt(user_to_refresh.refresh_token).decode()
+        }
+        
 
-        token_expiration_time = int(time.time()) + int(token_data["expires_in"])
-        user_to_refresh.access_token = cipher_suite.encrypt(token_data["access_token"].encode())
-        user_to_refresh.refresh_token = cipher_suite.encrypt(token_data["refresh_token"].encode())
-        user_to_refresh.expires_in = token_expiration_time
-        db.session.commit()
+        response = requests.post(url, headers=headers, data=data)
+        if response.status_code == 200:
+            token_data = response.json()
 
-        return True
-    
-    return False
+            token_expiration_time = int(time.time()) + int(token_data["expires_in"])
+            user_to_refresh.access_token = cipher_suite.encrypt(token_data["access_token"].encode())
+            user_to_refresh.refresh_token = cipher_suite.encrypt(token_data["refresh_token"].encode())
+            user_to_refresh.expires_in = token_expiration_time
+            db.session.commit()
+
+            return True
+        
+        return False
+
+    except Exception as e:
+        app.logger.error("Failed to refresh tokens in refreshTokens")
+        return False
+
+def clear_and_redirect(redirect_url):
+    response = redirect(redirect_url)
+    response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+    return response
 
 @app.route('/')
 def checkSession():
-    # Check if user session exists
-    user_session_id = get_session_id()
+    try:
+        # Check if user session exists
+        user_session_id = get_session_id()
 
-    if user_session_id:
-        user_id = find_user_function(user_session_id)
-        
-        # Refresh access and refresh token if the user already exists before redirecting to home page
-        if user_id:
-            if refreshTokens(user_id):
-                return redirect("/home")
+        if user_session_id:
+            user_id = find_user_function(user_session_id)
+            
+            # Refresh access and refresh token if the user already exists before redirecting to home page
+            if user_id:
+                if refreshTokens(user_id):
+                    return redirect("/home")
+
+                else:
+                    return clear_and_redirect("/a")
 
             else:
-                response = redirect("/a")
-                response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
-                return response
-
+                return clear_and_redirect("/a")
+            
+        # Login the user for the first time
         else:
-            response = redirect("/a")
-            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
-            return response
-        
-    # Login the user for the first time
-    else:
-        response = redirect("/a")
-        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
-        return response
+            return clear_and_redirect("/a")
 
+    except:
+        app.logger.error("Unknown Error in checkSession")
+        return clear_and_redirect("/a")
 
 # Generates a random state
 def generateRandomState(length = 32):
@@ -636,6 +655,7 @@ def generateNewSession(length=32):
     session_string = ''.join(secrets.choice(characters) for _ in range(length))
     return session_string
 
+#TODO
 # Redirect when user logs in with MAL
 @app.route('/auth')
 def auth():

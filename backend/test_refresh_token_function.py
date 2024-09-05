@@ -57,3 +57,13 @@ def test_refreshTokens_fail(mock_encrypt, mock_post, mock_decrypt):
     assert result == False
     assert mock_user.access_token == 'encrypted_access_token'
     assert mock_user.refresh_token == b'encrypted_refresh_token'
+
+# Refresh function exception
+@patch('main.requests.post')
+def test_exception(mock_post):
+    mock_post.side_effect = Exception()
+
+    mock_user = MockUser()
+    result = refreshTokens(mock_user)
+
+    assert result == False 

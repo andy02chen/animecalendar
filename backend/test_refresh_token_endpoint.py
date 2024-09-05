@@ -83,3 +83,12 @@ def test_refresh_sucess(mock_refresh, mock_find_user, mock_user_session, mock_ra
 
     assert response.status_code == 204
     assert response.data.decode() == ''
+
+# refresh exception
+@patch('main.is_rate_limited')
+def test_refresh_exception(mock_rate_limit, client):
+    mock_rate_limit.side_effect = Exception()
+    response = client.put('/api/refresh-token')
+
+    assert response.status_code == 401
+    assert response.data.decode() == ''

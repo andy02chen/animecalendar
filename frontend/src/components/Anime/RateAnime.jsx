@@ -37,7 +37,7 @@ function updateStatus(anime, setRefreshAnimeDisplay, score, displayDiv) {
         localStorage.removeItem(anime.id);
     })
     .catch(error => {
-        if(error.response.status === 502) {
+        if(error.response.status === 502 || error.response.status === 400) {
             document.getElementById('popup-error-message').textContent = error.response.data;
             const popup = document.getElementById("error-popup");
             popup.classList.remove("hide-error");

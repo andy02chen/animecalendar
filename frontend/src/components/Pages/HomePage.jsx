@@ -58,7 +58,7 @@ function HomePage() {
                 }
             })
             .catch(error => {
-                localStorage.setItem('errorMsgDiv', '3');
+                localStorage.setItem('errorMsgDiv', '4');
                 setLoaded(true);
             });
     }, []);

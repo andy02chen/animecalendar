@@ -56,7 +56,7 @@ def test_user_not_found(mock_find_user, mock_get_session,mock_rate_limit,client)
     mock_get_session.return_value = "fake_session"
     mock_find_user.return_value = None
     response = client.get('/api/check-login')
-    assert response.status_code == 200
+    assert response.status_code == 400
     assert response.json == {'loggedIn':False}
 
 # Test found user
@@ -74,3 +74,11 @@ def test_success(mock_find_user, mock_get_session,mock_rate_limit,client):
                 'username': "fake_id",
                 'picture': "fake_path"
             }
+
+# Test API exception
+@patch('main.is_rate_limited')
+def test_api_exception(mock_rate_limit, client):
+    mock_rate_limit.side_effect = Exception()
+    response = client.get('/api/check-login')
+    assert response.status_code == 400
+    assert response.json == {'loggedIn':False}

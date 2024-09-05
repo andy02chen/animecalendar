@@ -19,7 +19,7 @@ const moveToWatchingDiv = ((anime,setTrigger, setGotRequest) => {
         setGotRequest(true);
     })
     .catch(error => {
-        if(error.response.status === 502) {
+        if(error.response.status === 502 || error.response.status === 400) {
             setGotRequest(true);
             document.getElementById('popup-error-message').textContent = error.response.data;
             const popup = document.getElementById("error-popup");

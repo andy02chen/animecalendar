@@ -52,3 +52,11 @@ def test_refresh(mock_refresh_tokens, mock_find_user, mock_session, client):
     response = client.get('/')
     assert response.status_code == 302
     assert response.location.endswith('/home')
+
+# Test exception
+@patch('main.get_session_id')
+def test_refresh_exception(mock_session, client):
+    mock_session.side_effect = Exception()
+    response = client.get('/')
+    assert response.status_code == 302
+    assert response.location.endswith('/a')

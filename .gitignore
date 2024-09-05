@@ -32,3 +32,5 @@ backend/localhost-key.pem
 
 frontend/localhost-key.pem
 frontend/localhost.pem
+data/
+backend/app.log
