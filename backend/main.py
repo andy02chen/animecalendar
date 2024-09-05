@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string, send_from_directory, render_template
+from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string, send_from_directory, render_template, abort
 from cryptography.fernet import Fernet
 from config import app, db
 import pkce
@@ -15,6 +15,8 @@ import secrets
 import string
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+import logging
+from logging.handlers import RotatingFileHandler
 
 load_dotenv()
 
@@ -26,6 +28,23 @@ client_secret = os.getenv('CLIENT_SECRET')
 API_URL = os.getenv("API_URL")
 
 cipher_suite = Fernet(encryption_key)
+
+def setup_logging():
+    #DEBUG
+    #INFO
+    #WARNING
+    #ERROR
+    #CRITICAL
+    if not app.debug:
+        handler = RotatingFileHandler('app.log', maxBytes=100000, backupCount=3)
+        handler.setLevel(logging.INFO)
+        formatter = logging.Formatter(
+            '%(asctime)s - %(levelname)s - %(message)s [in %(pathname)s:%(lineno)d]'
+        )
+        handler.setFormatter(formatter)
+        app.logger.addHandler(handler)
+
+setup_logging()
 
 # For clearing tables
 scheduler = BackgroundScheduler()
@@ -49,142 +68,176 @@ scheduler.start()
 @app.route('/a')
 @app.route('/home')
 def serve_react_pages():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception:
+        app.logger.error('Unable to load home page.')
+        abort(500, description="Internal Server Error: Unable to load the page.")
 
 # Function for getting session cookie
 def get_session_id():
     return request.cookies.get('session')
 
 def find_user_function(user_session_id):
-    return User.query.filter_by(session_id=hash_text(user_session_id,session_salt)).first()
+    try:
+        hashed_session = hash_text(user_session_id,session_salt)
+        return User.query.filter_by(session_id=hashed_session).first()
+    except Exception:
+        app.logger.critical('Unable to query database to find user')
+        return None
 
 # Function for updating the number of episodes watched on MyAnimeList
 @app.route('/api/update-anime', methods=["POST"])
 def updateStatus():
-    # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
-        return jsonify({"error": "rate limit exceeded"}), 429
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
+            return jsonify({"error": "rate limit exceeded"}), 429
 
-    # Find user using session id
-    user_session_id = get_session_id()
-    if user_session_id:
-        find_user = find_user_function(user_session_id)
-        if find_user:
-            msg, code = check_expiry()
+        # Find user using session id
+        user_session_id = get_session_id()
+        if user_session_id:
+            find_user = find_user_function(user_session_id)
+            if find_user:
+                msg, code = check_expiry()
 
-            # Login again
-            if code == 401 or code == 403:
-                return msg, code
+                # Login again
+                if code in (401,403):
+                    return msg, code
 
-            data = request.get_json()
+                data = request.get_json()
 
-            if 'anime-id' not in data:
-                return '', 400
+                if not data or 'anime-id' not in data or 'eps-watched' not in data or 'completed' not in data:
+                    app.logger.warning('Invalid request data for updating anime')
+                    return 'Invalid request data for updating anime', 400
 
-            anime_id = data['anime-id']
+                anime_id = data['anime-id']
+                eps_watched = int(data['eps-watched']) + 1
 
-            if 'eps-watched' not in data:
-                return '', 400
-            eps_watched = int(data['eps-watched']) + 1
+                mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
 
-            mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
+                get_user_access_token = None
+                try:
+                    get_user_access_token = cipher_suite.decrypt(find_user.access_token)
+                except Exception as e:
+                    app.logger.error(f"Decryption error: {e}")
+                    return '', 401
 
-            get_user_access_token = cipher_suite.decrypt(find_user.access_token)
-            if not get_user_access_token:
-                return '', 401
+                if not get_user_access_token:
+                    return '',401
 
-            mal_access_token = get_user_access_token.decode()
-            headers = {
-                'Authorization': f'Bearer {mal_access_token}'
-            }
+                mal_access_token = get_user_access_token.decode()
+                headers = {
+                    'Authorization': f'Bearer {mal_access_token}'
+                }
 
-            if 'completed' not in data:
-                return '', 400
+                body = {}
+                # If Completed
+                if data['completed']:
+                    if 'score' in data:
+                        body = {
+                            'score': data['score'],
+                            "num_watched_episodes": eps_watched,
+                            "status" : "completed"
+                        }
 
-            body = {}
-            # If Completed
-            if data['completed']:
-                if 'score' in data:
-                    body = {
-                        'score': data['score'],
-                        "num_watched_episodes": eps_watched,
-                        "status" : "completed"
-                    }
+                    else:
+                        body = {
+                            "num_watched_episodes": eps_watched,
+                            "status" : "completed"
+                        }
 
+                # Update progress
                 else:
                     body = {
                         "num_watched_episodes": eps_watched,
-                        "status" : "completed"
+                        "status" : "watching"
                     }
 
-            # Update progress
-            else:
-                body = {
-                    "num_watched_episodes": eps_watched,
-                    "status" : "watching"
-                }
+                response = requests.patch(mal_update_anime, headers=headers, data=body)
+                if response.status_code == 200:
+                    return '', 200
+                else:
+                    return 'There was an error updating on MAL servers. Please try again later.', 502
 
-            response = requests.patch(mal_update_anime, headers=headers, data=body)
-            
-            if response.status_code == 200:
-                return '', 200
-
-            else:
-                return 'There was an error updating on MAL servers. Please try again later.', 502
-
-        return '', 401
+            return '', 401
+        
+        return '', 400
     
-    return '', 400
+    except Exception as e:
+        app.logger.error(f"Unexpected error in updateStatus: {e}")
+        return "An error has prevented the server from fulfilling this request. Pleaase try again later or report this bug", 500
 
 
 # Function for deleting user from the database
 @app.route('/api/logout', methods=["DELETE"])
 def delete_user_session():
-    # Check limit
-    if is_rate_limited(request.remote_addr, request.endpoint, limit=5, period=60):
-        return jsonify({"error": "rate limit exceeded"}), 429
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=5, period=60):
+            return jsonify({"error": "rate limit exceeded"}), 429
 
-    session_id = get_session_id()
+        session_id = get_session_id()
 
-    if session_id:
-        if session_id == 'guest':
-            return jsonify({"redirect_url": "/"}), 200
+        if session_id:
+            if session_id == 'guest':
+                return jsonify({"redirect_url": "/"}), 200
 
-        found_user = find_user_function(session_id)
+            found_user = find_user_function(session_id)
 
-        if found_user:
-            found_user.session_id = None
-            db.session.commit()
+            if found_user:
+                found_user.session_id = None
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    logging.error(f"Database commit error: {e}")
+                    db.session.rollback()
+                    return jsonify({"redirect_url": "/"}), 200
 
-            return jsonify({"redirect_url": "/"}), 200
+
+                return jsonify({"redirect_url": "/"}), 200
+
+            return jsonify({"redirect_url": "/"}), 401
 
         return jsonify({"redirect_url": "/"}), 401
-
-    return jsonify({"redirect_url": "/"}), 401
+    
+    except Exception as e:
+        logging.error(f"Unexpected error in delete_user_session: {e}")
+        return jsonify({"redirect_url": "/"}), 200
 
 # Function for checking expiry time
 # Calls function for refreshing if expired
 def check_expiry():
-    # Get user using session id
-    session_id = get_session_id()
+    try:
+        # Get user using session id
+        session_id = get_session_id()
 
-    if not session_id:
+        if not session_id:
+            return '', 401
+
+        found_user = find_user_function(session_id)
+
+        if not found_user:
+            return '', 401
+
+        # Check if it has expired
+        curr_time = int(time.time())
+
+        # Refresh if expired
+        if curr_time >= found_user.expires_in:
+            try:
+                return refreshUsersTokens()
+            except Exception as e:
+                logging.error(f"Token refresh error: {e}")
+                return '', 401
+
+        return '',100
+
+    except Exception as e:
+        logging.error(f"Unexpected error in check_expirty: {e}")
         return '', 401
 
-    found_user = find_user_function(session_id)
-
-    if not found_user:
-        return '', 401
-
-    # Check if it has expired
-    curr_time = int(time.time())
-
-    # Refresh if expired
-    if curr_time >= found_user.expires_in:
-        return refreshUsersTokens()
-
-    return '',100
-
+# TODO
 # Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):
     period_start = int(time.time()) - period
@@ -576,7 +629,9 @@ def checkSession():
         
     # Login the user for the first time
     else:
-        return redirect("/a")
+        response = redirect("/a")
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+        return response
 
 
 # Generates a random state
@@ -819,4 +874,5 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     
+    # Uncomment for development server
     app.run(debug=True, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))

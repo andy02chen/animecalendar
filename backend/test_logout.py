@@ -57,3 +57,25 @@ def test_logout_success(mock_found_user, mock_session_id, mock_rate_limit, clien
     mock_found_user.return_value = MagicMock(session_id=mock_session_id)
     response = client.delete('/api/logout')
     assert response.status_code == 200
+
+# Test logout exception
+@patch('main.is_rate_limited')
+@patch('main.get_session_id')
+@patch('main.find_user_function')
+@patch('main.db.session.commit')
+def test_logout_commit_exception(mock_commit, mock_found_user, mock_session_id, mock_rate_limit, client):
+    mock_rate_limit.return_value = False
+    mock_session_id.return_value = 'fake_session_id'
+    mock_found_user.side_effect = MagicMock(session_id=mock_session_id)
+    mock_commit.side_effect = Exception()
+    response = client.delete('/api/logout')
+    assert response.status_code == 200
+    mock_commit.assert_called_once()
+
+# Test API exception
+@patch('main.is_rate_limited')
+def test_api_exception(mock_rate_limit, client):
+    mock_rate_limit.side_effect = Exception()
+
+    response = client.delete('/api/logout')
+    assert response.status_code == 200

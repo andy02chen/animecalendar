@@ -14,5 +14,8 @@ db_path = os.path.abspath('../data/sessions.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SESSION_COOKIE_SECURE'] = True
 
+# Uncomment for Testing
+app.config['DEBUG'] = False
+
 db = SQLAlchemy(app)
 app.config['SESSION_SQLALCHEMY'] = db
