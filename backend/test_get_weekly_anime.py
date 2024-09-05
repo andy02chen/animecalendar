@@ -151,3 +151,11 @@ def test_found_user_success(mock_request_get, mock_decrypt, mock_expiry, mock_fi
     response = client.get('/api/get-weekly-anime')
     assert response.status_code == 200
     mock_request_get.assert_called_once()
+
+# Test api exception
+@patch('main.is_rate_limited')
+def test_api_exception(mock_rate_limit, client):
+    mock_rate_limit.side_effect = Exception()
+
+    response = client.get('/api/get-weekly-anime')
+    assert response.status_code == 500
