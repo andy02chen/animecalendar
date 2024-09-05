@@ -53,3 +53,11 @@ def test_exception(mock_hash_text, mock_query, mock_add, mock_commit, client):
 
     assert is_rate_limited('127.0.0.1', '/api/test', limit=10, period=60)
     mock_add.assert_called_once()
+
+# Missing ip
+def test_miss_ip(client):
+    assert not is_rate_limited(None, '/api/test', limit=10, period=60)
+
+# Missing salt
+def test_miss_salt(client):
+    assert not is_rate_limited(None, '/api/test', limit=10, period=60)

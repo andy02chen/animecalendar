@@ -57,3 +57,24 @@ def test_user_not_found(mock_find_user_function, mock_get_session_id, client):
     assert response.status_code == 302
     assert response.location.endswith('/')
     assert response.headers['Set-Cookie'].startswith('session=;')
+
+# Test exception
+@patch('main.get_session_id')
+@patch('main.generateRandomState')
+@patch('main.generateCodeChallenge')
+@patch('main.hash_text')
+@patch('main.cipher_suite.encrypt')
+@patch('main.db.session.add')
+@patch('main.db.session.commit')
+def test_exception(mock_commit, mock_add, mock_encrypt, mock_hash_text, mock_code_challenge, mock_state, mock_get_session_id, client):
+    mock_get_session_id.return_value = None
+    mock_state.return_value = "random_state"
+    mock_code_challenge.return_value = "code_challenge"
+    mock_encrypt.return_value = "encrypted"
+    mock_hash_text.return_value = "hashed"
+    mock_commit.side_effect = Exception()
+
+    response = client.get('/auth')
+
+    assert response.status_code == 500
+    mock_add.assert_called_once()

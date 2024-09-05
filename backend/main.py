@@ -72,7 +72,7 @@ def serve_react_pages():
         return render_template('index.html')
     except Exception:
         app.logger.error('Unable to load home page.')
-        abort(500, description="Internal Server Error: Unable to load the page.")
+        abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
 
 # Function for getting session cookie
 def get_session_id():
@@ -242,6 +242,9 @@ def check_expiry():
 # Function for checking if rate limited
 def is_rate_limited(ip, endpoint, limit, period):
     try:
+        if not ip or not ip_salt:
+            return False
+
         period_start = int(time.time()) - period
         recent_requests = RateLimit.query.filter_by(ip=hash_text(ip, ip_salt), endpoint=endpoint).filter(RateLimit.timestamp > period_start).count()
 
@@ -655,7 +658,6 @@ def generateNewSession(length=32):
     session_string = ''.join(secrets.choice(characters) for _ in range(length))
     return session_string
 
-#TODO
 # Redirect when user logs in with MAL
 @app.route('/auth')
 def auth():
@@ -681,7 +683,13 @@ def auth():
     got_session = generateNewSession()
     new_user_auth = Auth(oauth_state=hash_text(oauth_state, salt), code_challenge=cipher_suite.encrypt(code_challenge.encode()), session_id=hash_text(got_session,session_salt), state_salt=salt)
     db.session.add(new_user_auth)
-    db.session.commit()
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        app.logger.error(f"Database commit error in auth: {e}")
+        db.session.rollback()
+        abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
 
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri={API_URL}/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
@@ -690,10 +698,21 @@ def auth():
     return response
 
 def query_auth(session_id, session_salt):
-    return Auth.query.filter_by(session_id=hash_text(session_id, session_salt)).first()
+    try:
+        hashed_session = hash_text(session_id, session_salt)
+        return Auth.query.filter_by(session_id=hashed_session).first()
+
+    except Exception:
+        app.logger.critical('Unable to query database in query_auth')
+        return None
 
 def find_user_by_name(user_username):
-    return User.query.filter_by(user_id=user_username).first()
+    try:
+        return User.query.filter_by(user_id=user_username).first()
+
+    except Exception:
+        app.logger.critical('Unable to query database in find_user_by_name')
+        return None
 
 # Redirect from OAuth
 @app.route('/oauth/callback')
@@ -802,7 +821,24 @@ def oauth():
                     # Remove row from auth DB
                     db.session.delete(find_auth)
 
-                    db.session.commit()
+                    try:
+                        db.session.commit()
+                    
+                    except Exception as e:
+                        app.logger.error(f"Error saving to db in oauth: {e}")
+                        return render_template_string('''
+                            <html>
+                                <head>
+                                    <script type="text/javascript">
+                                        localStorage.setItem('errorMsgDiv', '4');
+                                        window.location.href = "/a";
+                                    </script>
+                                </head>
+                                <body>
+                                    <h1>Redirecting...</h1>
+                                </body>
+                            </html>
+                        ''')
 
                 else:
                     return render_template_string('''
@@ -820,6 +856,7 @@ def oauth():
                     ''')
 
             else:
+                app.logger.error("Error exchanging tokens in oauth")
                 return render_template_string('''
                     <html>
                         <head>
@@ -838,6 +875,7 @@ def oauth():
             return resp
 
         else:
+            app.logger.warning("State mismatch")
             return render_template_string('''
                     <html>
                         <head>

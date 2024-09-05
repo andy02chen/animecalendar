@@ -263,3 +263,49 @@ def test_success_new_user_no_image(mock_db_commit, mock_db_delete, mock_db_add, 
     mock_db_add.assert_called_once()
     mock_db_delete.assert_called_once()
     mock_db_commit.assert_called_once()
+
+# Test exception
+@patch('main.get_session_id')
+@patch('main.query_auth')
+@patch('main.hash_text')
+@patch('main.cipher_suite.decrypt')
+@patch('main.requests.post')
+@patch('main.requests.get')
+@patch('main.find_user_by_name')
+@patch('main.cipher_suite.encrypt')
+@patch('main.db.session.add')
+@patch('main.db.session.delete')
+@patch('main.db.session.commit')
+def test_exception(mock_db_commit, mock_db_delete, mock_db_add, mock_encrypt, mock_find_user, mock_get, mock_post, mock_decrypt, mock_hash, mock_auth_query, mock_session, client):
+    mock_session.return_value = "fake_session"
+    mock_auth_instance = MockAuth(oauth_state='hashed_state', state_salt='salt', code_challenge="code")
+    mock_auth_query.return_value = mock_auth_instance
+    mock_hash.return_value = "hashed_state"
+    mock_decrypt.return_value = b"code"
+
+    mock_post.return_value.status_code = 200
+    mock_post.return_value.json.return_value = {
+        'access_token': 'fake_access_token',
+        'refresh_token': 'fake_refresh_token',
+        'expires_in': 3600
+    }
+
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = {
+        'name': 'test_user',
+        'picture': 'http://example.com/pic.png'
+    }
+
+    mock_find_user.return_value = None
+    mock_encrypt.return_value = "encrypted"
+
+    mock_db_commit.side_effect = Exception()
+
+    response = client.get('/oauth/callback?state=state&code=code')
+    assert response.status_code == 200
+    assert b"localStorage.setItem('errorMsgDiv', '4');" in response.data
+    assert b'window.location.href = "/a";' in response.data
+    assert b'<h1>Redirecting...</h1>' in response.data
+
+    mock_db_add.assert_called_once()
+    mock_db_delete.assert_called_once()
