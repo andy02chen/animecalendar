@@ -8,7 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
 dist-ssr
 *.local
 
@@ -34,3 +33,5 @@ frontend/localhost-key.pem
 frontend/localhost.pem
 data/
 backend/app.log
+backend/htmlcov
+backend/.coverage

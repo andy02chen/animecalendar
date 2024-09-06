@@ -908,4 +908,5 @@ if __name__ == '__main__':
         db.create_all()
     
     # Uncomment for development server
-    app.run(debug=True, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    # app.run(debug=True, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    app.run(host="0.0.0.0", port=5000)
