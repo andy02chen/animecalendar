@@ -440,7 +440,7 @@ def weekly_anime():
         if user_session_id:
             if user_session_id == 'guest':
                 mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=watching&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true'''
+                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
                 headers = {
                     'X-MAL-CLIENT-ID': f'{client_id}'
                 }
@@ -465,7 +465,7 @@ def weekly_anime():
                     return msg, code
                 
                 mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true'''
+                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
                 headers = {
@@ -908,5 +908,5 @@ if __name__ == '__main__':
         db.create_all()
     
     # Uncomment for development server
-    # app.run(debug=True, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True, host="localhost",port=5000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    # app.run(host="0.0.0.0", port=80)
