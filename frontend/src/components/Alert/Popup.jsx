@@ -33,11 +33,11 @@ function Popup() {
                     <p className="popup-localStorage-text">
                         Preferences and some anime tracking data are saved in cookies and localStorage.<br/>
                         Clearing your browser data or using incognito mode may result in the loss of this information.<br/>
-                        Your anime tracking data will not be saved across devices. (May change in a future update)
+                        Your anime delayed data will not be saved across devices. (May change in a future update)
                     </p>
                     <div className="popup-button-div">
                         <button onClick={() => handleAccept()}>Accept</button>
-                        <button onClick={() => handleAcceptForever()}>Accept and Don't show again</button>
+                        <button onClick={() => handleAcceptForever()}>Accept and Hide</button>
                     </div>
                 </div>
             </div>

@@ -200,6 +200,10 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
         const theStartingDate = new Date(isoTime);
         let delaysToAdd = 0;
 
+        // TODO probably an issue here
+        // If anime has no broadcast time
+        // within 24 hours (user watched the timer tick down) (highly unlikely the cause)
+        // anime is finished airing or the timer is less than 0
         if((anime.eps_array.length === 0 || recalculateDates.current !== refreshAnimeDisplay) && anime.air_status === 'currently_airing') {
             recalculateDates.current = refreshAnimeDisplay;
             if (anime.eps) {
@@ -233,7 +237,7 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
             }
 
             anime.eps_array = epsArray;
-            handleData(anime);
+            
         }
 
         // Get next episode date
@@ -258,6 +262,8 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
             background: "linear-gradient(to right, var(--accent), hsla(120, 100%, 39%, 0.95))",
             borderRadius: "5px 0 0 5px"
         };
+
+        handleData(anime);
     }, [refreshAnimeDisplay]);
 
     useEffect(() => {

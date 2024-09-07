@@ -417,7 +417,7 @@ def filter_watching_anime(data):
 
         # Set default values
         details['delayed_eps'] = 0
-        details['air_status'] = node.get('status', None)
+        details['air_status'] = node.get('status')
         details['end_date'] = node.get('end_date', None)
         details['eps_array'] = []
 
