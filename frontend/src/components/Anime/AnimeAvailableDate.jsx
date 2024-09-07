@@ -183,10 +183,11 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
             setAnimeNoBroadcastTime(true);
             
             // Default to 12am
-            // const defaultTime = "23:59:59";
+            
             // const [year, month, day] = anime.start_date.split('-');
             // isoTime = `${year}-${month}-${day}T${defaultTime}`;
 
+            const defaultTime = "23:59:59";
             const dateTimeStr = `${anime.start_date}T${defaultTime}`;
             const newDate = new Date(dateTimeStr);
             isoTime = newDate.toISOString();
@@ -205,7 +206,9 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
         let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
         const today = new Date();
 
-        const theStartingDate = new Date(isoTime);
+        const theStartingDate = isoTime;
+        console.log(theStartingDate);
+
         let delaysToAdd = 0;
 
         // TODO probably an issue here
