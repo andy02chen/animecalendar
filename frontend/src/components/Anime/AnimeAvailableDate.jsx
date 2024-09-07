@@ -167,21 +167,29 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
             // Get anime broadcast date and time then convert it to local time
             const jstDateTimeStr = `${anime.start_date}T${anime.broadcast_time}:00+09:00`;
             const jstDate = new Date(jstDateTimeStr);
-            const localDateTimeStr = jstDate.toLocaleString();
+            isoTime = jstDate.toISOString();
+
+            // TODO compare old and new date calc
+
+            // const localDateTimeStr = jstDate.toLocaleString();
     
-            // Change into ISO 8601 format
-            const [date, time] = localDateTimeStr.split(',');
-            const [day,mth,yr] = date.trim().split('/');
-            const [hour,min,sec] = time.trim().split(":");
-            isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
+            // // Change into ISO 8601 format
+            // const [date, time] = localDateTimeStr.split(',');
+            // const [day,mth,yr] = date.trim().split('/');
+            // const [hour,min,sec] = time.trim().split(":");
+            // isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
         } else {
 
             setAnimeNoBroadcastTime(true);
             
             // Default to 12am
-            const defaultTime = "23:59:59";
-            const [year, month, day] = anime.start_date.split('-');
-            isoTime = `${year}-${month}-${day}T${defaultTime}`;
+            // const defaultTime = "23:59:59";
+            // const [year, month, day] = anime.start_date.split('-');
+            // isoTime = `${year}-${month}-${day}T${defaultTime}`;
+
+            const dateTimeStr = `${anime.start_date}T${defaultTime}`;
+            const newDate = new Date(dateTimeStr);
+            isoTime = newDate.toISOString();
         }
 
         // TODO maybe store these in localStorage the first time the user loads the page

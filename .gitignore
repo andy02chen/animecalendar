@@ -35,3 +35,5 @@ data/
 backend/app.log
 backend/htmlcov
 backend/.coverage
+backend/__pycache__
+backend/.pytest_cache
