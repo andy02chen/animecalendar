@@ -20,8 +20,6 @@ function MainComponent() {
         }
     }
 
-    console.log(animeInfo);
-
     return(
         <>
             <Popup/>

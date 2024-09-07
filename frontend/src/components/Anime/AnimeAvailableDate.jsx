@@ -207,8 +207,6 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
         const today = new Date();
 
         const theStartingDate = isoTime;
-        console.log(theStartingDate);
-
         let delaysToAdd = 0;
 
         // TODO probably an issue here
