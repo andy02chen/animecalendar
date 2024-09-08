@@ -14,7 +14,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: calc(var(--vh, 1vh) * 100);
+    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     background-color: rgba(128, 128, 128, 0.5);
     align-content: center;
