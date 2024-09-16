@@ -46,7 +46,7 @@
 }
 
 body {
-    height: 100dvh;
+    height: 100svh;
     width: 100vw;
     font-family: 'Lato', sans-serif;
     background-color: var(--background);

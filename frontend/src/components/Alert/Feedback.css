@@ -46,6 +46,7 @@
 
 .feedback-link {
     text-decoration: none;
+    color: var(--primary);
 }
 
 .feedback-link:hover {
