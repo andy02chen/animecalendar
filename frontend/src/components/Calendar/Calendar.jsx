@@ -74,18 +74,18 @@ function createDateString(day,month,year) {
 function Calendar({animeData, renderAllComponents}) {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
     ];
 
     // When month selection div is expanded but user clicks elsewhere
@@ -259,7 +259,7 @@ function Calendar({animeData, renderAllComponents}) {
                 <div>
                 </div>
                 <div className='month-buttons-div'>
-                    <button onClick={() => {setMonth(todayMonth); setYear(todayYear);}}>
+                    <button className='click-today-button' onClick={() => {setMonth(todayMonth); setYear(todayYear);}}>
                         Today
                     </button>
                     <button className="prev-month-button"

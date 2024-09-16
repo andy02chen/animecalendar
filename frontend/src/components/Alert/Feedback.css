@@ -15,7 +15,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100svh;
     width: 100%;
     background-color: rgba(128, 128, 128, 0.5);
     align-content: center;
