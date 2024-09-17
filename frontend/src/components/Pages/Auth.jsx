@@ -30,7 +30,15 @@ function instaRedirect() {
 }
 
 function discordRedirect() {
-    window.open('https://discord.com/invite/YURGC2Zq', '_blank');
+    navigator.clipboard.writeText('zneak300');
+    
+    const emailDiv = document.getElementById('copied-email-div');
+    emailDiv.classList.add('show');
+    emailDiv.style.display = "block";
+    setTimeout(() => {
+        emailDiv.classList.remove('show');
+        setTimeout(() => emailDiv.style.display = "none", 500);
+    }, 2000);
 }
 
 function Auth() {
@@ -90,6 +98,9 @@ function Auth() {
                         </>
                         :
                         <>
+                            <div id='copied-email-div' style={{display: "none"}}>
+                                <p>Copied to clipboard</p>
+                            </div>
                             <div className='main-page-image'>
                                 <div className='credit'>Background Image from <a className='credit-link' href='https://neural.love/' target='_blank'>neural.love</a></div>
                                 <div className='demo-div'>
