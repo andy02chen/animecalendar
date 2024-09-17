@@ -99,7 +99,7 @@ function Auth() {
                         :
                         <>
                             <div id='copied-email-div' style={{display: "none"}}>
-                                <p>Copied to clipboard</p>
+                                <p>Username copied to clipboard</p>
                             </div>
                             <div className='main-page-image'>
                                 <div className='credit'>Background Image from <a className='credit-link' href='https://neural.love/' target='_blank'>neural.love</a></div>
