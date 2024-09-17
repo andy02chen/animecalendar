@@ -113,13 +113,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                     // Convert time to local time
                     const jstDateTimeStr = `${anime.start_date}T${anime.broadcast_time}:00+09:00`;
                     const jstDate = new Date(jstDateTimeStr);
-                    const localDateTimeStr = jstDate.toLocaleString();
-
-                    // Change into ISO 8601 format
-                    const [date, time] = localDateTimeStr.split(',');
-                    const [day,mth,yr] = date.trim().split('/');
-                    const [hour,min,sec] = time.trim().split(":");
-                    const isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
+                    const isoTime = jstDate.toISOString();
 
                     // Get difference
                     const startDate = new Date(isoTime);
@@ -170,13 +164,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                 } else {
                     // Convert JST to local time
                     const jstDate = new Date(anime.start_date);
-                    const localDateTimeStr = jstDate.toLocaleString();
-
-                    // Change into ISO 8601 format
-                    const [date, time] = localDateTimeStr.split(',');
-                    const [day,mth,yr] = date.trim().split('/');
-                    const [hour,min,sec] = time.trim().split(":");
-                    const isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
+                    const isoTime = jstDate.toISOString();
 
                     const startDate = new Date(isoTime);
                     const dateNow = new Date(Date.now());

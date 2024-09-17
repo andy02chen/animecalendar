@@ -169,24 +169,11 @@ function AnimeAvailableDate({anime, handleData, setRenderAllComponents}) {
             const jstDate = new Date(jstDateTimeStr);
             isoTime = jstDate.toISOString();
 
-            // TODO compare old and new date calc
-
-            // const localDateTimeStr = jstDate.toLocaleString();
-    
-            // // Change into ISO 8601 format
-            // const [date, time] = localDateTimeStr.split(',');
-            // const [day,mth,yr] = date.trim().split('/');
-            // const [hour,min,sec] = time.trim().split(":");
-            // isoTime = `${yr}-${mth}-${day}T${hour}:${min}:${sec}`;
         } else {
 
             setAnimeNoBroadcastTime(true);
             
             // Default to 12am
-            
-            // const [year, month, day] = anime.start_date.split('-');
-            // isoTime = `${year}-${month}-${day}T${defaultTime}`;
-
             const defaultTime = "23:59:59";
             const dateTimeStr = `${anime.start_date}T${defaultTime}`;
             const newDate = new Date(dateTimeStr);
