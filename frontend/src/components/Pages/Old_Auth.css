@@ -1,0 +1,234 @@
+.login-page {
+    background-color: var(--primary-darker);
+    height: fit-content;
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.contact-div > div {
+    background-color: var(--primary-dark);
+    height: 10vh;
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.contact-div {
+    position: relative;
+}
+
+.login-choice-div {
+    background-color: var(--primary-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+
+    width: 30%;
+    height: 50%;
+    max-height: 500px;
+    min-height: 300px;
+}
+
+.login-choice-div > div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.choice-div-line {
+    width: 80%;
+    height: 5px;
+    background-color: var(--primary);
+    border-radius: 5px;
+}
+
+.choice-div-line::before {
+    content: "OR";
+    background-color: var(--primary-dark);
+    padding-left: 5%;
+    padding-right: 5%;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
+    font-weight: 400;
+}
+
+.mal-choice-div {
+    width: 100%;
+    height: 100%;
+    flex: 0 0 60%;
+}
+
+.mal-choice-div > p {
+    font-size: 1.6rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    text-align: center;
+}
+
+.guest-choice-div {
+    width: 100%;
+    height: 100%;
+}
+
+.login-choice-div button {
+    padding: 2%;
+    width: 60%;
+    font-size: 1.4rem;
+    font-family: 'Montserrat', sans-serif;
+
+    border-radius: 10px;
+    background: linear-gradient(to left, var(--text) 50%, var(--primary) 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    color: var(--primary);
+    cursor: pointer;
+    transition: background-position 0.3s ease-out;
+}
+
+.login-choice-div button:hover {
+    cursor: pointer;
+    background-position: left bottom;
+    color: var(--text);
+}
+
+.demo-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    height: 80%;
+    width: 90%;
+    background-color: hsla(209, 78%, 14%, 0.875);
+    border-radius: 20px;
+}
+
+.main-page-image {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 425px;
+    background-image: url("../imgs/background1.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.div-line {
+    height: 100%;
+    background-color: var(--primary-dark);
+    width: 5px;
+    border-radius: 10px;
+}
+
+.screenshots-div {
+    background-color: transparent;
+    height: 90%;
+    width: 50vw;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.credit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.created {
+    font-size: 0.9rem;
+    color: var(--text);
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.credit-link {
+    text-decoration: none;
+}
+
+.credit-link:hover {
+    cursor: pointer;
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.credit-link:visited {
+    color: var(--text);
+}
+
+@media screen and (max-width: 767px) {
+    .demo-div {
+        flex-direction: column-reverse;
+        gap: 5%;
+        min-height: 800px;
+    }
+
+    .main-page-image {
+        min-height: 800px;
+    }
+
+    .div-line {
+        min-height: 5px;
+        width: 90%;
+        height: 5px;
+    }
+
+    .screenshots-div {
+        background-color: transparent;
+        height: 100%;
+        width: 80%;
+    }
+
+    .login-choice-div {    
+        width: 80%;
+        height: 80%;
+    }
+
+    .mal-choice-div > p {
+        font-size: 1.2rem;
+    }
+
+    .login-choice-div button {
+        padding: 5%;
+        font-size: 1rem;
+    }
+}
+
+.main-page-contact-icons {
+    height: 60%;
+    width: auto;
+    fill: var(--text);
+    transition: transform 0.2s ease-in-out;
+}
+
+.main-page-contact-icons:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
