@@ -311,6 +311,22 @@
     animation: glitch-inverse .15s linear forwards;
 }
 
+#copied-discord-popup {
+    z-index: 1001;
+    position: fixed;
+    background-color: var(--black);
+    left: 50%;
+    transform: translate(-50%, 0%);
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#copied-discord-popup.show {
+    opacity: 1;
+}
+
 @keyframes glitch {
     0% { fill: var(--white);}
     10% { fill: var(--primary-300); }

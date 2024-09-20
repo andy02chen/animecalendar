@@ -9,6 +9,38 @@ import demo5 from '../imgs/demo/demo-5.png';
 import demo6 from '../imgs/demo/demo-6.png';
 import demo7 from '../imgs/demo/demo-7.png';
 
+function authRedirect() {
+    window.location.href = `/auth`;
+}
+
+function homepageRedirect() {
+    window.location.href = `/home`;
+}
+
+function guestRedirect() {
+    window.location.href = '/guest';
+}
+
+function linkedInRedirect() {
+    window.open('https://www.linkedin.com/in/andy-chen-bab130253/', '_blank');
+}
+
+function instaRedirect() {
+    window.open('https://www.instagram.com/andy.c02/', '_blank');
+}
+
+function discordRedirect() {
+    navigator.clipboard.writeText('zneak300');
+    
+    const emailDiv = document.getElementById('copied-discord-popup');
+    emailDiv.classList.add('show');
+    emailDiv.style.display = "block";
+    setTimeout(() => {
+        emailDiv.classList.remove('show');
+        setTimeout(() => emailDiv.style.display = "none", 500);
+    }, 2000);
+}
+
 function Auth()  {
     const [imageIndex, setImageIndex] = useState(0);
 
@@ -42,6 +74,9 @@ function Auth()  {
 
     return(
         <>
+            <div id='copied-discord-popup'>
+                <p>Username copied to clipboard</p>
+            </div>
             <div className='login-page-header'>
                 <img className='logo' src={logo} alt='logo'></img>
                 <button className='login-page-header-login-btn' onClick={() => {
