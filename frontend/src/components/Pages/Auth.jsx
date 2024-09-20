@@ -50,7 +50,7 @@ function Auth()  {
                 }}>
                     <svg width="133" height="46" viewBox="0 0 133 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 30.6705V0.5H110.443L132 15.3295V45.5H22.557L1 30.6705Z" fill="#1891FF" stroke="black"/>
-                        <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" fill="white" font-size="20" font-family="Furore">
+                        <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fill="white" fontSize="20" fontFamily="Furore">
                             Login
                         </text>
                     </svg>
@@ -77,7 +77,7 @@ function Auth()  {
                         <path d="M32 10H26V16H32V10Z" fill="#D6B165"/>
                         </g>
                         <path d="M163 67.5V59L170 63.5L163 67.5Z" fill="#EBD8B3"/>
-                        <text className='login-page-frame-text' x="50%" y="55%" text-anchor="middle" alignment-baseline="middle">
+                        <text className='login-page-frame-text' x="50%" y="55%" textAnchor="middle" alignmentBaseline="middle">
                             Stay up-to-date with anime releases
                         </text>
                     </svg>
@@ -125,8 +125,8 @@ function Auth()  {
                         <rect x="62.1875" y="59.5" width="60" height="3" fill="#E2C893"/>
                         <rect x="62.1875" y="48.5" width="7" height="7" fill="#F5D0E4"/>
                         <defs>
-                        <filter id="filter0_d_140_260" x="72.2998" y="15.5" width="338.921" height="43" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <filter id="filter0_d_140_260" x="72.2998" y="15.5" width="338.921" height="43" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
                         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
                         <feOffset dy="4"/>
                         <feGaussianBlur stdDeviation="2"/>
