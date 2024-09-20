@@ -129,7 +129,7 @@ function Calendar({animeData, renderAllComponents}) {
     // When the year changes need to empty the map
     useEffect(() => {
         markersMap.current.clear();
-        const startOfYear = new Date(`1/1/${year}`);
+        const startOfYear = new Date(`1/1/${year-1}`);
 
         // Loop through the store the releases the map
         for(const [id, anime] of animeData.current) {

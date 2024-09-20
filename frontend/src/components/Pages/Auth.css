@@ -191,11 +191,7 @@
 
 .how-to-use-right-top-frame, .how-to-use-right-bot-frame {
     width: 100%;
-    height: 20%;
-}
-
-#how-to-use-instructions {
-    height: 60%;
+    /* height: 20%; */
 }
 
 .how-to-use-left-buttons {
@@ -206,23 +202,52 @@
     gap: 26px;
 }
 
-.how-to-use-left button {
-    border: 2px solid var(--primary-200);
+.how-to-use-left-buttons button {
+    border: 3px solid var(--primary-200);
     color: var(--white);
     background-color: var(--black);
     padding-top: 5px;
     padding-bottom: 5px;
+    cursor: pointer;
+}
+
+.how-to-use-left-buttons .display-instructions {
+    border: 3px solid var(--yellow-200);
 }
 
 .how-to-use-right {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.how-to-use-instructions {
+    /* height: 60%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+#how-to-use-instruction-title {
+    font-family: 'Furore', sans-serif;
+    font-weight: 500;
+}
+
+#how-to-use-instruction-text {
+    color: var(--accent-500);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
 }
 
 /* Contact Section */
 .login-page-contact {
-    max-height: 350px;
-    height: 350px;
+    max-height: 200px;
+    height: 200px;
     background-color: var(--primary-400);
     display: flex;
     flex-direction: column;
@@ -268,6 +293,21 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
+}
+
+.login-page-link {
+    text-decoration: none;
+    color: var(--primary-200);
+}
+
+.login-page-link:hover {
+    cursor: pointer;
+    color: var(--primary-200);
+    text-decoration: underline;
+}
+
+.login-page-link:visited {
+    color: var(--primary-200);
 }
 
 

@@ -409,6 +409,7 @@ function getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeLis
             // Removes any stored data in localstorage as anime is finished airing
             else if (anime.air_status === 'finished_airing') {
                 localStorage.removeItem(anime.id);
+                localStorage.removeItem(anime.id+"Colour");
             }
         }
         setCurrAiringAnime(currAiring);
