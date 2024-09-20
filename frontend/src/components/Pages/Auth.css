@@ -45,7 +45,7 @@
 }
 
 .login-page-frame-text {
-    fill: var(--secondary-200);
+    fill: var(--secondary-100);
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
     text-shadow: 1px 1px black;
@@ -65,6 +65,100 @@
 .login-page-main-right {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-page-main-right-frame {
+    width: 95%;
+    height: auto;
+    max-height: 400px;
+    max-width: 700px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-frame {
+    width: 95%;
+    height: auto;
+    max-height: 400px;
+    max-width: 700px;
+}
+
+.login-div-overlay {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    gap: 15px;
+}
+
+.login-div-better {
+    font-family: "Furore", sans-serif;
+    font-size: 24px;
+    color: var(--yellow-300);
+}
+
+.choice-div-line {
+    max-width: 700px;
+    width: 80%;
+    height: 2px;
+    background-color: var(--accent-500);
+    border-radius: 5px;
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.choice-div-line::before {
+    content: "OR";
+    background-color: var(--accent-75);
+    color: var(--accent-500);
+    padding: 10px;
+    font-family: 'Furore', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.login-div-overlay button {
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: inline-block;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    color: var(--white);
+    border: 1px solid var(--black);
+}
+
+.login-div-mal-button {
+    background-color: var(--primary-200);
+    width: 50%;
+    max-width: 50%;
+}
+
+.login-div-mal-button:hover {
+    background-color: var(--white);
+    color: var(--primary-200)
+}
+
+.login-div-guest-button {
+    background-color: var(--primary-75);
+    width: 50%;
+    max-width: 50%;
+}
+
+.login-div-guest-button:hover {
+    background-color: var(--white);
+    color: var(--primary-75)
 }
 
 /* How to Use Section */
