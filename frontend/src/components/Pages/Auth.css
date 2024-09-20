@@ -166,6 +166,58 @@
     width: 100%;
     height: 600px;
     background-color: var(--white);
+    display: flex;
+    flex-direction: row;
+}
+
+.how-to-use-title {
+    height: 20%;
+    display: block;
+    margin: auto;
+}
+
+.how-to-use-left {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+}
+
+.how-to-use-right {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+}
+
+.how-to-use-right-top-frame, .how-to-use-right-bot-frame {
+    width: 100%;
+    height: 20%;
+}
+
+#how-to-use-instructions {
+    height: 60%;
+}
+
+.how-to-use-left-buttons {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 26px;
+}
+
+.how-to-use-left button {
+    border: 2px solid var(--primary-200);
+    color: var(--white);
+    background-color: var(--black);
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.how-to-use-right {
+    width: 100%;
+    height: 100%;
 }
 
 /* Contact Section */

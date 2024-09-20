@@ -114,7 +114,62 @@ function Auth()  {
                 </div>
             </section>
             <section className="login-page-how-to-use">
+                <div className='how-to-use-left'>
+                    <svg className='how-to-use-title' width="483" height="71" viewBox="0 0 483 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g filter="url(#filter0_d_140_260)">
+                        <path d="M83.2998 50.5H76.2998V15.5H83.2998V29.55H100.75V15.5H107.7V50.5H100.75V36.55H83.2998V50.5ZM119.677 43.5H137.127V22.5H119.677V43.5ZM140.627 50.5H116.127L112.677 47.05V19.05L116.127 15.5H140.627L144.077 19.05V47.05L140.627 50.5ZM174.804 50.5L169.504 44.25L164.304 50.5H157.304L148.554 40.05V15.5H155.554V36.55L160.854 43.5L166.004 36.55V15.5H173.004V36.55L178.304 43.5L183.504 36.55V15.5H190.454V40.05L181.804 50.5H174.804ZM232.722 50.5H225.722V22.5H213.472V15.5H244.872V22.5H232.722V50.5ZM255.37 43.5H272.82V22.5H255.37V43.5ZM276.32 50.5H251.82L248.37 47.05V19.05L251.82 15.5H276.32L279.77 19.05V47.05L276.32 50.5ZM304.767 15.5H311.767V43.5H329.217V15.5H336.167V47.05L332.717 50.5H308.217L304.767 47.05V15.5ZM369.094 50.5H344.594L341.144 47.05V40.05H348.144V43.5H365.594V36.55H344.594L341.144 34.05V19.05L344.594 15.5H369.094L372.544 19.05V26H365.594V22.5H348.144V29.5H369.094L372.544 33V47.05L369.094 50.5ZM407.221 50.5H377.521V15.5H407.221V22.5H384.521V29.55H405.471V36.55H384.521V43.5H407.221V50.5Z" fill="#3FA4FF"/>
+                        </g>
+                        <path d="M427.187 65.5L418.527 50.5L435.848 50.5L427.187 65.5Z" fill="#E2C893"/>
+                        <path d="M415.188 65L410.188 58H175.688L182.688 65H415.188Z" fill="#DEE4E7"/>
+                        <rect x="115.188" y="67.5" width="60" height="3" fill="#79BFFF"/>
+                        <rect x="62.1875" y="59.5" width="60" height="3" fill="#E2C893"/>
+                        <rect x="62.1875" y="48.5" width="7" height="7" fill="#F5D0E4"/>
+                        <defs>
+                        <filter id="filter0_d_140_260" x="72.2998" y="15.5" width="338.921" height="43" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                        <feOffset dy="4"/>
+                        <feGaussianBlur stdDeviation="2"/>
+                        <feComposite in2="hardAlpha" operator="out"/>
+                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_140_260"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_140_260" result="shape"/>
+                        </filter>
+                        </defs>
+                    </svg>
+                    <div className='how-to-use-left-buttons'>
+                        <button>Guest mode or MAL Acc</button>
+                        <button>Getting Anime Data</button>
+                        <button>Next Episode Release Date</button>
+                        <button>Upcoming Anime Releases</button>
+                        <button>Update Progress</button>
+                        <button>Rate Your Anime</button>
+                        <button>Can't find available episode</button>
+                    </div>
+                </div>
+                <div className='how-to-use-right'>
+                    <svg className='how-to-use-right-top-frame' width="469" height="47" viewBox="0 0 469 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.5" y="9.84998" width="5.33212" height="2.13333" fill="#EBD8B3"/>
+                        <rect x="11.1643" y="8.78333" width="293.267" height="4.26667" fill="#EBD8B3"/>
+                        <path d="M16.6381 6.65L8.56909 0.25H19.3277L23.3622 3.45L27.3967 6.65H16.6381Z" fill="#79BFFF"/>
+                        <path d="M32.776 6.65L24.707 0.25H35.4657L39.5001 3.45L43.5346 6.65H32.776Z" fill="#79BFFF"/>
+                        <path d="M48.9139 6.65L40.845 0.25H51.6036L55.6381 3.45L59.6726 6.65H48.9139Z" fill="#79BFFF"/>
+                        <path d="M128.295 46.75L118.845 42.4833H459.05L468.5 46.75H128.295Z" fill="#AEBCC5"/>
+                        <path d="M324.604 38.2167L316.451 28.6167L332.756 28.6167L324.604 38.2167Z" fill="#0F589C"/>
+                    </svg>
+                    <div id='how-to-use-instructions'>
 
+                    </div>
+                    <svg className='how-to-use-right-bot-frame' width="469" height="51" viewBox="0 0 469 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="80" y="16.75" width="9.51499" height="9.44579" fill="#E2C893"/>
+                        <path d="M85.4004 33.5425L80 29.3444H274.414L279.815 33.5425H85.4004Z" fill="#AEBCC5"/>
+                        <path d="M287.795 29.4152L291.729 36.4245L283.647 36.3019L287.795 29.4152Z" fill="#1166B3"/>
+                        <rect x="232.24" y="16.75" width="135.324" height="3.1486" fill="#A0D2FF"/>
+                        <rect x="308.36" y="21.9977" width="159.64" height="4.19813" fill="#E2C893"/>
+                        <path d="M449.069 17.15L441 10.75H451.759L455.793 13.95L459.828 17.15H449.069Z" fill="#79BFFF"/>
+                        <path d="M435.069 17.15L427 10.75H437.759L441.793 13.95L445.828 17.15H435.069Z" fill="#79BFFF"/>
+                    </svg>
+                </div>
             </section>
             <section className="login-page-contact">
 
