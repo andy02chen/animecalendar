@@ -224,6 +224,50 @@
     max-height: 350px;
     height: 350px;
     background-color: var(--primary-400);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-page-contact-icons-div {
+    height: 70%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.login-page-contact-icons {
+    height: 60%;
+    width: auto;
+    fill: var(--text);
+    transition: transform 0.2s ease-in-out;
+    max-width: 120px; 
+}
+
+.login-page-contact-icons:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.login-page-contact-title {
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-page-contact-title > h1 {
+    font-family: 'Furore', sans-serif;
+    font-size: 42px;
+}
+
+.login-page-created {
+    height: 10%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }
 
 
