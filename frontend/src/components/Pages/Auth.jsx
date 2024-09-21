@@ -192,7 +192,11 @@ function Auth()  {
                 </div>
                 <section className="login-page-main">
                     <div className='login-page-main-left'>
-                        <h1 className='login-page-main-left-title'>Track Your Anime</h1>
+                        <h1 className='login-page-main-left-title glitch'>
+                            <span aria-hidden="true">Track Your Anime</span>
+                                Track Your Anime
+                                <span aria-hidden="true">Track Your Anime</span>
+                        </h1>
                         <svg className='login-page-main-left-frame' width="379" height="68" viewBox="0 0 379 68" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M378 55V53H170L171.061 55H378Z" fill="#79BFFF" stroke="#79BFFF"/>
                             <path d="M48.2385 65L48 63H104.684L105 65H48.2385Z" fill="#E2C893"/>
