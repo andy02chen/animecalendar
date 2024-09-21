@@ -42,89 +42,31 @@ function discordRedirect() {
     }, 2000);
 }
 
-function changeSelectedInstruction(value, selectedButton) {
-    const title = document.getElementById('how-to-use-instruction-title');
-    const body = document.getElementById('how-to-use-instruction-text');
-    const div = document.getElementById('how-to-use-instructions');
+function expandInstructionDiv(value, selectedDiv) {
+    const div = document.getElementById(`how-to-use-btn-${value}`);
+    const body = document.getElementById(`how-to-use-btn-${value}-text`);
 
-    // Change Prev button
-    if(selectedButton.current !== null) {
-        document.getElementById(`how-to-use-btn-${selectedButton.current}`).classList.remove('display-instructions');
+    if(selectedDiv.current !== null) {
+        document.getElementById(`how-to-use-btn-${selectedDiv.current}`).classList.remove('display-instructions');
+        document.getElementById(`how-to-use-btn-${selectedDiv.current}-text`).style.display = 'none';
     }
 
-    // Add new active button effect and store old button
-    const button = document.getElementById(`how-to-use-btn-${value}`);
-    button.classList.add('display-instructions');
-    selectedButton.current = value;
-
-    // Effect or changing text
-    const currentHeight = div.scrollHeight + "px";
-    div.style.height = currentHeight;
-    div.offsetHeight;
-    div.style.height = '0';
-    div.classList.add('login-page-change-tutorial');
-    setTimeout(() => {
-        div.classList.remove('login-page-change-tutorial');
-
-        switch(value) {
-            case 0:
-                title.textContent = "Guest Mode or MAL Acc";
-                body.innerHTML = `
-                    Guest mode lets you explore <a class="login-page-link" href='https://myanimelist.net/profile/ZNEAK300' target='_blank'>Andy's</a> anime list as a demo with limited features. <br/>
-                    Log in with MyAnimeList to access your own lists, track progress, delay episodes, and more.
-                `;
-                break;
-                
-            case 1:
-                title.textContent = "Getting Anime Data";
-                body.innerHTML = "This site pulls public anime data from your 'Currently Watching' and 'Plan to Watch' lists on MyAnimeList, with a limit of 1,000 entries. If any anime is missing, please report the issue.";
-                break;
-    
-            case 2:
-                title.textContent = "Next Episodes and Markers";
-                body.innerHTML = "The next episode date is estimated based on your progress and shown next to each anime. Calendar markers indicate episode dates for currently airing shows, with all markers displayed if the season's total episode count is known.";
-                break;
-    
-            case 3:
-                title.textContent = "Delaying Episodes";
-                body.innerHTML = "Next to each anime is a delay button, functional only for currently airing shows. This button delays the estimated date by a week, and changes are reflected on the calendar. Note that this data is stored locally on your machine, so progress may not match across devices.";
-                break;
-    
-            case 4:
-                title.textContent = "Upcoming Anime Release";
-                body.innerHTML = "You can view upcoming anime in the 'Plan to Watch' section. Selecting 'Show Not Yet Aired Only' will display information related to each anime's release.";
-                break;
-    
-            case 5:
-                title.textContent = "Update Progress";
-                body.innerHTML = "You can update your MAL anime progress here. Click 'Watched' and confirm to update. The UI will refresh only after the update is confirmed on MAL. If the progress fails to update, an error will be displayed. Please double-check on MAL if you have concerns and report any issues.";
-                break;
-    
-            case 6:
-                title.textContent = "Rate Your Anime";
-                body.innerHTML = "Upon completing an anime, you'll have the option to rate it. If you choose not to rate, you can simply skip this step.";
-                break;
-    
-            case 7:
-                title.textContent = "Can't find available episode";
-                body.innerHTML = "The site uses the airing times in Japan to estimate release dates. If the estimated date is incorrect, your episode may be delayed or not yet available on your streaming service. If neither is the case, please report the issue.";
-                break;
-        }
-
-        div.style.height = div.scrollHeight + 'px'; // Get full height
-        div.offsetHeight; // Force reflow
-        div.addEventListener('transitionend', function setAutoHeight() {
-            div.style.height = 'auto'; // Set to auto once expanded
-            div.removeEventListener('transitionend', setAutoHeight); // Clean up listener
-        });
-    }, 400);    
+    if(value === selectedDiv.current) {
+        div.classList.remove('display-instructions');
+        body.style.display = 'none';
+        selectedDiv.current = null;
+    } else {
+        div.classList.add('display-instructions');
+        body.style.display = 'block';
+        selectedDiv.current = value;
+    }
 }
 
 function Auth()  {
     const [imageIndex, setImageIndex] = useState(0);
     const [isLoggedIn, setLoggedIn] = useState(false);
 
-    const selectedButton = useRef(0);
+    const selectedDiv = useRef(null);
 
     const imgArr = [
         demo1,
@@ -254,7 +196,7 @@ function Auth()  {
                     </div>
                 </section>
                 <section className="login-page-how-to-use">
-                    <div className='how-to-use-left'>
+                    <div className='how-to-use-div'>
                         <svg className='how-to-use-title' width="483" height="71" viewBox="0 0 483 71" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g filter="url(#filter0_d_140_260)">
                             <path d="M83.2998 50.5H76.2998V15.5H83.2998V29.55H100.75V15.5H107.7V50.5H100.75V36.55H83.2998V50.5ZM119.677 43.5H137.127V22.5H119.677V43.5ZM140.627 50.5H116.127L112.677 47.05V19.05L116.127 15.5H140.627L144.077 19.05V47.05L140.627 50.5ZM174.804 50.5L169.504 44.25L164.304 50.5H157.304L148.554 40.05V15.5H155.554V36.55L160.854 43.5L166.004 36.55V15.5H173.004V36.55L178.304 43.5L183.504 36.55V15.5H190.454V40.05L181.804 50.5H174.804ZM232.722 50.5H225.722V22.5H213.472V15.5H244.872V22.5H232.722V50.5ZM255.37 43.5H272.82V22.5H255.37V43.5ZM276.32 50.5H251.82L248.37 47.05V19.05L251.82 15.5H276.32L279.77 19.05V47.05L276.32 50.5ZM304.767 15.5H311.767V43.5H329.217V15.5H336.167V47.05L332.717 50.5H308.217L304.767 47.05V15.5ZM369.094 50.5H344.594L341.144 47.05V40.05H348.144V43.5H365.594V36.55H344.594L341.144 34.05V19.05L344.594 15.5H369.094L372.544 19.05V26H365.594V22.5H348.144V29.5H369.094L372.544 33V47.05L369.094 50.5ZM407.221 50.5H377.521V15.5H407.221V22.5H384.521V29.55H405.471V36.55H384.521V43.5H407.221V50.5Z" fill="#3FA4FF"/>
@@ -277,45 +219,70 @@ function Auth()  {
                             </filter>
                             </defs>
                         </svg>
-                        <div className='how-to-use-left-buttons'>
-                            <button className='display-instructions' id='how-to-use-btn-0' onClick={() => changeSelectedInstruction(0, selectedButton)}>Guest mode or MAL Acc</button>
-                            <button id='how-to-use-btn-1' onClick={() => changeSelectedInstruction(1, selectedButton)}>Getting Anime Data</button>
-                            <button id='how-to-use-btn-2' onClick={() => changeSelectedInstruction(2, selectedButton)}>Next Episodes and Markers</button>
-                            <button id='how-to-use-btn-3' onClick={() => changeSelectedInstruction(3, selectedButton)}>Delaying Episodes</button>
-                            <button id='how-to-use-btn-4' onClick={() => changeSelectedInstruction(4, selectedButton)}>Upcoming Anime Releases</button>
-                            <button id='how-to-use-btn-5' onClick={() => changeSelectedInstruction(5, selectedButton)}>Update Progress</button>
-                            <button id='how-to-use-btn-6' onClick={() => changeSelectedInstruction(6, selectedButton)}>Rate Your Anime</button>
-                            <button id='how-to-use-btn-7' onClick={() => changeSelectedInstruction(7, selectedButton)}>Can't find available episode</button>
+                        <div className='how-to-use-div-buttons'>
+                            <div id='how-to-use-btn-0' onClick={() => expandInstructionDiv(0, selectedDiv)}>
+                                <h1>Guest Mode or MAL Acc</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-0-text'>
+                                    Guest mode lets you explore <a className="login-page-link" href='https://myanimelist.net/profile/ZNEAK300' target='_blank'>Andy's</a> anime list as a demo with limited features. <br/>
+                                    Log in with MyAnimeList to access your <span className='how-to-use-highlight'>own lists, track progress, delay episodes, and more.</span>
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-1' onClick={() => expandInstructionDiv(1, selectedDiv)}>
+                                <h1>Getting Anime Data</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-1-text'>
+                                    This site pulls public anime data from your <span className='how-to-use-highlight'>'Currently Watching'</span> and <span className='how-to-use-highlight'>'Plan to Watch'</span> lists on 
+                                    MyAnimeList, with a limit of 1,000 entries. 
+                                    If any anime is missing, please report the issue.
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-2' onClick={() => expandInstructionDiv(2, selectedDiv)}>
+                                <h1>Next Episodes and Markers</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-2-text'>
+                                The next episode date is estimated based on <span className='how-to-use-highlight'>your progress</span> and shown next to each anime. 
+                                Calendar markers indicate episode dates for <span className='how-to-use-highlight'>currently airing</span> shows, with <span className='how-to-use-highlight'>all markers </span> displayed if the season's total episode count is known.
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-3' onClick={() => expandInstructionDiv(3, selectedDiv)}>
+                                <h1>Delaying Episodes</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-3-text'>
+                                Next to each anime is a <span className='how-to-use-highlight'>delay button</span>, functional only for <span className='how-to-use-highlight'>currently airing </span> shows. 
+                                This button delays the estimated date by a <span className='how-to-use-highlight'>week</span>, and changes are reflected on the calendar. 
+                                Note that this data is stored <span className='how-to-use-highlight'> locally on your machine</span>, so progress may not match across devices.
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-4' onClick={() => expandInstructionDiv(4, selectedDiv)}>
+                                <h1>Upcoming Anime Releases</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-4-text'>
+                                You can view upcoming anime in the<span className='how-to-use-highlight'> 'Plan to Watch' </span>section. 
+                                Selecting <span className='how-to-use-highlight'> 'Show Not Yet Aired Only' </span> will display information related to each anime's release.
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-5' onClick={() => expandInstructionDiv(5, selectedDiv)}>
+                                <h1>Update Progress</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-5-text'>
+                                You can update your <span className='how-to-use-highlight'> MAL anime progress </span> here. 
+                                Click 'Watched' and <span className='how-to-use-highlight'> confirm </span> to update.
+                                The UI will refresh only after the update is <span className='how-to-use-highlight'> confirmed on MAL</span>. 
+                                If the progress fails to update, an error will be displayed. Please <span className='how-to-use-highlight'> double-check </span> on MAL if you have<span className='how-to-use-highlight'> concerns </span> and report any issues.
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-6' onClick={() => expandInstructionDiv(6, selectedDiv)}>
+                                <h1>Rate Your Anime</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-6-text'>
+                                Upon <span className='how-to-use-highlight'> completing </span> an anime, you'll have the option to rate it. 
+                                If you choose not to rate, you can simply skip this step.
+                                </p>
+                            </div>
+                            <div id='how-to-use-btn-7' onClick={() => expandInstructionDiv(7, selectedDiv)}>
+                                <h1>Can't find available episode</h1>
+                                <p style={{display: "none"}} id='how-to-use-btn-7-text'>
+                                The site uses the <span className='how-to-use-highlight'> airing times in Japan </span> to estimate release dates. 
+                                If the estimated date is <span className='how-to-use-highlight'> incorrect</span>, 
+                                your episode may be <span className='how-to-use-highlight'> delayed </span> or <span className='how-to-use-highlight'> not yet available </span> on your streaming service. 
+                                If neither is the case, please report the issue.
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div className='how-to-use-right'>
-                        <svg className='how-to-use-right-top-frame' width="469" height="47" viewBox="0 0 469 47" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="0.5" y="9.84998" width="5.33212" height="2.13333" fill="#EBD8B3"/>
-                            <rect x="11.1643" y="8.78333" width="293.267" height="4.26667" fill="#EBD8B3"/>
-                            <path d="M16.6381 6.65L8.56909 0.25H19.3277L23.3622 3.45L27.3967 6.65H16.6381Z" fill="#79BFFF"/>
-                            <path d="M32.776 6.65L24.707 0.25H35.4657L39.5001 3.45L43.5346 6.65H32.776Z" fill="#79BFFF"/>
-                            <path d="M48.9139 6.65L40.845 0.25H51.6036L55.6381 3.45L59.6726 6.65H48.9139Z" fill="#79BFFF"/>
-                            <path d="M128.295 46.75L118.845 42.4833H459.05L468.5 46.75H128.295Z" fill="#AEBCC5"/>
-                            <path d="M324.604 38.2167L316.451 28.6167L332.756 28.6167L324.604 38.2167Z" fill="#0F589C"/>
-                        </svg>
-                        <div className='how-to-use-instructions' id='how-to-use-instructions'>
-                            <h2 id='how-to-use-instruction-title'>
-                                Guest Mode or MAL Acc
-                            </h2>
-                            <p id='how-to-use-instruction-text'>
-                                Guest mode lets you explore <a className='login-page-link' href='https://myanimelist.net/profile/ZNEAK300' target='_blank'>Andy's</a> anime list as a demo with limited features. <br/>
-                                Log in with MyAnimeList to access your own lists, track progress, delay episodes, and more.
-                            </p>
-                        </div>
-                        <svg className='how-to-use-right-bot-frame' width="469" height="51" viewBox="0 0 469 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="80" y="16.75" width="9.51499" height="9.44579" fill="#E2C893"/>
-                            <path d="M85.4004 33.5425L80 29.3444H274.414L279.815 33.5425H85.4004Z" fill="#AEBCC5"/>
-                            <path d="M287.795 29.4152L291.729 36.4245L283.647 36.3019L287.795 29.4152Z" fill="#1166B3"/>
-                            <rect x="232.24" y="16.75" width="135.324" height="3.1486" fill="#A0D2FF"/>
-                            <rect x="308.36" y="21.9977" width="159.64" height="4.19813" fill="#E2C893"/>
-                            <path d="M449.069 17.15L441 10.75H451.759L455.793 13.95L459.828 17.15H449.069Z" fill="#79BFFF"/>
-                            <path d="M435.069 17.15L427 10.75H437.759L441.793 13.95L445.828 17.15H435.069Z" fill="#79BFFF"/>
-                        </svg>
                     </div>
                 </section>
                 <section className="login-page-contact">

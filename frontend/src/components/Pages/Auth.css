@@ -227,12 +227,12 @@
 /* How to Use Section */
 .login-page-how-to-use {
     width: 100%;
-    height: 600px;
     background-color: var(--white);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    padding: 30px;
 }
 
 .how-to-use-title {
@@ -241,99 +241,65 @@
     margin: auto;
 }
 
-.how-to-use-left {
+.how-to-use-highlight {
+    color: var(--secondary-100);
+}
+
+.how-to-use-div {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: 30px;
-    max-width: 700px;
+    max-width: 1400px;
+    gap: 15px;
 }
 
-.how-to-use-right {
-    width: 100%;
-    height: 100%;
-    padding: 30px;
-    max-width: 700px;
-}
-
-.how-to-use-right-top-frame, .how-to-use-right-bot-frame {
-    width: 100%;
-}
-
-.how-to-use-left-buttons {
-    height: 80%;
+.how-to-use-div-buttons {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 26px;
+    align-items: center;
+    gap: 10px;
 }
 
-.how-to-use-left-buttons button {
+.how-to-use-div-buttons > div {
+    text-align: center;
     border: 3px solid var(--primary-200);
     color: var(--white);
     background-color: var(--black);
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
     cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 750px;
+    max-height: 55px;
+    transition: max-height 0.5s ease;
 }
 
-.how-to-use-left-buttons button:hover {
+.how-to-use-div-buttons > div > h1 {
+    color: var(--primary-75);
+}
+
+.how-to-use-div-buttons div:hover {
     animation: light-flicker 1.5s infinite;
 }
 
 @keyframes light-flicker {
     0% { border: 3px solid var(--yellow-100);}
-    10% { border: 3px solid var(--primary-200); }
+    10% { border: 3px solid var(--primary-100); }
     15% { border: 3px solid var(--yellow-100);}
-    20% { border: 3px solid var(--primary-200); }
+    20% { border: 3px solid var(--primary-100); }
     30% { border: 3px solid var(--yellow-100); }
     100% { border: 3px solid var(--yellow-100); }
 }
 
-.how-to-use-left-buttons .display-instructions {
-    border: 3px solid var(--yellow-200);
-}
-
-.how-to-use-right {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.how-to-use-instructions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    transition: height 0.4s ease-in-out;
-    overflow: hidden;
-    max-width: 421px;
-}
-
-.login-page-change-tutorial {
-    height: 0;
-}
-
-.login-page-show-tutorial {
-    height: auto;
-}
-
-#how-to-use-instruction-title {
-    padding-top: 10px;
-    font-family: 'Furore', sans-serif;
-    font-weight: 500;
-}
-
-#how-to-use-instruction-text {
-    color: var(--accent-500);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    font-size: 1rem;
-    padding-bottom: 10px;
+.how-to-use-div-buttons .display-instructions {
+    border: 3px solid var(--yellow-100);
+    max-height: 200px;
 }
 
 /* Contact Section */
