@@ -177,18 +177,20 @@ function Auth()  {
                     <p>Username copied to clipboard</p>
                 </div>
                 <div className='login-page-header'>
-                    <img className='logo' src={logo} alt='logo'></img>
-                    <button className='login-page-header-login-btn' onClick={() => {
-                        document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax; Secure; path=/';
-                        authRedirect();
-                    }}>
-                        <svg width="133" height="46" viewBox="0 0 133 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 30.6705V0.5H110.443L132 15.3295V45.5H22.557L1 30.6705Z" fill="#1891FF" stroke="black"/>
-                            <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fill="white" fontSize="20" fontFamily="Furore">
-                                Login
-                            </text>
-                        </svg>
-                    </button>
+                    <div>
+                        <img className='logo' src={logo} alt='logo'></img>
+                        <button className='login-page-header-login-btn' onClick={() => {
+                            document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax; Secure; path=/';
+                            authRedirect();
+                        }}>
+                            <svg width="133" height="46" viewBox="0 0 133 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 30.6705V0.5H110.443L132 15.3295V45.5H22.557L1 30.6705Z" fill="#1891FF" stroke="black"/>
+                                <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fill="white" fontSize="20" fontFamily="Furore">
+                                    Login
+                                </text>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <section className="login-page-main">
                     <div className='login-page-main-left'>
