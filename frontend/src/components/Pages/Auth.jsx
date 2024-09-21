@@ -45,61 +45,79 @@ function discordRedirect() {
 function changeSelectedInstruction(value, selectedButton) {
     const title = document.getElementById('how-to-use-instruction-title');
     const body = document.getElementById('how-to-use-instruction-text');
+    const div = document.getElementById('how-to-use-instructions');
 
-    
-
+    // Change Prev button
     if(selectedButton.current !== null) {
         document.getElementById(`how-to-use-btn-${selectedButton.current}`).classList.remove('display-instructions');
     }
 
+    // Add new active button effect and store old button
     const button = document.getElementById(`how-to-use-btn-${value}`);
     button.classList.add('display-instructions');
     selectedButton.current = value;
+
+    // Effect or changing text
+    const currentHeight = div.scrollHeight + "px";
+    div.style.height = currentHeight;
+    div.offsetHeight;
+    div.style.height = '0';
+    div.classList.add('login-page-change-tutorial');
+    setTimeout(() => {
+        div.classList.remove('login-page-change-tutorial');
+
+        switch(value) {
+            case 0:
+                title.textContent = "Guest Mode or MAL Acc";
+                body.innerHTML = `
+                    Guest mode lets you explore <a class="login-page-link" href='https://myanimelist.net/profile/ZNEAK300' target='_blank'>Andy's</a> anime list as a demo with limited features. <br/>
+                    Log in with MyAnimeList to access your own lists, track progress, delay episodes, and more.
+                `;
+                break;
+                
+            case 1:
+                title.textContent = "Getting Anime Data";
+                body.innerHTML = "This site pulls public anime data from your 'Currently Watching' and 'Plan to Watch' lists on MyAnimeList, with a limit of 1,000 entries. If any anime is missing, please report the issue.";
+                break;
     
-    switch(value) {
-        case 0:
-            title.textContent = "Guest Mode or MAL Acc";
-            body.innerHTML = `
-                Guest mode lets you explore <a class="login-page-link" href='https://myanimelist.net/profile/ZNEAK300' target='_blank'>Andy's</a> anime list as a demo with limited features. <br/>
-                Log in with MyAnimeList to access your own lists, track progress, delay episodes, and more.
-            `;
-            break;
-            
-        case 1:
-            title.textContent = "Getting Anime Data";
-            body.innerHTML = "This site pulls public anime data from your 'Currently Watching' and 'Plan to Watch' lists on MyAnimeList, with a limit of 1,000 entries. If any anime is missing, please report the issue.";
-            break;
+            case 2:
+                title.textContent = "Next Episodes and Markers";
+                body.innerHTML = "The next episode date is estimated based on your progress and shown next to each anime. Calendar markers indicate episode dates for currently airing shows, with all markers displayed if the season's total episode count is known.";
+                break;
+    
+            case 3:
+                title.textContent = "Delaying Episodes";
+                body.innerHTML = "Next to each anime is a delay button, functional only for currently airing shows. This button delays the estimated date by a week, and changes are reflected on the calendar. Note that this data is stored locally on your machine, so progress may not match across devices.";
+                break;
+    
+            case 4:
+                title.textContent = "Upcoming Anime Release";
+                body.innerHTML = "You can view upcoming anime in the 'Plan to Watch' section. Selecting 'Show Not Yet Aired Only' will display information related to each anime's release.";
+                break;
+    
+            case 5:
+                title.textContent = "Update Progress";
+                body.innerHTML = "You can update your MAL anime progress here. Click 'Watched' and confirm to update. The UI will refresh only after the update is confirmed on MAL. If the progress fails to update, an error will be displayed. Please double-check on MAL if you have concerns and report any issues.";
+                break;
+    
+            case 6:
+                title.textContent = "Rate Your Anime";
+                body.innerHTML = "Upon completing an anime, you'll have the option to rate it. If you choose not to rate, you can simply skip this step.";
+                break;
+    
+            case 7:
+                title.textContent = "Can't find available episode";
+                body.innerHTML = "The site uses the airing times in Japan to estimate release dates. If the estimated date is incorrect, your episode may be delayed or not yet available on your streaming service. If neither is the case, please report the issue.";
+                break;
+        }
 
-        case 2:
-            title.textContent = "Next Episodes and Markers";
-            body.innerHTML = "The next episode date is estimated based on your progress and shown next to each anime. Calendar markers indicate episode dates for currently airing shows, with all markers displayed if the season's total episode count is known.";
-            break;
-
-        case 3:
-            title.textContent = "Delaying Episodes";
-            body.innerHTML = "Next to each anime is a delay button, functional only for currently airing shows. This button delays the estimated date by a week, and changes are reflected on the calendar. Note that this data is stored locally on your machine, so progress may not match across devices.";
-            break;
-
-        case 4:
-            title.textContent = "Upcoming Anime Release";
-            body.innerHTML = "You can view upcoming anime in the 'Plan to Watch' section. Selecting 'Show Not Yet Aired Only' will display information related to each anime's release.";
-            break;
-
-        case 5:
-            title.textContent = "Update Progress";
-            body.innerHTML = "You can update your MAL anime progress here. Click 'Watched' and confirm to update. The UI will refresh only after the update is confirmed on MAL. If the progress fails to update, an error will be displayed. Please double-check on MAL if you have concerns and report any issues.";
-            break;
-
-        case 6:
-            title.textContent = "Rate Your Anime";
-            body.innerHTML = "Upon completing an anime, you'll have the option to rate it. If you choose not to rate, you can simply skip this step.";
-            break;
-
-        case 7:
-            title.textContent = "Can't find available episode";
-            body.innerHTML = "The site uses the airing times in Japan to estimate release dates. If the estimated date is incorrect, your episode may be delayed or not yet available on your streaming service. If neither is the case, please report the issue.";
-            break;
-    }
+        div.style.height = div.scrollHeight + 'px'; // Get full height
+        div.offsetHeight; // Force reflow
+        div.addEventListener('transitionend', function setAutoHeight() {
+            div.style.height = 'auto'; // Set to auto once expanded
+            div.removeEventListener('transitionend', setAutoHeight); // Clean up listener
+        });
+    }, 400);    
 }
 
 function Auth()  {
@@ -274,7 +292,7 @@ function Auth()  {
                             <path d="M128.295 46.75L118.845 42.4833H459.05L468.5 46.75H128.295Z" fill="#AEBCC5"/>
                             <path d="M324.604 38.2167L316.451 28.6167L332.756 28.6167L324.604 38.2167Z" fill="#0F589C"/>
                         </svg>
-                        <div className='how-to-use-instructions'>
+                        <div className='how-to-use-instructions' id='how-to-use-instructions'>
                             <h2 id='how-to-use-instruction-title'>
                                 Guest Mode or MAL Acc
                             </h2>
