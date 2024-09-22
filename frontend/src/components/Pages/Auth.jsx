@@ -127,7 +127,7 @@ function Auth()  {
                         }}>
                             <svg width="133" height="46" viewBox="0 0 133 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1 30.6705V0.5H110.443L132 15.3295V45.5H22.557L1 30.6705Z" fill="#1891FF" stroke="black"/>
-                                <text x="50%" y="50%" textAnchor="middle" alignmentBaseline="middle" fill="white" fontSize="20" fontFamily="Furore">
+                                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="20" fontFamily="Furore">
                                     Login
                                 </text>
                             </svg>
