@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string, send_from_directory, render_template, abort
+from flask import request, jsonify, redirect, session, make_response, url_for, render_template_string, send_from_directory, render_template, abort, send_file
 from cryptography.fernet import Fernet
 from config import app, db
 import pkce
@@ -73,6 +73,18 @@ def serve_react_pages():
     except Exception:
         app.logger.error('Unable to load home page.')
         abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
+
+# Get Logo Image
+@app.route('/api/logo', methods=["GET"])
+def get_logo():
+    image_path = os.path.join('logo.png')
+
+    if os.path.exists(image_path):
+        # Send the image file
+        return send_file(image_path, mimetype='image/png')
+    else:
+        # If the file doesn't exist, return a 404 error
+        abort(404)
 
 # Function for getting session cookie
 def get_session_id():
