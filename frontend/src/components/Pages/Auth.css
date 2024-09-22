@@ -101,7 +101,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 80%;
     height: 350px;
     overflow: hidden;
 }
@@ -114,8 +114,8 @@
 }
 
 .demo-image {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 
@@ -470,6 +470,12 @@
         max-height: 490px;
     }
 
+    .login-page-main-left-demo {
+        width: 80%;
+        height: 350px;
+        overflow: hidden;
+    }
+
     .login-page-main-left-title {
         font-size: 40px;
     }
@@ -499,6 +505,7 @@
     }
 
     .login-frame {
+        height: 100%;
         max-height: 300px;
         max-width: 450px;
     }
@@ -528,7 +535,7 @@
 
     .login-page-main-left-demo {
         width: 100%;
-        height: 350px;
+        height: 300px;
         overflow: hidden;
     }
 
@@ -610,9 +617,43 @@
     }
 }
 
-/* Mobile less than 500px */
-/* @media (max-width: 500px) {
-    .login-div-overlay {
-        gap: 4px;
+@media (max-width: 425px) {
+    .login-page-main-left-title {
+        overflow: hidden;
     }
-} */
+
+    .login-page-main-left, .login-page-main-right {
+        overflow: hidden;
+    }
+
+    .copied-discord-popup {
+        overflow: hidden;
+    }
+
+    .login-div-overlay button {
+        padding: 4px;
+        font-size: 1rem;
+    }
+
+    .login-div-better {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 375px) {
+    .login-frame {
+        transform: scale(200);
+    }
+}
+
+/* Disable hover effects for touch screens */
+@media (hover: none) {
+    .login-div-mal-button:hover {
+        background-color: initial;
+        color: initial;
+    }
+
+    .how-to-use-div-buttons div:hover {
+        animation: none;
+    }
+}
