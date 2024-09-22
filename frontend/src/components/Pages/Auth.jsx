@@ -166,7 +166,6 @@ function Auth()  {
                         <div className='login-page-main-left-demo'>
                             <img className='demo-image' src={shuffledImages[imageIndex]} alt={`Demo Image Unavailable`} />
                         </div>
-                        <p className='login-page-main-left-demo-text'>Demo screenshots</p>
                     </div>
                     <div className='login-page-main-right'>
                         <div className='login-page-main-right-frame'>
