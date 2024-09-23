@@ -8,7 +8,7 @@ const closeAnnouncement = () => {
 
 function Announcement() {
     // TODO edit when update
-    const version = "1.0";
+    const version = "1.1";
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function Announcement() {
         (isVisible &&
             <div className="gray-screen" id="announcement-div" style={{display: "none"}}>
                 <div className="feedback-div">
-                    <h2 className="feedback-title">Welcome to the Version 1.0 Launch!</h2>
+                    <h2 className="feedback-title">Version 1.1!</h2>
                     <p className="announcement-text">
                         Hey there! Thanks for checking out my website. This is my first time launching a site, so please bear with me if you encounter any issues.
                         <br/><br/>
@@ -45,11 +45,20 @@ function Announcement() {
                     </p>
                     <br/>
                     <p className='announcement-minier-title'>
+                        Changes:
+                    </p>
+                    <p className="announcement-text">
+                        - Login Page redesigned<br/>
+                        - Tutorial in the menu
+                    </p>
+                    <br/>
+                    <p className='announcement-minier-title'>
                         Planned Updates (In no particular order):
                     </p>
                     <p className="announcement-text">
+                        - Calendar page redesign
                         - Option to change anime marker colours<br/>
-                        - Light Mode<br/>
+                        - Light Mode / Dark Mode<br/>
                         - Animated month transitions and scroll controls<br/>
                         - Sync preferences and anime delayed data across devices (currently stored locally)<br/>
                         - User statistic on delayed episodes (If enough users)<br/>
@@ -58,7 +67,6 @@ function Announcement() {
 
                         I appreciate your support and feedback as I continue to refine and enhance the site. Enjoy!
                     </p>
-                    
                     <div>
                         <button className='close-feedback' onClick={() => closeAnnouncement()}>Close</button>
                     </div>
