@@ -1,5 +1,3 @@
-import './Tutorial.css'
-
 const closeTutorial = () => {
     document.getElementById('tutorial-div').style.display = "none";
     document.getElementById('main-div').style.overflow = 'auto';
