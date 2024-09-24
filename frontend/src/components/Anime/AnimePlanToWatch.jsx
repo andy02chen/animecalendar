@@ -130,7 +130,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                                     {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
                                 </p>
                                 <p className='episode-status'>
-                                    This anime is set to release in&nbsp;
+                                    This anime estimated to air in&nbsp;
                                     <span className="white-bold">
                                         {days}&nbsp;
                                     </span>
@@ -149,7 +149,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                                     {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
                                 </p>
                                 <p className='episode-status'>
-                                    This anime is set to release in&nbsp;
+                                    This anime is estimated to air in&nbsp;
                                     <span className="white-bold">
                                         <CountDown timer={diff}/>&nbsp;
                                     </span>

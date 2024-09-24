@@ -496,7 +496,7 @@ function showFeedbackDiv() {
 
 function showAnnouncement() {
     document.getElementById('main-div').style.overflow = 'hidden';
-    localStorage.setItem('seenAnnouncement', "1.1");
+    localStorage.setItem('seenAnnouncement', "1.1.1");
     document.getElementById('announcement-button').classList.add('hide-indicator');
     document.getElementById('settings-div-show-btn').classList.add('hide-indicator');
     document.getElementById('announcement-div').style.display = "flex";

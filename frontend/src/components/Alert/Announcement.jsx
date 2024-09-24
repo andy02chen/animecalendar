@@ -8,7 +8,7 @@ const closeAnnouncement = () => {
 
 function Announcement() {
     // TODO edit when update
-    const version = "1.1";
+    const version = "1.1.1";
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function Announcement() {
         (isVisible &&
             <div className="gray-screen" id="announcement-div" style={{display: "none"}}>
                 <div className="feedback-div">
-                    <h2 className="feedback-title">Version 1.1!</h2>
+                    <h2 className="feedback-title">Version 1.1.1!</h2>
                     <p className="announcement-text">
                         Hey there! Thanks for checking out my website. This is my first time launching a site, so please bear with me if you encounter any issues.
                         <br/><br/>
@@ -49,7 +49,8 @@ function Announcement() {
                     </p>
                     <p className="announcement-text">
                         - Login Page redesigned<br/>
-                        - Tutorial in the menu
+                        - Tutorial in the menu<br/>
+                        - Changed status message for not yet aired anime
                     </p>
                     <br/>
                     <p className='announcement-minier-title'>
