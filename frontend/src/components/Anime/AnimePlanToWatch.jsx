@@ -188,7 +188,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                                     }
                                 </p>
                                 <p className='episode-status'>
-                                    This anime is set to release in&nbsp;
+                                    This anime is estimated to air in&nbsp;
                                     <span className="white-bold">
                                         {days}&nbsp;
                                     </span>
@@ -214,7 +214,7 @@ function AnimePlanToWatch({anime,setTrigger,setGotRequest}) {
                                     }
                                 </p>
                                 <p className='episode-status'>
-                                    This anime is set to release&nbsp;
+                                    This anime estimated to air &nbsp;
                                     <span className="white-bold">
                                         sometime today &nbsp;
                                     </span>
