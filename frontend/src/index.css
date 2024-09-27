@@ -27,6 +27,7 @@
     --primary-500: #0F589C;
 
     --black: #2C2C2C;
+    --black-70: #2b2b2bb3;
     --white: #F1F3F2;
 
     --accent-50: #F7F8F9;
@@ -52,6 +53,8 @@
     --yellow-300: #CDA145;
     --yellow-400: #907130;
     --yellow-500: #8D5673;
+
+    --progress-div-colour: #1A344E;
 }
 
 @font-face {
@@ -93,7 +96,7 @@ body {
     width: 100vw;
     max-width: 100%;
     font-family: 'Lato', sans-serif;
-    background-color: var(--background);
+    background-color: var(--white);
 }
 
 p,h1 {
