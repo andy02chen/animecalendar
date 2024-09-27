@@ -1,6 +1,6 @@
 import React, {useState, useEffect, createContext} from 'react'
 import axios from "axios"
-import CalendarPage from '../Calendar/CalendarPage';
+import CalendarPage from './CalendarPage';
 import MainComponent from '../MainComponent'
 
 function loginRedirect() {
