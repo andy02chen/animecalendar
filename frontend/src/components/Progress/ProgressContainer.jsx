@@ -1,5 +1,5 @@
 import './ProgressContainer.css'
-
+import defaultpfp from '../imgs/defaultpfp.png';
 
 // Display Progress Container and hide expand div
 function expandProgressContainer() {
@@ -74,9 +74,29 @@ function ProgressContainer() {
                     </svg>
 
                     <div className='progress-content-div'>
-
+                        <div className='progress-header-div'>
+                            <h1>YOUR LIST</h1>
+                            <div className='progress-settings-div'>
+                                <button className='progress-settings-buttons'>
+                                    <img src={defaultpfp}></img>
+                                    <p className='progress-settings-title'>&nbsp;Username</p>
+                                    <svg className='progress-settings-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div className='progress-note'>
+                            <p>Note: Release times are based on MAL data and may differ from those on your streaming platform.</p>
+                        </div>
+                        <svg className='progress-top-divider' viewBox="0 0 469 47" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio='none'>
+                        <rect x="0.5" y="9.84998" width="5.33212" height="2.13333" fill="#EBD8B3"/>
+                        <rect x="11.1643" y="8.78333" width="293.267" height="4.26667" fill="#EBD8B3"/>
+                        <path d="M16.6381 6.65L8.56909 0.25H19.3277L23.3622 3.45L27.3967 6.65H16.6381Z" fill="#79BFFF"/>
+                        <path d="M32.776 6.65L24.707 0.25H35.4657L39.5001 3.45L43.5346 6.65H32.776Z" fill="#79BFFF"/>
+                        <path d="M48.9139 6.65L40.845 0.25H51.6036L55.6381 3.45L59.6726 6.65H48.9139Z" fill="#79BFFF"/>
+                        <path d="M128.295 46.75L118.845 42.4833H459.05L468.5 46.75H128.295Z" fill="#AEBCC5"/>
+                        <path d="M324.604 38.2167L316.451 28.6167L332.756 28.6167L324.604 38.2167Z" fill="#0F589C"/>
+                        </svg>
                     </div>
-
                     <div id='collapse-progress-container' >
                         <div class="trapezium2" onClick={() => collapseProgressContainer()}>
                             <span class="arrow">
