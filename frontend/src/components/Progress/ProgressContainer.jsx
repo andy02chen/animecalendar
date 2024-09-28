@@ -29,7 +29,7 @@ function ProgressContainer() {
             <div id="progress-container" style={{display: 'none'}}>
                 <div className='progress-div1'>
                     <svg className='progress-div1-svg' viewBox="0 0 336 996" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"> 
-                    <path d="M18.241 3L3 25.8462V993H16.3359L30.7386 957.573L305.597 957.574L319.568 993H333.221V3H18.241Z" fill="#1A344E" stroke="#1891FF" stroke-width="5"/>
+                    <path d="M18.241 3L3 25.8462V993H16.3359L30.7386 957.573L305.597 957.574L319.568 993H333.221V3H18.241Z" fill="#1A344E" stroke="#1891FF" strokeWidth="5"/>
                     <path d="M32.3527 959.602L18.1895 992.423H317.7L304.327 959.602H32.3527Z" fill="#CDA145" stroke="#1891FF"/>
                     <path d="M35.1045 985.498V972.039C37.6729 964.861 40.4553 969.048 41.5255 972.039V985.498C38.2232 996.265 35.8689 989.984 35.1045 985.498Z" fill="#E2C893"/>
                     <path d="M43.3594 985.498V972.039C45.9278 964.861 48.7102 969.048 49.7803 972.039V985.498C46.4781 996.265 44.1238 989.984 43.3594 985.498Z" fill="#E2C893"/>
@@ -51,26 +51,26 @@ function ProgressContainer() {
                     <path d="M253.419 985.498V972.039C255.987 964.861 258.77 969.048 259.84 972.039V985.498C256.538 996.265 254.183 989.984 253.419 985.498Z" fill="#E2C893"/>
                     <path d="M283.689 985.498V972.039C286.258 964.861 289.04 969.048 290.11 972.039V985.498C286.808 996.265 284.454 989.984 283.689 985.498Z" fill="#E2C893"/>
                     <path d="M294.696 985.498V972.039C297.265 964.861 300.047 969.048 301.117 972.039V985.498C297.815 996.265 295.461 989.984 294.696 985.498Z" fill="#E2C893"/>
-                    <line x1="38.1914" y1="970.069" x2="38.1914" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="46.4463" y1="970.069" x2="46.4463" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="54.7021" y1="970.069" x2="54.7021" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="71.2139" y1="970.069" x2="71.2139" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="79.4697" y1="970.069" x2="79.4697" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="98.7305" y1="970.069" x2="98.7305" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="113.408" y1="970.069" x2="113.408" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="124.416" y1="970.069" x2="124.416" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="135.423" y1="970.069" x2="135.423" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="161.107" y1="970.069" x2="161.107" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="169.363" y1="970.069" x2="169.363" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="177.619" y1="970.069" x2="177.619" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="185.874" y1="970.069" x2="185.874" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="211.557" y1="970.069" x2="211.557" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="219.812" y1="970.069" x2="219.812" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="234.487" y1="970.069" x2="234.487" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="245.497" y1="970.069" x2="245.497" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="256.505" y1="970.069" x2="256.505" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="286.773" y1="970.069" x2="286.773" y2="960.1" stroke="#E2C893" stroke-width="3"/>
-                    <line x1="297.783" y1="970.069" x2="297.783" y2="960.1" stroke="#E2C893" stroke-width="3"/>
+                    <line x1="38.1914" y1="970.069" x2="38.1914" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="46.4463" y1="970.069" x2="46.4463" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="54.7021" y1="970.069" x2="54.7021" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="71.2139" y1="970.069" x2="71.2139" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="79.4697" y1="970.069" x2="79.4697" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="98.7305" y1="970.069" x2="98.7305" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="113.408" y1="970.069" x2="113.408" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="124.416" y1="970.069" x2="124.416" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="135.423" y1="970.069" x2="135.423" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="161.107" y1="970.069" x2="161.107" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="169.363" y1="970.069" x2="169.363" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="177.619" y1="970.069" x2="177.619" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="185.874" y1="970.069" x2="185.874" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="211.557" y1="970.069" x2="211.557" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="219.812" y1="970.069" x2="219.812" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="234.487" y1="970.069" x2="234.487" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="245.497" y1="970.069" x2="245.497" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="256.505" y1="970.069" x2="256.505" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="286.773" y1="970.069" x2="286.773" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
+                    <line x1="297.783" y1="970.069" x2="297.783" y2="960.1" stroke="#E2C893" strokeWidth="3"/>
                     </svg>
 
                     <div className='progress-content-div'>
@@ -78,8 +78,8 @@ function ProgressContainer() {
                             <h1>YOUR LIST</h1>
                             <div className='progress-settings-div'>
                                 <button className='progress-settings-buttons'>
-                                    <img src={defaultpfp}></img>
-                                    <p className='progress-settings-title'>&nbsp;Username</p>
+                                    <img alt="pfp" src={localStorage.getItem('pfp') === 'null' ? defaultpfp : localStorage.getItem('pfp') }></img>
+                                    <p className='progress-settings-title'>&nbsp;{localStorage.getItem('username')}</p>
                                     <svg className='progress-settings-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"/></svg>
                                 </button>
                             </div>
@@ -98,8 +98,8 @@ function ProgressContainer() {
                         </svg>
                     </div>
                     <div id='collapse-progress-container' >
-                        <div class="trapezium2" onClick={() => collapseProgressContainer()}>
-                            <span class="arrow">
+                        <div className="trapezium2" onClick={() => collapseProgressContainer()}>
+                            <span className="arrow">
                                 &lt;
                             </span>
                         </div>
@@ -108,8 +108,8 @@ function ProgressContainer() {
             </div>
             
             <div id='expand-progress-container'>
-                <div class="trapezium" onClick={() => expandProgressContainer()}>
-                    <span class="arrow">
+                <div className="trapezium" onClick={() => expandProgressContainer()}>
+                    <span className="arrow">
                         &gt;
                     </span>
                 </div>
