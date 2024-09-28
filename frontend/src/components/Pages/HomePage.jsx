@@ -58,7 +58,7 @@ function HomePage() {
                 }
             })
             .catch(error => {
-                localStorage.setItem('errorMsgDiv', '4');
+                localStorage.setItem('errorMsgDiv', true);
                 setLoginChecked(true);
             });
     }, []);

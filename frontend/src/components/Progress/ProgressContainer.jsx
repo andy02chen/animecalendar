@@ -73,6 +73,9 @@ function ProgressContainer() {
                     <line x1="297.783" y1="970.069" x2="297.783" y2="960.1" stroke="#E2C893" stroke-width="3"/>
                     </svg>
 
+                    <div className='progress-content-div'>
+
+                    </div>
 
                     <div id='collapse-progress-container' >
                         <div class="trapezium2" onClick={() => collapseProgressContainer()}>
