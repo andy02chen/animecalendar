@@ -112,6 +112,18 @@
     width: 100%;
 }
 
+#progress-settings-user {
+    background-color: var(--primary-500);
+}
+
+.progress-settings-buttons:hover, #progress-settings-user:hover {
+    background-color: var(--primary-400);
+}
+
+.expanded-settings-active {
+    background-color: var(--primary-500);
+}
+
 .progress-settings-buttons > img {
     width: 28px;
     height: auto;
