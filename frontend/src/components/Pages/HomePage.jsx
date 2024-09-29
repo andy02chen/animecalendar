@@ -69,9 +69,6 @@ function HomePage() {
             {loginChecked ?
                 <>
                     {isLoggedIn?
-                        // <MyContext.Provider value={user}>
-                        //     <MainComponent/>
-                        // </MyContext.Provider>
                         <CalendarPage/>
                         :
                         <>

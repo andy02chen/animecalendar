@@ -36,6 +36,7 @@ function expandSettings() {
     }
 }
 
+// Log out Function
 function logOut() {
     axios.delete('/api/logout')
         .then(response => {
@@ -48,6 +49,17 @@ function logOut() {
             localStorage.setItem('errorMsgDiv', '4');
             window.location.href = '/';
         });
+}
+
+// Expand Feedback page
+function expandFeedback() {
+    const div = document.getElementById("feedback-page");
+    document.getElementById('progress-hidden-settings').style.display = "none";
+    if (div.style.display === 'none') {
+        div.style.display = "block";
+    } else {
+        div.style.display = "none";
+    }
 }
 
 function ProgressContainer() {
@@ -130,7 +142,7 @@ function ProgressContainer() {
                                         <svg className='progress-settings-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path d="M48 80a48 48 0 1 1 96 0A48 48 0 1 1 48 80zM0 224c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 224 32 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 512c-17.7 0-32-14.3-32-32s14.3-32 32-32l32 0 0-192-32 0c-17.7 0-32-14.3-32-32z"/></svg>
                                         <p className='progress-settings-title'>&nbsp;Tutorial</p>
                                     </button>
-                                    <button className='progress-settings-buttons'>
+                                    <button className='progress-settings-buttons' onClick={() => expandFeedback()}>
                                         <svg className='progress-settings-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 0C28.7 0 0 28.7 0 64L0 352c0 35.3 28.7 64 64 64l96 0 0 80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416 448 416c35.3 0 64-28.7 64-64l0-288c0-35.3-28.7-64-64-64L64 0z"/></svg>
                                         <p className='progress-settings-title'>&nbsp;Feedback</p>
                                     </button>
