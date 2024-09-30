@@ -2,10 +2,22 @@
     background: var(--white);
     width: 100vw;
     height: 100vh;
-    max-width:100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.calendar-container > div {
+    height: 100%;
+    width: 100%;
+    min-width: 320px;
+    min-height: 500px;
+}
+
+@media screen and (max-height: 500px) {
+    .calendar-container {
+        overflow-y: auto;
+    }
 }
 
 .calendar-svg {

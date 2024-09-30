@@ -171,7 +171,7 @@ function ProgressContainer() {
                         </svg>
                     </div>
                     <div id='collapse-progress-container' >
-                        <div className="trapezium2" onClick={() => collapseProgressContainer()}>
+                        <div className="trapezium" onClick={() => collapseProgressContainer()}>
                             <span className="arrow">
                                 &lt;
                             </span>

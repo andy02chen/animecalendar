@@ -17,6 +17,18 @@
     border: 2px solid var(--primary-300);
 }
 
+.trapezium:hover {
+    background-color: var(--primary-500);
+    cursor: pointer;
+}
+
+@media (hover: none) {
+    .trapezium:hover {
+        background-color: var(--progress-div-colour);
+        cursor: pointer;
+    }
+}
+
 .arrow {
     position: absolute;
     left: 50%;
@@ -31,8 +43,11 @@
 #progress-container {
     width: 100vw;
     height: 100vh;
+    max-height: 100%;
     background-color: var(--black-70);
     position: fixed;
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 .progress-div1 {
@@ -57,15 +72,6 @@
     top: 50%;
     right: -20px;
     transform: translateY(-50%);
-}
-
-.trapezium2 {
-    position: relative;
-    width: 20px;
-    height: 200px;
-    background-color: var(--progress-div-colour);
-    clip-path: polygon(0 0, 100% 10%, 100% 90%, 0 100%);
-    border-right: 2px solid var(--primary-300);
 }
 
 /* Div Content */
