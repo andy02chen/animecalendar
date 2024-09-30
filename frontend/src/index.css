@@ -108,13 +108,14 @@ img {
     color: var(--text);
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 0.5em;
+    height: 0.5em;
 }
 
 ::-webkit-scrollbar-track {
     background: #333333;
-    border-radius: 100vw;
 }
 
 ::-webkit-scrollbar-thumb {

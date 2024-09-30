@@ -3,6 +3,7 @@
     width: 100vw;
     height: 100vh;
     display: flex;
+    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -12,8 +13,10 @@
     width: 100%;
     min-width: 320px;
     min-height: 500px;
+    max-height: 1024px
 }
 
+/* Add scroll bar when screen height less than 500px */
 @media screen and (max-height: 500px) {
     .calendar-container {
         overflow-y: auto;
