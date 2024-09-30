@@ -1,6 +1,7 @@
 import NewCalendar from '../Calendar/NewCalendar';
 import ProgressContainer from '../Progress/ProgressContainer';
 import Feedback from '../MenuPages/Feedback';
+import Tutorial from '../MenuPages/Tutorial';
 
 function CalendarPage() {
 
@@ -9,6 +10,7 @@ function CalendarPage() {
             <ProgressContainer/>
             <NewCalendar/>
             <Feedback/>
+            <Tutorial/>
         </>
     );
 }
