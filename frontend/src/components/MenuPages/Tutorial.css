@@ -4,4 +4,68 @@
     width: 100vw;
     background-color: var(--black-70);
     top: 0;
+    max-width: px;
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 70px;
+}
+
+.tutorial-expand-symbol {
+    height: auto;
+    width: 30px;
+    min-width: 30px;
+    fill: var(--white);
+    transform: rotate(45deg);
+    transition: transform 0.5s ease;;
+}
+
+.tutorial-page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tutorial-page-expand-button {
+    width: 100%;
+    border: 5px solid var(--primary-200);
+    min-height: 70px;
+    transition: max-height 0.5s ease;
+    max-height: 70px;
+    overflow: hidden;
+}
+
+.tutorial-page-expand-button:hover {
+    border: 5px solid var(--primary-100);
+    cursor: pointer;
+}
+
+.tutorial-page-expand-button > p {
+    text-align: center;
+    padding: 10px;
+}
+
+.tutorial-title {
+    text-align: left;
+    font-size: 20px;
+    font-family: "Montserrat", Arial, sans-serif;
+}
+
+.expand-tutorial-text {
+    max-height: 500px;
+}
+
+.expand-symbol {
+    transform: rotate(0deg);
+}
+
+@media (hover: none) {
+    .tutorial-page-expand-button:hover {
+        border: 5px solid var(--primary-200);
+    }
 }

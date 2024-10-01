@@ -96,7 +96,7 @@ body {
     height: 100dvh;
     width: 100vw;
     max-width: 100%;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Lato', Arial, sans-serif;
     background-color: var(--white);
 }
 
