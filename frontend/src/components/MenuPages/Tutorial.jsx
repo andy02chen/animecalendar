@@ -4,7 +4,7 @@ import './Tutorial.css';
 // Close Tutoria Page
 function closeTutorial() {
     const div = document.getElementById('tutorial-page');
-    if(div.style.display === 'block') {
+    if(div.style.display === 'flex') {
         div.style.display = 'none'
     }
 }
@@ -30,7 +30,7 @@ function expandTutorial(value) {
 
 function Tutorial() {
     return(
-        <div id="tutorial-page" style={{display: 'none'}}>
+        <div id="tutorial-page" className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-shape'>
                 <div className='menu-page-content'>
                     <div className='menu-page-header'>

@@ -7,6 +7,7 @@
     align-items: center;
     justify-content: center;
     overflow: auto;
+    max-width: 1024px;
 }
 
 .menu-page-text {
@@ -47,4 +48,9 @@
 
 .menupage-content-text {
     min-width: 300px;
+}
+
+.menu-page-hold {
+    display: flex;
+    justify-content: center;
 }

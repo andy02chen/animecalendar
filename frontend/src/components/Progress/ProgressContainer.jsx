@@ -57,7 +57,7 @@ function expandFeedback() {
     const div = document.getElementById("feedback-page");
     document.getElementById('progress-hidden-settings').style.display = "none";
     if (div.style.display === 'none') {
-        div.style.display = "block";
+        div.style.display = "flex";
     } else {
         div.style.display = "none";
     }
@@ -68,7 +68,7 @@ function expandTutorial() {
     const div = document.getElementById("tutorial-page");
     document.getElementById('progress-hidden-settings').style.display = "none";
     if (div.style.display === 'none') {
-        div.style.display = "block";
+        div.style.display = "flex";
     } else {
         div.style.display = "none";
     }

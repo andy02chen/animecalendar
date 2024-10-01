@@ -4,7 +4,7 @@ import './MenuPages.css';
 // Close Feedback Page
 function closeFeedback() {
     const div = document.getElementById('feedback-page');
-    if(div.style.display === 'block') {
+    if(div.style.display === 'flex') {
         div.style.display = 'none'
     }
 }
@@ -27,7 +27,7 @@ function copyDiscord() {
 function Feedback() {
     return(
         
-        <div id='feedback-page' style={{display: 'none'}}>
+        <div id='feedback-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-shape'>
                 <div className='menu-page-content'>
                     <div className='menu-page-header'>
