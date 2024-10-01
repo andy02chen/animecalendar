@@ -3,9 +3,9 @@ import AnimeProgress from "./Anime/AnimeProgress";
 import "./MainComponent.css";
 import Popup from './Alert/Popup';
 import { useState, useRef, useEffect } from "react";
-import Feedback from "./Alert/Feedback";
-import Announcement from "./Alert/Announcement";
-import Tutorial from './Alert/Tutorial';
+// import Feedback from "./Alert/Feedback";
+// import Announcement from "./Alert/Announcement";
+// import Tutorial from './Alert/Tutorial';
 
 function MainComponent() {
     const animeInfo = useRef(new Map());
@@ -44,9 +44,9 @@ function MainComponent() {
                     }
                 </div>
             </div>
-            <Feedback/>
+            {/* <Feedback/>
             <Announcement/>
-            <Tutorial/>
+            <Tutorial/> */}
         </>
     );
 }

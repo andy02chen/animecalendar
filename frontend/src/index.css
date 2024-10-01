@@ -285,10 +285,6 @@ img {
     .calendar-div {
         flex: 0 0 65%;
     }
-
-    .feedback-div {
-        width: 75%;
-    }
 }
 
 /* Tablets */
@@ -346,10 +342,6 @@ img {
         font-size: 1.5rem;
     }
 
-    .feedback-div {
-        width: 80%;
-    }
-
     button {
         font-size: 1.5rem;
     }
@@ -377,14 +369,6 @@ img {
 
     .anime-progress-checkbox {
         font-size: 1.5rem;
-    }
-
-    .feedback-title {
-        font-size: 2rem;
-    }
-
-    .feedback-text {
-        font-size: 1.6rem;
     }
 
     .announcement-text {

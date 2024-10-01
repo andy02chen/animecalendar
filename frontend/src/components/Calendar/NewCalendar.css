@@ -3,9 +3,9 @@
     width: 100vw;
     height: 100vh;
     display: flex;
-    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
+    align-items: center;
 }
 
 .calendar-container > div {
@@ -13,18 +13,59 @@
     width: 100%;
     min-width: 320px;
     min-height: 500px;
-    max-height: 1024px
+    max-height: 1024px;
+}
+
+.calendar-svg-mobile {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.calendar-svg-pc {
+    display: none;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    max-width: 1400px;
+    max-height: 1080px;
+}
+
+@media screen and (min-width: 1024px) {
+    .calendar-svg-pc {
+        display: block;
+    }
+
+    .calendar-svg-mobile {
+        display: none;
+    }
+
+    .calendar-container {
+        padding: 10px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .calendar-container {
+        background: var(--white);
+        height: 100vh;
+        max-width: 1400px;
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .calendar-container > div {
+        max-height: 1080px;
+        max-width: 1400px;
+        flex-grow: 1;
+    }
 }
 
 /* Add scroll bar when screen height less than 500px */
 @media screen and (max-height: 500px) {
     .calendar-container {
         overflow-y: auto;
+        align-items: normal;
     }
-}
-
-.calendar-svg {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
 }

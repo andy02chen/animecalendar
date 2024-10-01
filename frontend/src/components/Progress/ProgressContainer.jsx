@@ -1,6 +1,7 @@
 import './ProgressContainer.css'
 import defaultpfp from '../imgs/defaultpfp.png';
 import axios from 'axios';
+import { useRef, useEffect} from 'react';
 
 // Display Progress Container and hide expand div
 function expandProgressContainer() {
@@ -74,6 +75,8 @@ function expandTutorial() {
 }
 
 function ProgressContainer() {
+    const div1 = useRef(null);
+    const progressDiv = useRef(null);
 
     // When settings div is expanded but user clicks elsewhere
     document.addEventListener("click", function(event) {
@@ -86,10 +89,26 @@ function ProgressContainer() {
         }
     });
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (div1.current && !div1.current.contains(event.target) && progressDiv.current && progressDiv.current.contains(event.target)) {
+                collapseProgressContainer()
+            }
+        };
+        
+        // Add event listener
+        document.addEventListener('mousedown', handleClickOutside);
+    
+        // Cleanup the event listener
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return(
         <>
-            <div id="progress-container" style={{display: 'none'}}>
-                <div className='progress-div1'>
+            <div id="progress-container" ref={progressDiv}>
+                <div className='progress-div1' ref={div1}>
                     <svg className='progress-div1-svg' viewBox="0 0 336 996" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"> 
                     <path d="M18.241 3L3 25.8462V993H16.3359L30.7386 957.573L305.597 957.574L319.568 993H333.221V3H18.241Z" fill="#1A344E" stroke="#1891FF" strokeWidth="5"/>
                     <path d="M32.3527 959.602L18.1895 992.423H317.7L304.327 959.602H32.3527Z" fill="#CDA145" stroke="#1891FF"/>
@@ -188,6 +207,7 @@ function ProgressContainer() {
                             </span>
                         </div>
                     </div>
+                    
                 </div>
             </div>
             
