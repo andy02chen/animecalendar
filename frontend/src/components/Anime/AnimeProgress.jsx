@@ -461,7 +461,6 @@ function getWeeklyAnime(setPlanToWatch,setNotYetAiredList,setPlanToWatchAnimeLis
             setGotRequest(true);
         }
     });
-
 }
 
 // Displays the settings div

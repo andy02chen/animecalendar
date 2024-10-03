@@ -30,7 +30,7 @@ function Popup() {
             <div className="localstorage-popup">
                 <div className="localstorage-popup-shape">
                     <svg className="popup-svg-shape" preserveAspectRatio="none" viewBox="0 0 374 217" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 216V1H373V193L344 216H1Z" fill="#1A344E" stroke="#3FA4FF" stroke-width="2"/>
+                    <path d="M1 216V1H373V193L344 216H1Z" fill="#1A344E" stroke="#3FA4FF" strokeWidth="2"/>
                     </svg>
                     <div className="popup-contain-text">
                         <h1 className="popup-content-title">This site uses Cookies and LocalStorage</h1>
