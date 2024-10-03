@@ -1,11 +1,47 @@
 import './DisplayAnimeProgress.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AnimeContext } from './ProgressContainer';
+
+// Changes the Displayed anime list
+function changeDisplayedList(list, setListSelected, selected) {
+    if(list !== selected) {
+        document.getElementById(`change-list-button-${list}`).classList.add('active-list');
+        document.getElementById(`change-list-button-${selected}`).classList.remove('active-list');
+        setListSelected(list);
+    }
+}
+
 
 function DisplayAnimeProgress() {
     const {animeArray, planToWatchArray} = useContext(AnimeContext);
 
-    console.log(animeArray, planToWatchArray);
+    // Which List
+    const [listSelected, setListSelected] = useState('cw');
+
+    // Which Filter
+    const [cwFilter, setCWFilter] = useState(null);
+    const [ptwFilter, setPTWFilter] = useState(null);
+
+    const handleCWFilter = (event) => {
+        const value = event.target.value;
+
+        if(cwFilter === value) {
+            setCWFilter(null);
+        } else {
+            setCWFilter(value);
+        }
+    };
+
+    const handlePTWFilter = (event) => {
+        const value = event.target.value;
+
+        if(ptwFilter === value) {
+            setPTWFilter(null);
+        } else {
+            setPTWFilter(value);
+        }
+    };
+
     return(
         <>
             <div className='progress-display-anime'>
@@ -21,15 +57,43 @@ function DisplayAnimeProgress() {
             <path d="M435.069 17.15L427 10.75H437.759L441.793 13.95L445.828 17.15H435.069Z" fill="#79BFFF"/>
             </svg>
             <div className='progress-filters'>
-                <div className='display-anime-filters'>
-                    <p>Filter 1</p>
-                    <p>Filter 2</p>
-                </div>
+                {listSelected === 'cw' &&
+                    (
+                    <div className='display-anime-filters' id='cw-anime-filters'>
+                        <label className="anime-filters-check">
+                            <input type="checkbox" name="option" value="curr_airing" checked={cwFilter === "curr_airing"} onChange={handleCWFilter}/>
+                            <span className="check-button"></span>
+                            Currently Airing Only
+                        </label>
+
+                        <label className="anime-filters-check">
+                            <input type="checkbox" name="option" value="fin_airing" checked={cwFilter === "fin_airing"} onChange={handleCWFilter}/>
+                            <span className="check-button"></span>
+                            Finished Airing Only
+                        </label>
+                    </div>
+                    )
+                }
+                {listSelected === 'ptw' && (
+                    <div className='display-anime-filters' id='ptw-anime-filters'>
+                        <label className="anime-filters-check">
+                            <input type="checkbox" name="option" value="curr_not_yet_airing" checked={ptwFilter === "curr_not_yet_airing"} onChange={handlePTWFilter}/>
+                            <span className="check-button"></span>
+                            Not Yet or Currently Airing Only
+                        </label>
+
+                        <label className="anime-filters-check">
+                            <input type="checkbox" name="option" value="fin_only" checked={ptwFilter === "fin_only"} onChange={handlePTWFilter}/>
+                            <span className="check-button"></span>
+                            Finished Only
+                        </label>
+                    </div>
+                )}
                 <div className='display-which-list'>
-                    <button id='change-list-button-cw' className='change-list-button'>
+                    <button id='change-list-button-cw' className='change-list-button active-list' onClick={() => changeDisplayedList('cw', setListSelected, listSelected)}>
                         Currently Airing
                     </button>
-                    <button id='change-list-button-ptw' className='change-list-button'>
+                    <button id='change-list-button-ptw' className='change-list-button' onClick={() => changeDisplayedList('ptw', setListSelected, listSelected)}>
                         Plan To Watch
                     </button>
                 </div>

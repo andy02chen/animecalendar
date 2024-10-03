@@ -9,13 +9,6 @@
 
 .progress-filters {
     width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.display-anime-filters {
-    display: flex;
-    justify-content: center;
 }
 
 .display-which-list {
@@ -61,51 +54,56 @@
     content: "Currently Watching";
 }
 
-/* Radio boxes */
-/* .checkbox-container {
+.display-anime-filters {
     display: flex;
-    align-items: center;
-    color: var(--text-gray);
+    justify-content: space-evenly;
 }
 
-.checkbox-container label {
-    display: flex;
-    cursor: pointer;
+.active-list {
+    background-color: var(--primary-200);
 }
 
-.checkbox-container input[type='checkbox'] {
-    cursor: pointer;
-    opacity: 0;
+/* checkbox boxes */
+.anime-filters-check input[type="checkbox"]  {
+    display: none;
+}
+
+/* Custom checkbox button */
+.check-button {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-300);
+    display: inline-block;
+    position: relative;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* Checked state */
+.anime-filters-check input[type="checkbox"]:checked + .check-button {
+    background-color: var(--primary-300);
+}
+
+.anime-filters-check input[type="checkbox"]:checked + .check-button:after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: white;
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.checkbox-container label::before {
-    content: "";
-    width: 1em;
-    height: 1em;
-    border: .05em solid white;
-    border-radius: .15em;
-    margin-right: .3em;
-}
-
-.checkbox-container label:hover::before,
-.checkbox-container input[type='checkbox']:hover + label::before {
-    background-color: var(--primary-small-hover);
-}
-
-.checkbox-container input[type='checkbox']:hover + label {
-    color: var(--text);
-}
-
-.checkbox-container input[type='checkbox']:focus + label::before {
-    box-shadow: 0 0 3px var(--text);
-}
-
-.checkbox-container input[type='checkbox']:checked + label::before {
-    content: '\002714';
-    background-color: var(--primary);
+/* Label styling */
+.anime-filters-check {
+    cursor: pointer;
     display: flex;
-    justify-content: center;
     align-items: center;
-} */
-
+    color: var(--white);
+    font-size: "Montserrat", Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
