@@ -2,7 +2,9 @@ import './ProgressContainer.css'
 import defaultpfp from '../imgs/defaultpfp.png';
 import axios from 'axios';
 import { useRef, useEffect, useState} from 'react';
+import { createContext } from 'react';
 import Anime from './Anime';
+import DisplayAnimeProgress from './DisplayAnimeProgress';
 
 // Display Progress Container and hide expand div
 function expandProgressContainer() {
@@ -116,7 +118,6 @@ function getUsersAnime(setAnimeArray, setPlanToWatch) {
          // Get user's plan to watch list
         axios.get('/api/get-plan-to-watch')
         .then(response => {
-            console.log(response.data.plan_to_watch);
             const storePlanToWatch = response.data.plan_to_watch;
             const planToWatchList = [];
 
@@ -140,6 +141,8 @@ function getUsersAnime(setAnimeArray, setPlanToWatch) {
         console.error(animeError);
     });
 }
+
+export const AnimeContext = createContext([]);
 
 function ProgressContainer() {
     const div1 = useRef(null);
@@ -178,8 +181,6 @@ function ProgressContainer() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
-
-    console.log(animeArray, planToWatchArray);
 
     return(
         <>
@@ -275,9 +276,9 @@ function ProgressContainer() {
                         <path d="M128.295 46.75L118.845 42.4833H459.05L468.5 46.75H128.295Z" fill="#AEBCC5"/>
                         <path d="M324.604 38.2167L316.451 28.6167L332.756 28.6167L324.604 38.2167Z" fill="#0F589C"/>
                         </svg>
-                        <div>
-                            Anime Progress Display here
-                        </div>
+                        <AnimeContext.Provider value={{animeArray, planToWatchArray}}>
+                            <DisplayAnimeProgress/>
+                        </AnimeContext.Provider>
                     </div>
                     <div id='collapse-progress-container' >
                         <div className="trapezium" onClick={() => collapseProgressContainer()}>
