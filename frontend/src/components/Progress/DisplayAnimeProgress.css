@@ -1,5 +1,16 @@
 .progress-display-anime {
     width: 100%;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.list-of-anime-cards {
+    width: 100%;
+    overflow: auto;
+    max-height: 600px;
+    gap: 25px;
+    display: flex;
+    flex-direction: column;
 }
 
 .progress-bot-divider {

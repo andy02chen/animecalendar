@@ -1,6 +1,7 @@
 import './DisplayAnimeProgress.css';
 import { useContext, useState } from 'react';
 import { AnimeContext } from './ProgressContainer';
+import AnimeCard from './AnimeCard';
 
 // Changes the Displayed anime list
 function changeDisplayedList(list, setListSelected, selected) {
@@ -49,7 +50,20 @@ function DisplayAnimeProgress() {
     return(
         <>
             <div className='progress-display-anime'>
-                Display Anime
+                {listSelected === 'cw' && 
+                (<div className='list-of-anime-cards'>
+                    {animeArray.map((anime)=> {
+                        return <AnimeCard anime={anime} key={anime.id}/>
+                    })}
+                </div>)
+                }
+                {listSelected === 'ptw' && 
+                (<div className='list-of-anime-cards'>
+                    {planToWatchArray.map((anime)=> {
+                        return <AnimeCard anime={anime} key={anime.id}/>
+                    })}
+                </div>)
+                }
             </div>
             <svg className='progress-bot-divider' preserveAspectRatio='none' viewBox="0 0 469 51" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="80" y="16.75" width="9.51499" height="9.44579" fill="#E2C893"/>
