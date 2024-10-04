@@ -6,8 +6,12 @@ import { AnimeContext } from './ProgressContainer';
 function changeDisplayedList(list, setListSelected, selected) {
     if(list !== selected) {
         document.getElementById(`change-list-button-${list}`).classList.add('active-list');
-        document.getElementById(`change-list-button-${selected}`).classList.remove('active-list');
-        setListSelected(list);
+        document.getElementById(`${selected}-anime-filters`).classList.add('hide');
+        setTimeout(() => {
+            document.getElementById(`change-list-button-${selected}`).classList.remove('active-list');
+            setListSelected(list);
+        }, 500);
+        
     }
 }
 

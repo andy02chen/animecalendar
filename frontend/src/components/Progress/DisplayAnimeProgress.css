@@ -57,6 +57,15 @@
 .display-anime-filters {
     display: flex;
     justify-content: space-evenly;
+    transition: opacity 0.5s ease;
+}
+
+.display-anime-filters.show {
+    opacity: 1;
+}
+
+.display-anime-filters.hide {
+    opacity: 0;
 }
 
 .active-list {
