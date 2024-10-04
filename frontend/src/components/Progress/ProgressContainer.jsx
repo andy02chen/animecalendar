@@ -105,13 +105,13 @@ function getUsersAnime(setAnimeArray, setPlanToWatch) {
         const storeAnime = response.data.anime;
         const animeList = [];
 
-        for (let animeData of storeAnime) {
-            assignAnimeColour(animeData);
-            animeList.push(
-                new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
-                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date)
-            );
-        }
+        // for (let animeData of storeAnime) {
+        //     assignAnimeColour(animeData);
+        //     animeList.push(
+        //         new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
+        //             animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date)
+        //     );
+        // }
 
         setAnimeArray(a => animeList);
 

@@ -52,15 +52,20 @@ function DisplayAnimeProgress() {
             <div className='progress-display-anime'>
                 {listSelected === 'cw' && 
                 (<div className='list-of-anime-cards'>
-                    {animeArray.map((anime)=> {
-                        return <AnimeCard anime={anime} key={anime.id}/>
+                    {animeArray.map((anime, index)=> {
+                        return(
+                            <>
+                                <AnimeCard anime={anime} key={anime.id} type={'cw'}/>
+                                {index === animeArray.length - 1 ? <div></div> : <div className='anime-card-divider'></div> }
+                            </>
+                        );
                     })}
                 </div>)
                 }
                 {listSelected === 'ptw' && 
                 (<div className='list-of-anime-cards'>
                     {planToWatchArray.map((anime)=> {
-                        return <AnimeCard anime={anime} key={anime.id}/>
+                        return <AnimeCard anime={anime} key={anime.id} type={'ptw'}/>
                     })}
                 </div>)
                 }

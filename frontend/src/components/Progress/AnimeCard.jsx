@@ -1,6 +1,6 @@
 import './AnimeCard.css';
 
-function AnimeCard({anime}) {
+function AnimeCard({anime, type}) {
     
     // Progress Bar Styling
     let progress = anime.totalEpisodes === 0 ? 60: (anime.currentProgress / anime.totalEpisodes) * 100;
@@ -33,16 +33,20 @@ function AnimeCard({anime}) {
                     <img src={anime.image} alt='Img of Anime'/>
                 </div>
                 <div className='card-progress-div'>
-                    <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
-                    <div style={outerProgress}><div style={innerProgress}></div></div>
-                    <div className='card-progress-buttons'>
-                        <button>
-                            Delayed
-                        </button>
-                        <button>
-                            Watched
-                        </button>
-                    </div>
+                    {type === "cw" && 
+                        <>
+                            <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
+                            <div style={outerProgress}><div style={innerProgress}></div></div>
+                            <div className='card-progress-buttons'>
+                                <button>
+                                    Delayed
+                                </button>
+                                <button>
+                                    Watched
+                                </button>
+                            </div>
+                        </>
+                    }
                 </div>
             </div>
         </div>

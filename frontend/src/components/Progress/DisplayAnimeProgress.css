@@ -1,7 +1,13 @@
 .progress-display-anime {
     width: 100%;
-    padding-top: 25px;
-    padding-bottom: 25px;
+    min-height: 175px;
+}
+
+.anime-card-divider {
+    margin-inline: auto;
+    width: 75%;
+    border: 1px solid var(--yellow-100);
+    border-radius: 100%;
 }
 
 .list-of-anime-cards {
