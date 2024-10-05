@@ -39,6 +39,27 @@ function displayCurrWatchingAnimeList(animeArray) {
     );
 }
 
+// Displays plan to watch list
+function displayPlanToWatchList(planToWatchArray) {
+    if(planToWatchArray.length === 0) {
+        return (
+            <>
+                <h1 className='no-anime-cards-title'>You do not have any anime in your Plan To Watch list.</h1>
+            </>
+        );
+    }
+
+    return (
+        <>
+            {planToWatchArray.map((anime, index) => (
+                <React.Fragment key={anime.id} >
+                    <AnimeCard anime={anime} type={'ptw'}/>
+                    {index !== planToWatchArray.length - 1 && <div className='anime-card-divider'></div>}
+                </React.Fragment>
+            ))}
+        </>
+    );
+}
 
 function DisplayAnimeProgress() {
     const [ready, setReady] = useState(false);
@@ -80,11 +101,9 @@ function DisplayAnimeProgress() {
                     </div>)
                 }
                 {listSelected === 'ptw' && 
-                (<div className='list-of-anime-cards'>
-                    {planToWatchArray.map((anime)=> {
-                        return <AnimeCard anime={anime} key={anime.id} type={'ptw'}/>
-                    })}
-                </div>)
+                    (<div className='list-of-anime-cards'>
+                        {displayPlanToWatchList(planToWatchArray)}
+                    </div>)
                 }
             </div>
             <svg className='progress-bot-divider' preserveAspectRatio='none' viewBox="0 0 469 51" fill="none" xmlns="http://www.w3.org/2000/svg">
