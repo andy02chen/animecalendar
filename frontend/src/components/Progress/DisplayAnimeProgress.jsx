@@ -74,9 +74,11 @@ function DisplayAnimeProgress() {
     return(
         <>
             <div className='progress-display-anime'>
-                <div className='list-of-anime-cards'>
-                    {displayCurrWatchingAnimeList(animeArray)}
-                </div>
+                {listSelected === 'cw' && 
+                    (<div className='list-of-anime-cards'>
+                        {displayCurrWatchingAnimeList(animeArray)}
+                    </div>)
+                }
                 {listSelected === 'ptw' && 
                 (<div className='list-of-anime-cards'>
                     {planToWatchArray.map((anime)=> {

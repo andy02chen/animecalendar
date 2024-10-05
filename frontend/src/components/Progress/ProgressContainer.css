@@ -198,16 +198,28 @@
     }
 }
 
-/* @media screen and (max-width: 1439px) {
-    #progress-container {
-        display: none !important;
-    }
+.progress-loading-div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-    #collapse-progress-container {
-        display: none !important;
-    }
-    
-    #expand-progress-container {
-        display: block !important;
-    }
-} */
+.spinner-loading {
+    height: auto;
+    width: 75px;
+    animation: spin 0.8s linear infinite;
+    fill: var(--text);
+}
+
+.loading-text {
+    margin: 10px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    font-style: normal;
+    width: 70%;
+    text-align: center;
+}
