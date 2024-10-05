@@ -44,9 +44,6 @@ function MainComponent() {
                     }
                 </div>
             </div>
-            {/* <Feedback/>
-            <Announcement/>
-            <Tutorial/> */}
         </>
     );
 }
