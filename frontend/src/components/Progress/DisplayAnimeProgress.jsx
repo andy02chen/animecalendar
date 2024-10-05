@@ -2,6 +2,7 @@ import './DisplayAnimeProgress.css';
 import { useContext, useState } from 'react';
 import { AnimeContext } from './ProgressContainer';
 import AnimeCard from './AnimeCard';
+import React from 'react';
 
 // Changes the Displayed anime list
 function changeDisplayedList(list, setListSelected, selected) {
@@ -16,8 +17,31 @@ function changeDisplayedList(list, setListSelected, selected) {
     }
 }
 
+// Displays current watching anime list
+function displayCurrWatchingAnimeList(animeArray) {
+    if(animeArray.length === 0) {
+        return (
+            <>
+                <h1 className='no-anime-cards-title'>You do not have any anime in your Currently Watching list.</h1>
+            </>
+        );
+    }
+
+    return (
+        <>
+            {animeArray.map((anime, index) => (
+                <React.Fragment key={anime.id} >
+                    <AnimeCard anime={anime} type={'cw'} />
+                    {index !== animeArray.length - 1 && <div className='anime-card-divider'></div>}
+                </React.Fragment>
+            ))}
+        </>
+    );
+}
+
 
 function DisplayAnimeProgress() {
+    const [ready, setReady] = useState(false);
     const {animeArray, planToWatchArray} = useContext(AnimeContext);
 
     // Which List
@@ -46,22 +70,13 @@ function DisplayAnimeProgress() {
             setPTWFilter(value);
         }
     };
-
+    
     return(
         <>
             <div className='progress-display-anime'>
-                {listSelected === 'cw' && 
-                (<div className='list-of-anime-cards'>
-                    {animeArray.map((anime, index)=> {
-                        return(
-                            <>
-                                <AnimeCard anime={anime} key={anime.id} type={'cw'}/>
-                                {index === animeArray.length - 1 ? <div></div> : <div className='anime-card-divider'></div> }
-                            </>
-                        );
-                    })}
-                </div>)
-                }
+                <div className='list-of-anime-cards'>
+                    {displayCurrWatchingAnimeList(animeArray)}
+                </div>
                 {listSelected === 'ptw' && 
                 (<div className='list-of-anime-cards'>
                     {planToWatchArray.map((anime)=> {

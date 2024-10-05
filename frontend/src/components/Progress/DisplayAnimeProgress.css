@@ -1,6 +1,9 @@
 .progress-display-anime {
     width: 100%;
-    min-height: 175px;
+    min-height: 200px;
+    display: flex;
+    flex-grow: 1;
+    overflow: auto;
 }
 
 .anime-card-divider {
@@ -12,11 +15,19 @@
 
 .list-of-anime-cards {
     width: 100%;
-    overflow: auto;
     max-height: 600px;
     gap: 25px;
     display: flex;
     flex-direction: column;
+}
+
+.no-anime-cards-title {
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: "Lato", Arial, sans-serif;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .progress-bot-divider {
