@@ -1,5 +1,5 @@
 import './Error.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function closeError() {
     localStorage.removeItem('errorType');
@@ -11,23 +11,23 @@ function closeError() {
     }, 500);
 }
 
-function Error() {
-    const[errorMessage, setErrorMessage] = useState(null);
-
+function CalenderError({displayError}) {
+    const [errorMessage, setErrorMessage] = useState("");
+    
     useEffect(() => {
         const errorType = localStorage.getItem('errorType');
 
-        // if(errorType === 'error_get_plan_to_watch') {
-        //     setErrorMessage(
-        //         "There was an error getting Plan To Watch list from MyAnimeList"
-        //     )
-        // }
+        if(errorType === 'error_anime_lists') {
+            setErrorMessage(
+                "There was an error getting your anime lists"
+            );
+        }
 
 
-    }, []);
+    }, [displayError]);
 
     return(
-        errorMessage && 
+        displayError && 
             (<div className='error-alert-div-shape show' id='error-message-alert' style={{display: 'flex'}}>
                 <div className='error-alert-div-contents'>
                     <div className='error-alert-header-div'>
@@ -43,4 +43,4 @@ function Error() {
     );
 }
 
-export default Error;
+export default CalenderError;

@@ -1,8 +1,10 @@
 import './DisplayAnimeProgress.css';
-import { useContext, useState } from 'react';
-import { AnimeContext } from './ProgressContainer';
+import { useEffect, useContext, useState } from 'react';
 import AnimeCard from './AnimeCard';
 import React from 'react';
+import { AnimeContext } from '../Pages/CalendarPage';
+import axios from 'axios';
+import Anime from './Anime';
 
 // Changes the Displayed anime list
 function changeDisplayedList(list, setListSelected, selected) {
@@ -18,12 +20,21 @@ function changeDisplayedList(list, setListSelected, selected) {
 }
 
 // Displays current watching anime list
-function displayCurrWatchingAnimeList(animeArray) {
+function displayCurrWatchingAnimeList(animeArray, error) {
+    if(error) {
+        return (
+            <div className='anime-card-error'>
+                <h1 className='no-anime-cards-title'>There was an error getting your anime lists.</h1>
+                <button className='retry-get-anime-lists'>Try again</button>
+            </div>
+        );
+    }
+
     if(animeArray.length === 0) {
         return (
-            <>
-                <h1 className='no-anime-cards-title'>You do not have any anime in your Currently Watching list.</h1>
-            </>
+            <div className='anime-card-error'>
+                <h1 className='no-anime-cards-title'>You do not have any anime in your <a href={`https://myanimelist.net/animelist/${localStorage.getItem('username')}`} target="_blank">Currently Watching</a> list.</h1>
+            </div>
         );
     }
 
@@ -40,12 +51,12 @@ function displayCurrWatchingAnimeList(animeArray) {
 }
 
 // Displays plan to watch list
-function displayPlanToWatchList(planToWatchArray, ptwError) {
-    if(ptwError) {
+function displayPlanToWatchList(planToWatchArray, error) {
+    if(error) {
         return (
             <div className='anime-card-error'>
-                <h1 className='no-anime-cards-title'>Error getting List</h1>
-                <button>Try again</button>
+                <h1 className='no-anime-cards-title'>There was an error getting your anime lists.</h1>
+                <button className='retry-get-anime-lists'>Try again</button>
             </div>
         );
     }
@@ -53,7 +64,7 @@ function displayPlanToWatchList(planToWatchArray, ptwError) {
     if(planToWatchArray.length === 0) {
         return (
             <div className='anime-card-error'>
-                <h1 className='no-anime-cards-title'>You do not have any anime in your Plan To Watch list.</h1>
+                <h1 className='no-anime-cards-title'>You do not have any anime in your <a href={`https://myanimelist.net/animelist/${localStorage.getItem('username')}`} target="_blank">Plan To Watch</a> list.</h1>
             </div>
         );
     }
@@ -70,8 +81,79 @@ function displayPlanToWatchList(planToWatchArray, ptwError) {
     );
 }
 
+function generateRandomColour() {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
+    const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
+// Assigns a colour to anime if necessary
+function assignAnimeColour(animeData) {
+    if(animeData.air_status === 'currently_airing') {
+        localStorage.setItem(animeData.id+"Colour", generateRandomColour());
+    } else if (animeData.air_status === 'finished_airing') {
+        // Removes the colour marker if anime is no longer airing
+        localStorage.removeItem(animeData.id+"Colour");
+
+        // Removes any delayed eps
+        localStorage.removeItem(animeData.id);
+    }
+}
+
+// Gets user's anime lists
+function getUsersAnime(handleSuccess, setLoaded, setError, setDisplayError) {
+    // Get users watch list
+    axios.get('/api/get-weekly-anime')
+    .then(response => {
+        const storeAnime = response.data.anime;
+        const animeList = [];
+
+        for (let animeData of storeAnime) {
+            assignAnimeColour(animeData);
+            animeList.push(
+                new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
+                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date)
+            );
+        }
+
+        // Get user's plan to watch list
+        axios.get('/api/get-plan-to-watch')
+        .then(response => {
+            const storePlanToWatch = response.data.plan_to_watch;
+            const ptwList = [];
+
+            for (let animePlanned of storePlanToWatch) {
+                ptwList.push(
+                    new Anime(
+                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date
+                    )
+                )
+            }
+
+            handleSuccess(animeList, ptwList);
+            setLoaded(true);
+        })
+        .catch(planToWatchError => {
+            localStorage.setItem('errorType', 'error_anime_lists');
+            setLoaded(true);
+            setError(true);
+            setDisplayError(true);
+        });
+    })
+    .catch (animeError => {
+        localStorage.setItem('errorType', 'error_anime_lists');
+        setLoaded(true);
+        setError(true);
+        setDisplayError(true);
+    });
+}
+
 function DisplayAnimeProgress() {
-    const {animeArray, planToWatchArray, ptwError} = useContext(AnimeContext);
+    const [loaded, setLoaded] = useState(false);
+    const [error, setError] = useState(false);
+    const {handleSuccess, watchingList, planToWatchList, setDisplayError} = useContext(AnimeContext)
 
     // Which List
     const [listSelected, setListSelected] = useState('cw');
@@ -99,20 +181,32 @@ function DisplayAnimeProgress() {
             setPTWFilter(value);
         }
     };
+
+    useEffect(() => {
+        getUsersAnime(handleSuccess, setLoaded, setError, setDisplayError);
+    }, []);
     
     return(
         <>
             <div className='progress-display-anime'>
-                {listSelected === 'cw' && 
-                    (<div className='list-of-anime-cards'>
-                        {displayCurrWatchingAnimeList(animeArray)}
-                    </div>)
-                }
-                {listSelected === 'ptw' && 
-                    (<div className='list-of-anime-cards'>
-                        {displayPlanToWatchList(planToWatchArray, ptwError)}
-                    </div>)
-                }
+            {loaded ? (
+                listSelected === 'cw' ? (
+                    <div className='list-of-anime-cards'>
+                        {displayCurrWatchingAnimeList(watchingList, error)}
+                    </div>
+                ) : listSelected === 'ptw' ? (
+                    <div className='list-of-anime-cards'>
+                        {displayPlanToWatchList(planToWatchList, error)}
+                    </div>
+                ) : null 
+            ) : (
+                <div className='anime-card-loading-container'>
+                    <svg className='loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/>
+                    </svg>
+                    <p className='anime-card-loading'>Loading...</p>
+                </div>
+            )}
             </div>
             <svg className='progress-bot-divider' preserveAspectRatio='none' viewBox="0 0 469 51" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="80" y="16.75" width="9.51499" height="9.44579" fill="#E2C893"/>

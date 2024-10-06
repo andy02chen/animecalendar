@@ -22,7 +22,6 @@ function AnimeCard({anime, type}) {
         border: "1px solid #666666",
     };
 
-    console.log(anime);
     return(
         <div className='anime-card'>
             <div>

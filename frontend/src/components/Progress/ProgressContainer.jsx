@@ -2,8 +2,6 @@ import './ProgressContainer.css'
 import defaultpfp from '../imgs/defaultpfp.png';
 import axios from 'axios';
 import { useRef, useEffect, useState} from 'react';
-import { createContext } from 'react';
-import Anime from './Anime';
 import DisplayAnimeProgress from './DisplayAnimeProgress';
 
 // Display Progress Container and hide expand div
@@ -77,100 +75,9 @@ function expandTutorial() {
     }
 }
 
-function generateRandomColour() {
-    const hue = Math.floor(Math.random() * 360);
-    const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
-    const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
-
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
-
-// Assigns a colour to anime if necessary
-function assignAnimeColour(animeData) {
-    if(animeData.air_status === 'currently_airing') {
-        localStorage.setItem(animeData.id+"Colour", generateRandomColour());
-    } else if (animeData.air_status === 'finished_airing') {
-        // Removes the colour marker if anime is no longer airing
-        localStorage.removeItem(animeData.id+"Colour");
-
-        // Removes any delayed eps
-        localStorage.removeItem(animeData.id);
-    }
-}
-
-function getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded, setPTWError) {
-    // Get users watch list
-    axios.get('/api/get-weekly-anime')
-    .then(response => {
-        const storeAnime = response.data.anime;
-        const animeList = [];
-
-        for (let animeData of storeAnime) {
-            assignAnimeColour(animeData);
-            animeList.push(
-                new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
-                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date)
-            );
-        }
-
-        setAnimeArray(a => animeList);
-
-        // Get user's plan to watch list
-        // TODO test and fix
-        axios.get('/api/get-plan-to-watcha')
-        .then(response => {
-            const storePlanToWatch = response.data.plan_to_watch;
-            const planToWatchList = [];
-
-            for (let animePlanned of storePlanToWatch) {
-                planToWatchList.push(
-                    new Anime(
-                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date
-                    )
-                )
-            }
-
-            setPlanToWatch(p => planToWatchList);
-            setLoaded(true);
-        })
-        .catch(planToWatchError => {
-            setPTWError(true);
-            localStorage.setItem('errorType', 'error_get_plan_to_watch');
-            setLoaded(true);
-        });
-    })
-    .catch (animeError => {
-        // TODO
-        console.error(animeError);
-        setLoaded(true);
-    });
-}
-
-export const AnimeContext = createContext([]);
-
 function ProgressContainer() {
-    const [loaded, setLoaded] = useState(false);
-    const [ptwError, setPTWError] = useState(false);
-
     const div1 = useRef(null);
     const progressDiv = useRef(null);
-    const [animeArray, setAnimeArray] = useState([]);
-    const [planToWatchArray, setPlanToWatch] = useState([]);
-
-    // When settings div is expanded but user clicks elsewhere
-    document.addEventListener("click", function(event) {
-        const div = document.getElementById('progress-hidden-settings');
-        const username = document.getElementById('progress-settings-user')
-        let isClickInside = div.contains(event.target) || username.contains(event.target);
-        
-        if (!isClickInside) {
-            div.style.display = "none";
-        }
-    });
-
-    useEffect(() => {
-        getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded, setPTWError);
-    }, []);
 
     // For if user clicks gray area, collapse progress
     useEffect(() => {
@@ -283,18 +190,7 @@ function ProgressContainer() {
                         <path d="M128.295 46.75L118.845 42.4833H459.05L468.5 46.75H128.295Z" fill="#AEBCC5"/>
                         <path d="M324.604 38.2167L316.451 28.6167L332.756 28.6167L324.604 38.2167Z" fill="#0F589C"/>
                         </svg>
-                        {!loaded?
-                            <>
-                                <div className='progress-loading-div'>
-                                    <svg className='spinner-loading' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
-                                    <p className='loading-text'>Loading...</p>
-                                </div>
-                            </>
-                        :
-                            <AnimeContext.Provider value={{animeArray, planToWatchArray, ptwError}}>
-                                <DisplayAnimeProgress/>
-                            </AnimeContext.Provider>
-                        }
+                        <DisplayAnimeProgress/>
                     </div>
                     <div id='collapse-progress-container' >
                         <div className="trapezium" onClick={() => collapseProgressContainer()}>
