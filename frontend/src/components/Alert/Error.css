@@ -11,8 +11,12 @@
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     clip-path: polygon(100% 0, 100% 90%, 95% 100%, 0 100%, 0 0);
     overflow: auto;
-    display: none;
     opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.error-alert-div-shape.show {
+    opacity: 1;
     transition: opacity 0.5s ease;
 }
 

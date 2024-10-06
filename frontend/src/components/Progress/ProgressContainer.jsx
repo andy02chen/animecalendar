@@ -98,7 +98,7 @@ function assignAnimeColour(animeData) {
     }
 }
 
-function getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded) {
+function getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded, setPTWError) {
     // Get users watch list
     axios.get('/api/get-weekly-anime')
     .then(response => {
@@ -115,8 +115,9 @@ function getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded) {
 
         setAnimeArray(a => animeList);
 
-         // Get user's plan to watch list
-        axios.get('/api/get-plan-to-watch')
+        // Get user's plan to watch list
+        // TODO test and fix
+        axios.get('/api/get-plan-to-watcha')
         .then(response => {
             const storePlanToWatch = response.data.plan_to_watch;
             const planToWatchList = [];
@@ -133,8 +134,8 @@ function getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded) {
             setLoaded(true);
         })
         .catch(planToWatchError => {
-            // TODO
-            console.error(planToWatchError);
+            setPTWError(true);
+            localStorage.setItem('errorType', 'error_get_plan_to_watch');
             setLoaded(true);
         });
     })
@@ -149,6 +150,7 @@ export const AnimeContext = createContext([]);
 
 function ProgressContainer() {
     const [loaded, setLoaded] = useState(false);
+    const [ptwError, setPTWError] = useState(false);
 
     const div1 = useRef(null);
     const progressDiv = useRef(null);
@@ -167,7 +169,7 @@ function ProgressContainer() {
     });
 
     useEffect(() => {
-        getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded);
+        getUsersAnime(setAnimeArray, setPlanToWatch, setLoaded, setPTWError);
     }, []);
 
     // For if user clicks gray area, collapse progress
@@ -289,7 +291,7 @@ function ProgressContainer() {
                                 </div>
                             </>
                         :
-                            <AnimeContext.Provider value={{animeArray, planToWatchArray}}>
+                            <AnimeContext.Provider value={{animeArray, planToWatchArray, ptwError}}>
                                 <DisplayAnimeProgress/>
                             </AnimeContext.Provider>
                         }

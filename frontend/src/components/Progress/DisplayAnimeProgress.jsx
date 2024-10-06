@@ -40,12 +40,21 @@ function displayCurrWatchingAnimeList(animeArray) {
 }
 
 // Displays plan to watch list
-function displayPlanToWatchList(planToWatchArray) {
+function displayPlanToWatchList(planToWatchArray, ptwError) {
+    if(ptwError) {
+        return (
+            <div className='anime-card-error'>
+                <h1 className='no-anime-cards-title'>Error getting List</h1>
+                <button>Try again</button>
+            </div>
+        );
+    }
+
     if(planToWatchArray.length === 0) {
         return (
-            <>
+            <div className='anime-card-error'>
                 <h1 className='no-anime-cards-title'>You do not have any anime in your Plan To Watch list.</h1>
-            </>
+            </div>
         );
     }
 
@@ -62,8 +71,7 @@ function displayPlanToWatchList(planToWatchArray) {
 }
 
 function DisplayAnimeProgress() {
-    const [ready, setReady] = useState(false);
-    const {animeArray, planToWatchArray} = useContext(AnimeContext);
+    const {animeArray, planToWatchArray, ptwError} = useContext(AnimeContext);
 
     // Which List
     const [listSelected, setListSelected] = useState('cw');
@@ -102,7 +110,7 @@ function DisplayAnimeProgress() {
                 }
                 {listSelected === 'ptw' && 
                     (<div className='list-of-anime-cards'>
-                        {displayPlanToWatchList(planToWatchArray)}
+                        {displayPlanToWatchList(planToWatchArray, ptwError)}
                     </div>)
                 }
             </div>
