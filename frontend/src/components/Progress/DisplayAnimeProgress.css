@@ -113,7 +113,7 @@
     align-content: center;
     background-color: var(--white);
     clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 #change-list-button-ptw::after {

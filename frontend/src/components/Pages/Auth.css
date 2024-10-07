@@ -34,7 +34,7 @@
 
 .login-page-main-left-title {
     font-family: 'Furore', sans-serif;
-    font-size: 46px;
+    font-size: 3rem;
 }
 
 .glitch {
@@ -108,7 +108,7 @@
 
 .login-page-frame-text {
     fill: var(--secondary-100);
-    font-size: 16px;
+    font-size: 1.2rem;
     font-family: 'Montserrat', sans-serif;
     text-shadow: 1px 1px black;
 }
@@ -164,7 +164,7 @@
 
 .login-div-better {
     font-family: "Furore", sans-serif;
-    font-size: 24px;
+    font-size: 1.5rem;
     color: var(--yellow-300);
 }
 
@@ -186,7 +186,7 @@
     color: var(--accent-500);
     padding: 10px;
     font-family: 'Furore', sans-serif;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 500;
 }
 
@@ -200,6 +200,7 @@
     font-size: 1rem;
     color: var(--white);
     border: 1px solid var(--black);
+    font-weight: bold;
 }
 
 .login-div-mal-button {
@@ -345,7 +346,7 @@
 
 .login-page-contact-title > h1 {
     font-family: 'Furore', sans-serif;
-    font-size: 42px;
+    font-size: 2.6rem;
 }
 
 .login-page-created {
@@ -477,11 +478,11 @@
     }
 
     .login-page-main-left-title {
-        font-size: 40px;
+        font-size: 2.5rem;
     }
 
     .login-page-frame-text {
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     /* Login Right */
@@ -540,7 +541,7 @@
     }
 
     .login-page-main-left-title {
-        font-size: 40px;
+        font-size: 2.5rem;
     }
 
     /* Login Right */
@@ -569,7 +570,7 @@
     }
 
     .login-div-better {
-        font-size: 20px;
+        font-size: 1.25rem;
     }
 
     /* How to use section */
@@ -594,11 +595,11 @@
 
     .how-to-use-div-buttons > div > h1 {
         color: var(--primary-75);
-        font-size: 20px;
+        font-size: 1.25rem;
     }
 
     .how-to-use-div-buttons > div > p {
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     /* Contact Section */
@@ -636,7 +637,7 @@
     }
 
     .login-div-better {
-        font-size: 18px;
+        font-size: 1.125rem;
     }
 }
 

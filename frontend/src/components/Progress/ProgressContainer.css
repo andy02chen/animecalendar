@@ -35,7 +35,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-family: "Furore", sans-serif;
 }
 
@@ -155,7 +155,7 @@
 
 .progress-settings-title {
     font-family: "Montserrat", sans-serif;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .progress-settings-icon {
@@ -174,7 +174,7 @@
 
 .progress-note {
     text-align: center;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-family: "Montserrat", sans-serif;
 }
 
