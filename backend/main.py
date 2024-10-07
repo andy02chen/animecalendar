@@ -214,9 +214,13 @@ def delete_user_session():
 
                 return jsonify({"redirect_url": "/"}), 200
 
-            return jsonify({"redirect_url": "/"}), 401
+            response = jsonify({"redirect_url": "/"})
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response, 401
 
-        return jsonify({"redirect_url": "/"}), 401
+        response = jsonify({"redirect_url": "/"})
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+        return response, 401
     
     except Exception as e:
         app.logger.error(f"Unexpected error in delete_user_session: {e}")

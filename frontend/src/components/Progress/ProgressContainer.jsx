@@ -44,11 +44,10 @@ function logOut() {
         .then(response => {
             localStorage.removeItem('username');
             localStorage.removeItem('pfp');
-            document.cookie = 'session=; Max-Age=-99999999; SameSite=Lax; Secure; path=/';
             window.location.href = response.data.redirect_url;
         })
         .catch(error => {
-            localStorage.setItem('errorMsgDiv', '4');
+            localStorage.setItem('errorType', 'error_logout');
             window.location.href = '/';
         });
 }

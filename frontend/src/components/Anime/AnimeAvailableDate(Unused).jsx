@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
-import AnimeDelayEpConfirmation from "./AnimeDelayEpConfirmation";
-import RateAnime from "./RateAnime";
+import AnimeDelayEpConfirmation from "./AnimeDelayEpConfirmation(Unused)";
+import RateAnime from "./RateAnime(Unused)";
 import "./AnimeAvailableDate.css"
 import { MyContext } from "../Pages/HomePage";
 

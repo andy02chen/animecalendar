@@ -25,6 +25,14 @@ function Error() {
             setErrorMessage(
                 "There was an issue checking your login details. Please try again logging in again, and if the problem persists, consider reporting it."
             )
+        } else if (errorType === 'error_logout') {
+            setErrorMessage(
+                "There was an error logging you out. Don't worry you should still be logged out."
+            )
+        } else if (errorType === 'error_force_logout') {
+            setErrorMessage(
+                "There was an error and you have been logged out."
+            )
         }
 
 

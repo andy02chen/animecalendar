@@ -19,6 +19,10 @@ function refreshAccessToken() {
             localStorage.removeItem("pfp");
             window.location.href = response.data.redirect_url;
         })
+        .catch(error => {
+            localStorage.setItem('errorType', 'error_force_logout');
+            window.location.href = '/';
+        });
     })
 }
 
@@ -60,6 +64,10 @@ function HomePage() {
                     localStorage.removeItem("pfp");
                     window.location.href = response.data.redirect_url;
                 })
+                .catch(error => {
+                    localStorage.setItem('errorType', 'error_force_logout');
+                    window.location.href = '/';
+                });
             });
     }, []);
 

@@ -95,7 +95,7 @@ function Auth()  {
                 setLoggedIn(response.data.loggedIn);
             })
             .catch(error => {
-                // TODO maybe need to handle
+                setLoggedIn(false);
             });
     }, []);
 
