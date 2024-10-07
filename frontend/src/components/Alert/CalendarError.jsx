@@ -17,11 +17,11 @@ function CalenderError({displayError}) {
     useEffect(() => {
         const errorType = localStorage.getItem('errorType');
 
-        if(errorType === 'error_anime_lists') {
-            setErrorMessage(
-                "There was an error getting your anime lists"
-            );
-        }
+        // if(errorType === 'error_anime_lists') {
+        //     setErrorMessage(
+        //         "There was an error getting your anime lists"
+        //     );
+        // }
 
 
     }, [displayError]);

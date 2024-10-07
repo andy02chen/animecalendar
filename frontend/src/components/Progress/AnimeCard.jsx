@@ -13,8 +13,8 @@ function AnimeCard({anime, type}) {
     };
 
     let outerProgress = {
-        height: "20px",
-        width: "80%",
+        height: "1.5rem",
+        width: "60%",
         backgroundColor: "#363636",
         borderRadius: "5px",
         overflow: "hidden",

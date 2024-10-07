@@ -35,6 +35,10 @@
     white-space: normal; 
 }
 
+.error-close-button {
+    cursor: pointer;
+}
+
 .error-alert-header-div {
     display: flex;
     justify-content: space-between;
