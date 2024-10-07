@@ -65,14 +65,15 @@ scheduler.start()
 
 
 # React Router should be doing this
-@app.route('/a')
-@app.route('/home')
-def serve_react_pages():
-    try:
-        return render_template('index.html')
-    except Exception:
-        app.logger.error('Unable to load home page.')
-        abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
+# @app.route('/a')
+# @app.route('/home')
+# def serve_react_pages():
+#     try:
+#         # return render_template('index.html')
+#         return redirect("https://localhost:5173", code=302)
+#     except Exception:
+#         app.logger.error('Unable to load home page.')
+#         abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
 
 # Get Logo Image
 @app.route('/api/logo', methods=["GET"])
@@ -189,7 +190,9 @@ def delete_user_session():
     try:
         # Check limit
         if is_rate_limited(request.remote_addr, request.endpoint, limit=5, period=60):
-            return jsonify({"error": "rate limit exceeded"}), 429
+            response = jsonify({"error": "rate limit exceeded"})
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response, 429
 
         session_id = get_session_id()
 

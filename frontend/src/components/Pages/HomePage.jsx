@@ -1,7 +1,6 @@
 import React, {useState, useEffect, createContext} from 'react'
 import axios from "axios"
 import CalendarPage from './CalendarPage';
-import MainComponent from '../MainComponent'
 
 function loginRedirect() {
     window.location.href = `/a`
@@ -15,10 +14,9 @@ function refreshAccessToken() {
     .catch(error => {
         axios.delete('/api/logout')
         .then(response => {
-            localStorage.setItem('errorMsgDiv', true);
+            localStorage.setItem("errorType", "refresh_token_error");
             localStorage.removeItem("username");
             localStorage.removeItem("pfp");
-            document.cookie = 'session=; Max-Age=-99999999; SameSite=Lax; Secure; path=/';
             window.location.href = response.data.redirect_url;
         })
     })
@@ -40,7 +38,6 @@ export const MyContext = createContext("");
 function HomePage() {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [loginChecked, setLoginChecked] = useState(false);
-    const [user, setUser] = useState("");
 
     // Calls API to check if user is logged in
     useEffect(() => {
@@ -49,8 +46,6 @@ function HomePage() {
                 setLoggedIn(response.data.loggedIn);
                 localStorage.setItem("username",response.data.username);
                 localStorage.setItem("pfp", response.data.picture);
-
-                setUser(response.data.username);
                 setLoginChecked(true);
 
                 if(response.data.loggedIn) {
@@ -58,8 +53,13 @@ function HomePage() {
                 }
             })
             .catch(error => {
-                localStorage.setItem('errorMsgDiv', true);
-                setLoginChecked(true);
+                axios.delete('/api/logout')
+                .then(response => {
+                    localStorage.setItem('errorType', "check_login_error");
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("pfp");
+                    window.location.href = response.data.redirect_url;
+                })
             });
     }, []);
 

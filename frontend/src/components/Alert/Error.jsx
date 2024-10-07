@@ -17,11 +17,15 @@ function Error() {
     useEffect(() => {
         const errorType = localStorage.getItem('errorType');
 
-        // if(errorType === 'error_get_plan_to_watch') {
-        //     setErrorMessage(
-        //         "There was an error getting Plan To Watch list from MyAnimeList"
-        //     )
-        // }
+        if(errorType === 'refresh_token_error') {
+            setErrorMessage(
+                "There was an issue refreshing your MyAnimeList access token. Please try again later, and if the problem persists, consider reporting it."
+            )
+        } else if (errorType === 'check_login_error') {
+            setErrorMessage(
+                "There was an issue checking your login details. Please try again logging in again, and if the problem persists, consider reporting it."
+            )
+        }
 
 
     }, []);

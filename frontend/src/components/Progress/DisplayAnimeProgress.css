@@ -42,6 +42,18 @@
     gap: 10px;
 }
 
+.anime-card-loading-spinner {
+    height: auto;
+    width: 75px;
+    animation: spin 0.8s linear infinite;
+    fill: var(--text);
+}
+
+@keyframes spin {
+    0% {transform:rotate(0deg);}
+    100% {transform:rotate(360deg);}
+}
+
 .anime-card-loading {
     text-align: center;
     margin: 10px;
@@ -85,6 +97,8 @@
     align-items: center; 
     justify-content: center;
     transition: background-color 0.5s ease;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 700;
 }
 
 .change-list-button:hover {

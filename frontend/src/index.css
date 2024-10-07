@@ -102,6 +102,7 @@ body {
 
 p,h1 {
     color: var(--text);
+    font-family: 'Montserrat', Arial, sans-serif;
 }
 
 img {
