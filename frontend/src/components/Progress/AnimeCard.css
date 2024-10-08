@@ -1,5 +1,4 @@
 .anime-card {
-    /* height: 250px; */
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -28,7 +27,7 @@
 }
 
 .card-image-div > img {
-    max-height: 200px;
+    max-height: 12.5rem;
 }
 
 .card-progress {

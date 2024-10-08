@@ -11,9 +11,9 @@
 .calendar-container > div {
     height: 100%;
     width: 100%;
-    min-width: 320px;
-    min-height: 500px;
-    max-height: 1024px;
+    min-width: 20rem;
+    min-height: 31.25rem;
+    max-height: 64rem;
 }
 
 .calendar-svg-mobile {
@@ -27,11 +27,11 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    max-width: 1400px;
-    max-height: 1080px;
+    max-width: 87.5rem;
+    max-height: 67.5rem;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 64rem) {
     .calendar-svg-pc {
         display: block;
     }
@@ -45,25 +45,25 @@
     }
 }
 
-@media screen and (min-width: 1440px) {
+@media screen and (min-width: 87.5rem) {
     .calendar-container {
         background: var(--white);
         height: 100vh;
-        max-width: 1400px;
+        max-width: 87.5rem;
         display: flex;
         overflow-x: auto;
         overflow-y: hidden;
     }
 
     .calendar-container > div {
-        max-height: 1080px;
-        max-width: 1400px;
+        max-height: 67.5rem;
+        max-width: 87.5rem;
         flex-grow: 1;
     }
 }
 
 /* Add scroll bar when screen height less than 500px */
-@media screen and (max-height: 500px) {
+@media screen and (max-height: 31.25rem) {
     .calendar-container {
         overflow-y: auto;
         align-items: normal;
