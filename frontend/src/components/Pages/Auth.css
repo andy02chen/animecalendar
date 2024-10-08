@@ -1,7 +1,7 @@
 /* Main Section */
 .login-page-main {
     width: 100%;
-    height: 600px;
+    height: 37.5rem;
     background-color: var(--primary-500);
     background-image: url('../imgs/background.jpg');
     background-size: cover;
@@ -24,7 +24,7 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    max-width: 700px;
+    max-width: 43.75rem;
 }
 
 .login-page-main-left-frame {
@@ -102,13 +102,13 @@
     justify-content: center;
     align-items: center;
     width: 80%;
-    height: 350px;
+    height: 21rem;
     overflow: hidden;
 }
 
 .login-page-frame-text {
     fill: var(--secondary-100);
-    font-size: 1.2rem;
+    font-size: 20px;
     font-family: 'Montserrat', sans-serif;
     text-shadow: 1px 1px black;
 }
@@ -130,14 +130,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 700px;
+    max-width: 43.75rem;
 }
 
 .login-page-main-right-frame {
     width: 95%;
     height: auto;
-    max-height: 400px;
-    max-width: 700px;
+    max-height: 25rem;
+    max-width: 43.75rem;
     position: relative;
     display: flex;
     justify-content: center;
@@ -147,8 +147,8 @@
 .login-frame {
     width: 95%;
     height: auto;
-    max-height: 400px;
-    max-width: 700px;
+    max-height: 25rem;
+    max-width: 43.75rem;
 }
 
 .login-div-overlay {
@@ -169,7 +169,7 @@
 }
 
 .choice-div-line {
-    max-width: 700px;
+    max-width: 43.75rem;
     width: 80%;
     height: 2px;
     background-color: var(--accent-500);
@@ -251,7 +251,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    max-width: 1400px;
+    max-width: 87.5rem;
     gap: 15px;
 }
 
@@ -276,8 +276,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 750px;
-    max-height: 500px;
+    width: 46.875rem;
+    max-height: 31.25rem;
     transition: max-height 0.5s ease;
 }
 
@@ -300,13 +300,13 @@
 
 .how-to-use-div-buttons .display-instructions {
     border: 3px solid var(--yellow-100);
-    max-height: 500px;
+    max-height: 31.25rem;
 }
 
 /* Contact Section */
 .login-page-contact {
-    max-height: 200px;
-    height: 200px;
+    max-height: 12.5rem;
+    height: 12.5rem;
     background-color: var(--primary-400);
     display: flex;
     flex-direction: column;
@@ -320,7 +320,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    max-width: 700px;
+    max-width: 43.75rem;
 }
 
 .login-page-contact-icons {
@@ -328,7 +328,7 @@
     width: auto;
     fill: var(--text);
     transition: transform 0.2s ease-in-out;
-    max-width: 120px; 
+    max-width: 7.5rem; 
 }
 
 .login-page-contact-icons:hover {
@@ -374,8 +374,8 @@
 
 /* Header */
 .login-page-header {
-    max-height: 100px;
-    height: 60px;
+    max-height: 6.25rem;
+    height: 3.75rem;
     position: sticky;
     z-index: 1000;
     background-color: var(--white);
@@ -387,7 +387,7 @@
 }
 
 .login-page-header div {
-    max-width: 1400px;
+    max-width: 87.5rem;
     height: 100%;
     width: 100%;
     padding: 10px 30px 10px 30px;
@@ -399,7 +399,7 @@
 
 /* Logo */
 .logo {
-    max-height: 40px;
+    max-height: 2.5rem;
     border-radius: 5px;
 }
 
@@ -458,22 +458,22 @@
 }
 
 /* Tablet View */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 48rem) and (max-width: 63.938rem) {
     .login-page-main {
-        height: 800px;
+        height: 50rem;
         flex-direction: column;
     }
 
     /* Login Left */
     .login-page-main-left {
         gap: 8px;
-        max-width: 700px;
-        max-height: 490px;
+        max-width: 43.75rem;
+        max-height: 30.625rem;
     }
 
     .login-page-main-left-demo {
         width: 80%;
-        height: 350px;
+        height: 21.875rem;
         overflow: hidden;
     }
 
@@ -487,39 +487,39 @@
 
     /* Login Right */
     .login-page-main-right {
-        max-width: 700px;
-        max-height: 250px;
+        max-width: 43.75rem;
+        max-height: 15.625rem;
     }
 
     .login-div-overlay {
         height: 100%;
         width: 100%;
-        max-height: 300px;
-        max-width: 450px;
+        max-height: 18.75rem;
+        max-width: 28.125rem;
     }
 
     .login-page-main-right-frame {
         width: 95%;
         height: auto;
-        max-height: 300px;
-        max-width: 450px;
+        max-height: 18.75rem;
+        max-width: 28.125rem;
     }
 
     .login-frame {
         height: 100%;
-        max-height: 300px;
-        max-width: 450px;
+        max-height: 18.75rem;
+        max-width: 28.125rem;
     }
 }
 
 /* Mobile View */
-@media (max-width: 767px) {
+@media (max-width: 47.938rem) {
     .login-page-header div {
         padding: 10px;
     }
 
     .login-page-main {
-        height: 800px;
+        height: 50rem;
         flex-direction: column;
         padding-left: 10px;
         padding-right: 10px;
@@ -530,13 +530,13 @@
     /* Login Left */
     .login-page-main-left {
         gap: 0px;
-        max-width: 700px;
-        max-height: 490px;
+        max-width: 43.75rem;
+        max-height: 30.625rem;
     }
 
     .login-page-main-left-demo {
         width: 100%;
-        height: 300px;
+        height: 18.75rem;
         overflow: hidden;
     }
 
@@ -546,15 +546,15 @@
 
     /* Login Right */
     .login-page-main-right {
-        max-width: 700px;
-        max-height: 250px;
+        max-width: 43.75rem;
+        max-height: 15.625rem;
     }
 
     .login-page-main-right-frame {
         width: 95%;
         height: auto;
-        max-height: 300px;
-        max-width: 450px;
+        max-height: 18.75rem;
+        max-width: 28.125rem;
     }
 
     .login-div-overlay {
@@ -613,12 +613,12 @@
     }
 
     .login-page-contact {
-        height: 600px;
-        max-height: 600px;
+        height: 37.5rem;
+        max-height: 37.5rem;
     }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 26.563rem) {
     .login-page-main-left-title {
         overflow: hidden;
     }
@@ -641,7 +641,7 @@
     }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 23.438rem) {
     .login-frame {
         transform: scale(200);
     }
