@@ -57,17 +57,31 @@ function HomePage() {
                 }
             })
             .catch(error => {
-                axios.delete('/api/logout')
-                .then(response => {
-                    localStorage.setItem('errorType', "check_login_error");
-                    localStorage.removeItem("username");
-                    localStorage.removeItem("pfp");
-                    window.location.href = response.data.redirect_url;
-                })
-                .catch(error => {
-                    localStorage.setItem('errorType', 'error_force_logout');
-                    window.location.href = '/';
-                });
+                if(error.response.status === 429) {
+                    axios.delete('/api/logout')
+                    .then(response => {
+                        localStorage.setItem("errorType", "rate_limit_error");
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("pfp");
+                        window.location.href = '/';
+                    })
+                    .catch(error => {
+                        localStorage.setItem("errorType", "rate_limit_error");
+                        window.location.href = '/';
+                    });
+                } else {
+                    axios.delete('/api/logout')
+                    .then(response => {
+                        localStorage.setItem('errorType', "check_login_error");
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("pfp");
+                        window.location.href = response.data.redirect_url;
+                    })
+                    .catch(error => {
+                        localStorage.setItem('errorType', 'error_force_logout');
+                        window.location.href = '/';
+                    });
+                }
             });
     }, []);
 

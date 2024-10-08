@@ -95,6 +95,9 @@ function Auth()  {
                 setLoggedIn(response.data.loggedIn);
             })
             .catch(error => {
+                if(error.response.status === 429) {
+                    localStorage.setItem("errorType", "rate_limit_error");
+                }
                 setLoggedIn(false);
             });
     }, []);

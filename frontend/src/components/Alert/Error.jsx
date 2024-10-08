@@ -33,6 +33,10 @@ function Error() {
             setErrorMessage(
                 "There was an error and you have been logged out."
             )
+        } else if (errorType === 'rate_limit_error') {
+            setErrorMessage(
+                "You are going a bit too fast! Please wait a moment and try again."
+            )
         }
 
 
