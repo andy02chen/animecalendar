@@ -34,7 +34,11 @@ function AnimeCard({anime, type}) {
                 <div className='card-progress-div'>
                     {type === "cw" && 
                         <>
-                            <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
+                            <div className='anime-card-progress-buttons'>
+                                <button>-</button>
+                                <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
+                                <button>+</button>
+                            </div>
                             <div style={outerProgress}><div style={innerProgress}></div></div>
                             <div className='card-progress-buttons'>
                                 <button className="card-progress-button negative-button">
