@@ -94,7 +94,18 @@
 }
 
 .change-list-button {
-    clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
+    /* clip-path: polygon(0 0, 100% 0, 100% 100%, 95% 100%, 95% 90%, 85% 90%, 85% 100%, 8% 100%, 0 70%);
+    height: 3.125rem;
+    width: 50%;
+    border: none;
+    cursor: pointer;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 700;
+    outline: transparent;
+    position: relative; */
+
+    /* clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%); */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 95% 100%, 95% 90%, 85% 90%, 85% 100%, 8% 100%, 0 70%);
     width: 50%;
     height: 3.125rem;
     border: none;
@@ -105,6 +116,7 @@
     align-items: center; 
     justify-content: center;
     transition: background-color 0.5s ease;
+    font-size: 1rem;
     font-family: "Montserrat", Arial, sans-serif;
     font-weight: 700;
 }
@@ -113,23 +125,21 @@
     background-color: var(--primary-200);
 }
 
-#change-list-button-ptw::after, #change-list-button-cw::after{
-    content: "";
-    width: calc(100% - 5px);
-    height: 2.813rem;
-    position: absolute; 
-    align-content: center;
-    background-color: var(--white);
-    clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
-    font-size: 1rem;
+.change-list-button:after,
+.change-list-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 95% 100%, 95% 90%, 85% 90%, 85% 100%, 8% 100%, 0 70%);
+    z-index: -1;
 }
 
-#change-list-button-ptw::after {
-    content: "Plan To Watch";
-}
-
-#change-list-button-cw::after {
-    content: "Currently Watching";
+.change-list-button:after {
+    background: var(--white);
+    transform: translate(-4px, 0);
 }
 
 .display-anime-filters {

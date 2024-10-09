@@ -246,15 +246,6 @@ function DisplayAnimeProgress() {
                         null
                     }
                 </div>
-                // listSelected === 'cw' ? (
-                //     <div className='list-of-anime-cards'>
-                //         {displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded)}
-                //     </div>
-                // ) : listSelected === 'ptw' ? (
-                //     <div className='list-of-anime-cards'>
-                //         {displayPlanToWatchList(planToWatchList, error, handleSuccess, setError, setLoaded)}
-                //     </div>
-                // ) : null 
             ) : (
                 <div className='anime-card-loading-container'>
                     <svg className='anime-card-loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

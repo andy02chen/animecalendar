@@ -37,10 +37,10 @@ function AnimeCard({anime, type}) {
                             <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
                             <div style={outerProgress}><div style={innerProgress}></div></div>
                             <div className='card-progress-buttons'>
-                                <button>
+                                <button className="card-progress-button negative-button">
                                     Delayed
                                 </button>
-                                <button>
+                                <button className="card-progress-button positive-button">
                                     Watched
                                 </button>
                             </div>
