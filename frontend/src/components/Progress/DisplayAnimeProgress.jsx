@@ -11,11 +11,15 @@ function changeDisplayedList(list, setListSelected, selected) {
     if(list !== selected) {
         document.getElementById(`change-list-button-${list}`).classList.add('active-list');
         document.getElementById(`${selected}-anime-filters`).classList.add('hide');
+        
+        const list2 = document.getElementById('progress-display-anime-list');
+        list2.classList.add('change');
+
         setTimeout(() => {
             document.getElementById(`change-list-button-${selected}`).classList.remove('active-list');
             setListSelected(list);
+            list2.classList.remove('change');
         }, 500);
-        
     }
 }
 
@@ -230,17 +234,27 @@ function DisplayAnimeProgress() {
     
     return(
         <>
-            <div className='progress-display-anime'>
+            <div className='progress-display-anime' id='progress-display-anime-list'>
             {loaded ? (
-                listSelected === 'cw' ? (
-                    <div className='list-of-anime-cards'>
-                        {displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded)}
-                    </div>
-                ) : listSelected === 'ptw' ? (
-                    <div className='list-of-anime-cards'>
-                        {displayPlanToWatchList(planToWatchList, error, handleSuccess, setError, setLoaded)}
-                    </div>
-                ) : null 
+                <div className='list-of-anime-cards'>
+                    {listSelected === 'cw' ?
+                        displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded)
+                        :
+                        listSelected === 'ptw' ?
+                        displayPlanToWatchList(planToWatchList, error, handleSuccess, setError, setLoaded)
+                        :
+                        null
+                    }
+                </div>
+                // listSelected === 'cw' ? (
+                //     <div className='list-of-anime-cards'>
+                //         {displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded)}
+                //     </div>
+                // ) : listSelected === 'ptw' ? (
+                //     <div className='list-of-anime-cards'>
+                //         {displayPlanToWatchList(planToWatchList, error, handleSuccess, setError, setLoaded)}
+                //     </div>
+                // ) : null 
             ) : (
                 <div className='anime-card-loading-container'>
                     <svg className='anime-card-loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
