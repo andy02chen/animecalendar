@@ -80,6 +80,14 @@
     transform: translateY(-2px);
 }
 
+.positive-button:active {
+    background: var(--primary-300);
+}
+
+.negative-button:active {
+    background: var(--accent-500);
+}
+
 .anime-card-progress-buttons {
     display: flex;
     gap: 20px;
@@ -92,4 +100,25 @@
     width: 40px;
     height: 40px;
     font-size: 1.5rem;
+}
+
+.anime-card-change-progress-button {
+    background-color: var(--white);
+    color: var(--primary-200);
+    border: 1px solid var(--primary-300);
+    border-radius: 50%;
+    text-align: center;
+}
+
+.anime-card-change-progress-button:hover{
+    cursor: pointer;
+}
+
+.anime-card-change-progress-button:active{
+    background-color: var(--primary-50);
+}
+
+.anime-card-change-progress-button[disabled] {
+    opacity: 20%;
+    pointer-events: none;
 }

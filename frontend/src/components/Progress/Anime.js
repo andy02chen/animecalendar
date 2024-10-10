@@ -10,5 +10,20 @@ export default class Anime {
         this.start_date = start_date;
         this.end_date = end_date;
         this.image = image;
+        this.minProgress = currentProgress;
+    }
+
+    // Increase the episode count
+    increaseProgress() {
+        if (this.currentProgress < this.totalEpisodes || this.totalEpisodes === 0) {
+            this.currentProgress += 1;
+        }
+    }
+
+    //Decrease Progress
+    decreaseProgress() {
+        if(this.currentProgress > this.minProgress) {
+            this.currentProgress -= 1;
+        }
     }
 }

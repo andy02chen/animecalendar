@@ -1,6 +1,32 @@
 import './AnimeCard.css';
+import {useState} from 'react';
+
+
+function increaseAnimeProgress(anime, setUpdate) {
+    anime.increaseProgress();
+    setUpdate(u => !u);
+
+    if(anime.totalEpisodes > 0 && anime.currentProgress === anime.totalEpisodes) {
+        document.getElementById(`increase-progress-${anime.id}`).disabled = true;
+    }
+
+    // if(anime.currentProgress > anime.minProgress) {
+    //     document.getElementById(`decrease-progress-${anime.id}`).disabled = false;
+    // }
+}
+
+function decreaseAnimeProgress(anime, setUpdate) {
+    anime.decreaseProgress();
+    setUpdate(u => !u);
+
+    if (anime.currentProgress === anime.minProgress) {
+        document.getElementById(`increase-progress-${anime.id}`).disabled = false;
+    }
+}
 
 function AnimeCard({anime, type}) {
+
+    const [update, setUpdate] = useState(false);
     
     // Progress Bar Styling
     let progress = anime.totalEpisodes === 0 ? 60: (anime.currentProgress / anime.totalEpisodes) * 100;
@@ -35,9 +61,10 @@ function AnimeCard({anime, type}) {
                     {type === "cw" && 
                         <>
                             <div className='anime-card-progress-buttons'>
-                                <button>-</button>
+                                <button className="anime-card-change-progress-button" id={`decrease-progress-${anime.id}`} disabled={anime.currentProgress <= anime.minProgress} 
+                                onClick={() => decreaseAnimeProgress(anime, setUpdate)}>-</button>
                                 <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
-                                <button>+</button>
+                                <button className='anime-card-change-progress-button' id={`increase-progress-${anime.id}`} onClick={() => increaseAnimeProgress(anime, setUpdate)}>+</button>
                             </div>
                             <div style={outerProgress}><div style={innerProgress}></div></div>
                             <div className='card-progress-buttons'>
