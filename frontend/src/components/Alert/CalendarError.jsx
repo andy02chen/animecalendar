@@ -11,17 +11,17 @@ function closeError() {
     }, 500);
 }
 
-function CalenderError({displayError}) {
+function CalendarError({displayError}) {
     const [errorMessage, setErrorMessage] = useState("");
     
     useEffect(() => {
         const errorType = localStorage.getItem('errorType');
 
-        // if(errorType === 'error_anime_lists') {
-        //     setErrorMessage(
-        //         "There was an error getting your anime lists"
-        //     );
-        // }
+        if(errorType === 'update_anime_error') {
+            setErrorMessage(
+                "There was an error updating progress. Please try again later."
+            );
+        }
 
 
     }, [displayError]);
@@ -43,4 +43,4 @@ function CalenderError({displayError}) {
     );
 }
 
-export default CalenderError;
+export default CalendarError;

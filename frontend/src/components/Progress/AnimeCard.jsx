@@ -1,6 +1,6 @@
 import './AnimeCard.css';
-import {useState} from 'react';
-
+import {useState, useContext} from 'react';
+import { AnimeContext } from '../Pages/CalendarPage';
 
 function increaseAnimeProgress(anime, setUpdate) {
     anime.increaseProgress();
@@ -20,14 +20,14 @@ function decreaseAnimeProgress(anime, setUpdate) {
     }
 }
 
-function updateAnimeProgress(anime, setUpdate, setLoading) {
+function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError) {
     setLoading(true);
     anime.updateWatchedEpisodes().then((result) => {
     if (result) {
         setUpdate(u => !u);
     } else {
-        console.log('API call failed.');
-        // TODO make error popup
+        localStorage.setItem('errorType', 'update_anime_error');
+        setDisplayError(e => !e);
     }
     setLoading(false);
     });
@@ -37,6 +37,7 @@ function AnimeCard({anime, type}) {
 
     const [update, setUpdate] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { setDisplayError } = useContext(AnimeContext);
     
     // Progress Bar Styling
     let progress = anime.totalEpisodes === 0 ? 60: (anime.currentProgress / anime.totalEpisodes) * 100;
@@ -82,7 +83,7 @@ function AnimeCard({anime, type}) {
                                     Delayed
                                 </button>
                                 <button className="card-progress-button positive-button" disabled={anime.currentProgress === anime.minProgress}
-                                onClick={() => updateAnimeProgress(anime, setUpdate, setLoading)}>
+                                onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError)}>
                                     Watched
                                 </button>
                             </div>
