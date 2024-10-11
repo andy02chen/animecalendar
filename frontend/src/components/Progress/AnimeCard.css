@@ -129,3 +129,24 @@
     opacity: 20%;
     pointer-events: none;
 }
+
+.loading-update-anime {
+    height: auto;
+    width: 75px;
+    animation: spin 0.8s linear infinite;
+    fill: var(--text);
+}
+
+.loading-update-anime-text {
+    font-size: 1.25rem;
+    font-family: "Lato", Arial, sans-serif;
+}
+
+@keyframes spin {
+    0% {transform:rotate(0deg);}
+    100% {transform:rotate(360deg);}
+}
+
+.loading-container-update-anime {
+    margin-top: 10px;
+}
