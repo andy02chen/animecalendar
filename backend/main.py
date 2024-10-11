@@ -125,7 +125,7 @@ def updateStatus():
                     return 'Invalid request data for updating anime', 400
 
                 anime_id = data['anime-id']
-                eps_watched = int(data['eps-watched']) + 1
+                eps_watched = int(data['eps-watched'])
 
                 mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
 

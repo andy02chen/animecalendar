@@ -80,6 +80,12 @@
     transform: translateY(-2px);
 }
 
+.positive-button[disabled] {
+    opacity: 50%;
+    pointer-events: none;
+    user-select: none;
+}
+
 .positive-button:active {
     background: var(--primary-300);
 }
@@ -108,6 +114,7 @@
     border: 1px solid var(--primary-300);
     border-radius: 50%;
     text-align: center;
+    user-select: none;
 }
 
 .anime-card-change-progress-button:hover{

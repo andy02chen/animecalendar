@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default class Anime {
     constructor(id, title, totalEpisodes, currentProgress, air_status, broadcast_time, delayed_eps, end_date, image, start_date) {
         this.id = id;
@@ -24,6 +26,29 @@ export default class Anime {
     decreaseProgress() {
         if(this.currentProgress > this.minProgress) {
             this.currentProgress -= 1;
+        }
+    }
+
+    // Update watched progress
+    // TODO when complete anime
+    // TODO when move from plan to watch to watching
+    async updateWatchedEpisodes() {
+        try {
+            const response = await axios.post('/api/update-anime',
+                {
+                    'anime-id': this.id,
+                    'eps-watched': this.currentProgress,
+                    'completed': false,
+                    'status': 'watching'
+                });
+            
+            if(response.status === 200) {
+                this.minProgress = this.currentProgress;
+                return true;
+            }
+            return false;
+        } catch (error) {
+            return false;
         }
     }
 }

@@ -9,10 +9,6 @@ function increaseAnimeProgress(anime, setUpdate) {
     if(anime.totalEpisodes > 0 && anime.currentProgress === anime.totalEpisodes) {
         document.getElementById(`increase-progress-${anime.id}`).disabled = true;
     }
-
-    // if(anime.currentProgress > anime.minProgress) {
-    //     document.getElementById(`decrease-progress-${anime.id}`).disabled = false;
-    // }
 }
 
 function decreaseAnimeProgress(anime, setUpdate) {
@@ -22,6 +18,17 @@ function decreaseAnimeProgress(anime, setUpdate) {
     if (anime.currentProgress === anime.minProgress) {
         document.getElementById(`increase-progress-${anime.id}`).disabled = false;
     }
+}
+
+function updateAnimeProgress(anime, setUpdate) {
+    anime.updateWatchedEpisodes().then((result) => {
+    if (result) {
+        setUpdate(u => !u);
+    } else {
+        console.log('API call failed.');
+        // TODO make error popup
+    }
+    });
 }
 
 function AnimeCard({anime, type}) {
@@ -71,7 +78,8 @@ function AnimeCard({anime, type}) {
                                 <button className="card-progress-button negative-button">
                                     Delayed
                                 </button>
-                                <button className="card-progress-button positive-button">
+                                <button className="card-progress-button positive-button" disabled={anime.currentProgress === anime.minProgress}
+                                onClick={() => updateAnimeProgress(anime, setUpdate)}>
                                     Watched
                                 </button>
                             </div>
