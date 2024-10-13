@@ -8,11 +8,74 @@ export default class Anime {
         this.totalEpisodes = totalEpisodes;
         this.air_status = air_status;
         this.broadcast_time = broadcast_time;
-        this.delayed_eps = delayed_eps;
+        this.delayed_eps = this.getDelayedEps();
         this.start_date = start_date;
         this.end_date = end_date;
         this.image = image;
         this.minProgress = currentProgress;
+        this.epsArray = this.getEpsArray();
+    }
+
+    getDelayedEps() {
+        if(localStorage.getItem(this.id) !== null) {
+            return Object.keys(JSON.parse(localStorage.getItem(this.id))).length;
+        }
+
+        return 0;
+    }
+
+    getEpsArray() {
+        if(this.air_status === 'finished_airing') {
+            return [];
+        }
+
+        let isoTime = null;
+
+        if(this.broadcast_time !== null) {
+            // Get anime broadcast date and time then convert it to local time
+            const jstDateTimeStr = `${this.start_date}T${this.broadcast_time}:00+09:00`;
+            const jstDate = new Date(jstDateTimeStr);
+            isoTime = jstDate.toISOString();
+
+        } else {
+            // Default to 12am
+            const defaultTime = "23:59:59";
+            const dateTimeStr = `${this.start_date}T${defaultTime}`;
+            const newDate = new Date(dateTimeStr);
+            isoTime = newDate.toISOString();
+        }
+
+        // Calculates the episode dates and stores them
+        const epsArray = [];
+        const delayEpsDictString = localStorage.getItem(this.id);
+        let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
+        const today = new Date();
+
+        let delaysToAdd = 0;
+
+        if (this.totalEpisodes !== 0) {
+            // Calculates estimated release dates for all episodes
+            for(let i = 0; i < this.totalEpisodes; i++) {
+                const epDate = new Date(isoTime);
+                const delaysThisWeek = delayedEpsDict[`${i}`];
+                let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
+                delaysToAdd = delaysToAdd + addToTotalDelays;
+                epDate.setDate(epDate.getDate() + (7 * (i + delaysToAdd)));
+                epsArray.push(epDate.toISOString());
+            }
+        } else {
+            // Calculates the user's next ep is total is unknown
+            for(let i = 0; i < this.currentProgress + 1; i++) {
+                const epDate = new Date(isoTime);
+                const delaysThisWeek = delayedEpsDict[`${i}`];
+                let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
+                delaysToAdd = delaysToAdd + addToTotalDelays;
+                epDate.setDate(epDate.getDate() + (7 * (i + delaysToAdd)));
+                epsArray.push(epDate.toISOString());
+            }
+        }
+
+        return epsArray;
     }
 
     // Increase the episode count

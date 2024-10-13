@@ -1,6 +1,7 @@
 import './AnimeCard.css';
 import {useState, useContext} from 'react';
 import { AnimeContext } from '../Pages/CalendarPage';
+import NextEpisodeStatus from './NextEpisodeStatus';
 
 function increaseAnimeProgress(anime, setUpdate) {
     anime.increaseProgress();
@@ -78,6 +79,9 @@ function AnimeCard({anime, type}) {
                                 <button className='anime-card-change-progress-button' id={`increase-progress-${anime.id}`} onClick={() => increaseAnimeProgress(anime, setUpdate)}>+</button>
                             </div>
                             <div style={outerProgress}><div style={innerProgress}></div></div>
+                            <div className='anime-card-status'>
+                                <NextEpisodeStatus anime={anime} type={type}/>
+                            </div>
                             <div className='card-progress-buttons'>
                                 <button className="card-progress-button negative-button">
                                     Delayed
@@ -87,6 +91,14 @@ function AnimeCard({anime, type}) {
                                     Watched
                                 </button>
                             </div>
+                        </>
+                    }
+                    {type === "ptw" && !loading && 
+                        <>
+                            <div className='anime-card-status'>
+                                <NextEpisodeStatus anime={anime} type={type}/>
+                            </div>
+                            {/* TODO add buttons for started watching */}
                         </>
                     }
                     {loading && 
