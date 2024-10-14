@@ -5,6 +5,7 @@ export default class Anime {
         this.id = id;
         this.title = title;
         this.currentProgress = currentProgress;
+        this.displayProgress = currentProgress;
         this.totalEpisodes = totalEpisodes;
         this.air_status = air_status;
         this.broadcast_time = broadcast_time;
@@ -126,6 +127,8 @@ export default class Anime {
             
             if(response.status === 200) {
                 this.minProgress = this.currentProgress;
+                this.displayProgress = this.currentProgress;
+                this.epsArray = this.getEpsArray();
                 return true;
             }
             return false;

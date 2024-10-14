@@ -1,6 +1,7 @@
 import './NextEpisodeStatus.css';
 
 function NextEpisodeStatus({anime, type}) {
+    console.log(anime);
     if(type === 'ptw') {
         return(
             <p>PlaceHolder text for plan to watch</p>
@@ -29,14 +30,14 @@ function NextEpisodeStatus({anime, type}) {
                 const airDay = dateArr[0];
 
                 return(
-                    <p className='next-episode-status-text'>{`Ep. ${anime.currentProgress + 1} is estimated to air on ${airDay}, ${airDate} ${airMonth} ${airYear}`}</p>
+                    <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} is estimated to air on ${airDay}, ${airDate} ${airMonth} ${airYear}`}</p>
                 );
 
             } else if (anime.daysTillRelease > 0 && anime.daysTillRelease <= 1) {
 
             } else if (anime.daysTillRelease < 0) {
                 return(
-                    <p className='next-episode-status-text'>{`Ep. ${anime.currentProgress + 1} available to watch now`}</p>
+                    <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} available to watch now`}</p>
                 );
             }
 
@@ -46,7 +47,7 @@ function NextEpisodeStatus({anime, type}) {
         }
 
         return(
-            <p className='next-episode-status-text'>Anime has not finished and is not currently airing. Are you sure this is watchable?</p>
+            <p className='next-episode-status-text'>According to MAL data, this anime is not finished or currently airing. Check back again when it officially releases for episode information.</p>
         )
     }
     return(null);
