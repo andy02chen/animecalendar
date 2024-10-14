@@ -83,13 +83,22 @@ function AnimeCard({anime, type}) {
                                 <NextEpisodeStatus anime={anime} type={type}/>
                             </div>
                             <div className='card-progress-buttons'>
-                                <button className="card-progress-button negative-button">
-                                    Delayed
-                                </button>
-                                <button className="card-progress-button positive-button" disabled={anime.currentProgress === anime.minProgress}
-                                onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError)}>
-                                    Watched
-                                </button>
+                                {anime.air_status === 'finished_airing' ? 
+                                    null
+                                    :
+                                    <button className="card-progress-button negative-button">
+                                        Delayed
+                                    </button>
+                                }
+                                {anime.currentProgress === anime.minProgress ?
+                                    null
+                                    :
+                                    <button className="card-progress-button positive-button"
+                                    onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError)}>
+                                        Watched
+                                    </button>
+                                }
+                                
                             </div>
                         </>
                     }

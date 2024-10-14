@@ -14,6 +14,20 @@ export default class Anime {
         this.image = image;
         this.minProgress = currentProgress;
         this.epsArray = this.getEpsArray();
+
+        if(this.air_status === 'currently_airing') {
+            this.startCountDown();
+        }
+    }
+
+    startCountDown() {
+        this.countdownInterval = setInterval(() => {
+            this.countdown -= 1000;
+
+            if (this.countdown <= 0) {
+                clearInterval(this.countdownInterval);
+            }
+        }, 1000);
     }
 
     getDelayedEps() {
@@ -25,7 +39,7 @@ export default class Anime {
     }
 
     getEpsArray() {
-        if(this.air_status === 'finished_airing') {
+        if(this.air_status === 'finished_airing' || this.air_status === 'not_yet_aired') {
             return [];
         }
 
@@ -49,8 +63,6 @@ export default class Anime {
         const epsArray = [];
         const delayEpsDictString = localStorage.getItem(this.id);
         let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
-        const today = new Date();
-
         let delaysToAdd = 0;
 
         if (this.totalEpisodes !== 0) {
@@ -74,6 +86,13 @@ export default class Anime {
                 epsArray.push(epDate.toISOString());
             }
         }
+
+        this.nextEpDate = new Date(epsArray[this.currentProgress]);
+        const now = new Date();
+        
+        // Gets days until next episode release
+        this.countdown = this.nextEpDate - now;
+        this.daysTillRelease = this.countdown / (1000 * 60 * 60 * 24);
 
         return epsArray;
     }
