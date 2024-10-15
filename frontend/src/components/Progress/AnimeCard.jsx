@@ -16,12 +16,17 @@ function decreaseAnimeProgress(anime, setUpdate) {
     anime.decreaseProgress();
     setUpdate(u => !u);
 
-    if (anime.currentProgress === anime.minProgress) {
+    if (anime.currentProgress === anime.minProgress || anime.currentProgress < anime.totalEpisodes) {
         document.getElementById(`increase-progress-${anime.id}`).disabled = false;
     }
 }
 
-function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError) {
+function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating) {
+    if(anime.currentProgress === anime.totalEpisodes) {
+        anime.markCompleted();
+    }
+
+    anime.setRating(rating);
     setLoading(true);
     anime.updateWatchedEpisodes().then((result) => {
     if (result) {
@@ -39,6 +44,12 @@ function AnimeCard({anime, type}) {
     const [update, setUpdate] = useState(false);
     const [loading, setLoading] = useState(false);
     const { setDisplayError } = useContext(AnimeContext);
+
+    const [rating, setRating] = useState('0');
+
+    const handleInput = (event) => {
+        setRating(event.target.value);
+    }
     
     // Progress Bar Styling
     let progress = anime.totalEpisodes === 0 ? 60: (anime.currentProgress / anime.totalEpisodes) * 100;
@@ -82,6 +93,22 @@ function AnimeCard({anime, type}) {
                             <div className='anime-card-status'>
                                 <NextEpisodeStatus anime={anime} type={type}/>
                             </div>
+                            {anime.currentProgress === anime.totalEpisodes ?
+                                <div className='anime-card-rating'>
+                                    <input
+                                        style={{width: "80%"}}
+                                        onChange={handleInput} 
+                                        id="rating-slider" 
+                                        type="range" 
+                                        min="0" 
+                                        max="10" 
+                                        defaultValue={rating}
+                                    />
+                                    <p style={{fontSize: "1.5rem", color: "var(--text)", fontWeight: "700"}} id="rating-output">{rating === '0' ? `None` : rating}</p>
+                                </div>
+                                :
+                                null
+                            }
                             <div className='card-progress-buttons'>
                                 {anime.air_status === 'finished_airing' ? 
                                     null
@@ -94,7 +121,7 @@ function AnimeCard({anime, type}) {
                                     null
                                     :
                                     <button className="card-progress-button positive-button"
-                                    onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError)}>
+                                    onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating)}>
                                         Watched
                                     </button>
                                 }

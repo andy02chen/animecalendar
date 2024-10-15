@@ -17,6 +17,15 @@ export default class Anime {
         this.epsArray = this.getEpsArray();
         this.completed = false;
         this.countdown = null;
+        this.rating = null;
+    }
+
+    markCompleted() {
+        this.completed = true;
+    }
+
+    setRating(rating) {
+        this.rating = rating;
     }
 
     getDelayedEps() {
@@ -104,28 +113,48 @@ export default class Anime {
     // TODO when move from plan to watch to watching
     async updateWatchedEpisodes() {
         try {
-            const response = await axios.post('/api/update-anime',
-                {
-                    'anime-id': this.id,
-                    'eps-watched': this.currentProgress,
-                    'completed': false,
-                    'status': 'watching'
-                });
+            let response = null;
+
+            if(this.completed) {
+                let data = {}
+                if(score === 0) {
+                    data = {
+                        'anime-id': this.id,
+                        'eps-watched': this.currentProgress,
+                        'completed': true
+                    }
+                } else {
+                    data = {
+                        'anime-id': this.id,
+                        'eps-watched': this.currentProgress,
+                        'score': this.rating,
+                        'completed': true
+                    }
+                }
+
+                response = await axios.post('/api/update-anime', data);
+            } else {
+                response = await axios.post('/api/update-anime',
+                    {
+                        'anime-id': this.id,
+                        'eps-watched': this.currentProgress,
+                        'completed': false,
+                        'status': 'watching'
+                    });
+            }
             
             if(response.status === 200) {
                 this.minProgress = this.currentProgress;
                 this.displayProgress = this.currentProgress;
-
-                if(this.currentProgress === this.totalEpisodes) {
-                    this.completed = true;
-                }
-
+                this.completed = true;
                 this.epsArray = this.getEpsArray();
 
                 return true;
             }
+            this.completed = false;
             return false;
         } catch (error) {
+            this.completed = false;
             return false;
         }
     }

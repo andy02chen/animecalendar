@@ -1,18 +1,20 @@
 import './Error.css';
 import { useState, useEffect, useRef } from 'react';
 
-function closeError() {
-    localStorage.removeItem('errorType');
-
-    const errorDiv = document.getElementById('error-message-alert');
-    errorDiv.classList.remove('show');
-    setTimeout(() => {
-        errorDiv.style.display = "none";
-    }, 500);
-}
-
 function CalendarError({displayError}) {
     const [errorMessage, setErrorMessage] = useState("");
+    const [hasError, setHasError] = useState(false);
+
+    const closeError = () => {
+        localStorage.removeItem('errorType');
+
+        const errorDiv = document.getElementById('error-message-alert');
+        errorDiv.classList.remove('show');
+        setTimeout(() => {
+            errorDiv.style.display = "none";
+        }, 500);
+        setHasError(false); 
+    }
     
     useEffect(() => {
         const errorType = localStorage.getItem('errorType');
@@ -21,13 +23,14 @@ function CalendarError({displayError}) {
             setErrorMessage(
                 "There was an error updating progress. Please try again later."
             );
+            setHasError(true); 
         }
 
 
     }, [displayError]);
 
     return(
-        displayError && 
+        hasError && 
             (<div className='error-alert-div-shape show' id='error-message-alert' style={{display: 'flex'}}>
                 <div className='error-alert-div-contents'>
                     <div className='error-alert-header-div'>
