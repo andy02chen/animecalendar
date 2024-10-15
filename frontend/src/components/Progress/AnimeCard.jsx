@@ -90,7 +90,7 @@ function AnimeCard({anime, type}) {
                                         Delayed
                                     </button>
                                 }
-                                {anime.currentProgress === anime.minProgress ?
+                                {anime.currentProgress === anime.minProgress || anime.completed?
                                     null
                                     :
                                     <button className="card-progress-button positive-button"

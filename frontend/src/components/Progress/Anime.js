@@ -15,6 +15,7 @@ export default class Anime {
         this.image = image;
         this.minProgress = currentProgress;
         this.epsArray = this.getEpsArray();
+        this.completed = false;
 
         if(this.air_status === 'currently_airing') {
             this.startCountDown();
@@ -128,7 +129,13 @@ export default class Anime {
             if(response.status === 200) {
                 this.minProgress = this.currentProgress;
                 this.displayProgress = this.currentProgress;
+
+                if(this.currentProgress === this.totalEpisodes) {
+                    this.completed = true;
+                }
+
                 this.epsArray = this.getEpsArray();
+
                 return true;
             }
             return false;

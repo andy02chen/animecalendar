@@ -15,6 +15,12 @@ function NextEpisodeStatus({anime, type}) {
         // TODO No broadcast time anime 
         // Finishing anime DONE
 
+        if(anime.completed) {
+            return(
+                <p className='next-episode-status-text'>Completed 🎉</p>
+            );
+        }
+
         // If Anime has finished airing
         if(anime.air_status === 'finished_airing') {
             return(
