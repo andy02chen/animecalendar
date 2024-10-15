@@ -116,8 +116,9 @@ export default class Anime {
             let response = null;
 
             if(this.completed) {
+
                 let data = {}
-                if(score === 0) {
+                if(this.rating === 0) {
                     data = {
                         'anime-id': this.id,
                         'eps-watched': this.currentProgress,
@@ -151,6 +152,7 @@ export default class Anime {
 
                 return true;
             }
+            
             this.completed = false;
             return false;
         } catch (error) {

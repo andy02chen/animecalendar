@@ -93,7 +93,7 @@ function AnimeCard({anime, type}) {
                             <div className='anime-card-status'>
                                 <NextEpisodeStatus anime={anime} type={type}/>
                             </div>
-                            {anime.currentProgress === anime.totalEpisodes ?
+                            {anime.currentProgress === anime.totalEpisodes && !anime.completed ?
                                 <div className='anime-card-rating'>
                                     <input
                                         style={{width: "80%"}}
