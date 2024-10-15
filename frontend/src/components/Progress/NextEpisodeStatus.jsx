@@ -1,7 +1,35 @@
 import './NextEpisodeStatus.css';
+import { useState, useEffect } from 'react';
+
+// Formats the time into HH:MM:SS
+function formatTime(timeRemaining) {
+    let hours = Math.floor(timeRemaining / (1000*60*60));
+    let mins = Math.floor(timeRemaining / (1000*60) % 60);
+    let sec = Math.floor(timeRemaining / (1000) % 60);
+    hours = String(hours).padStart(2, '0')
+    mins = String(mins).padStart(2, '0')
+    sec = String(sec).padStart(2, '0')
+    return `${hours >= 1 ? hours+":" : ""}${mins >= 1 || hours >= 0 ? mins+":" : ""}${sec}`;
+}
 
 function NextEpisodeStatus({anime, type}) {
-    console.log(anime);
+    
+    const [countdown, setCountdown] = useState(anime.countdown);
+
+    useEffect(() => {
+        const countdownInterval = setInterval(() => {
+            setCountdown(c => {
+                if (c <= 0) {
+                    clearInterval(countdownInterval);
+                    return 0;
+                }
+                return c - 1000;
+            });
+        }, 1000);
+
+        return () => clearInterval(countdownInterval);
+    }, []);
+
     if(type === 'ptw') {
         return(
             <p>PlaceHolder text for plan to watch</p>
@@ -9,11 +37,7 @@ function NextEpisodeStatus({anime, type}) {
     } else if (type === 'cw') {
         
         // Cases
-        // Available to watch now DONE
-        // TODO Available within 24 hours 
-        // Available > 24 hours DONE
         // TODO No broadcast time anime 
-        // Finishing anime DONE
 
         if(anime.completed) {
             return(
@@ -40,6 +64,15 @@ function NextEpisodeStatus({anime, type}) {
                 );
 
             } else if (anime.daysTillRelease > 0 && anime.daysTillRelease <= 1) {
+                if(countdown > 0) {
+                    return(
+                        <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} is estimated to air in ${formatTime(countdown)}`}</p>
+                    );
+                }
+
+                return(
+                    <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} available to watch now`}</p>
+                );
 
             } else if (anime.daysTillRelease < 0) {
                 return(

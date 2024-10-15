@@ -16,20 +16,7 @@ export default class Anime {
         this.minProgress = currentProgress;
         this.epsArray = this.getEpsArray();
         this.completed = false;
-
-        if(this.air_status === 'currently_airing') {
-            this.startCountDown();
-        }
-    }
-
-    startCountDown() {
-        this.countdownInterval = setInterval(() => {
-            this.countdown -= 1000;
-
-            if (this.countdown <= 0) {
-                clearInterval(this.countdownInterval);
-            }
-        }, 1000);
+        this.countdown = null;
     }
 
     getDelayedEps() {
@@ -114,7 +101,6 @@ export default class Anime {
     }
 
     // Update watched progress
-    // TODO when complete anime
     // TODO when move from plan to watch to watching
     async updateWatchedEpisodes() {
         try {
