@@ -63,25 +63,49 @@ export default class Anime {
         let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
         let delaysToAdd = 0;
 
+        // Gets number of weeks early
+        let earlyValue = 0;
+        if(localStorage.getItem(this.id + 'early') !== null) {
+            earlyValue = parseInt(localStorage.getItem(this.id + 'early'));
+        }
+
+        
         if (this.totalEpisodes !== 0) {
             // Calculates estimated release dates for all episodes
+            let epCounter = 0
             for(let i = 0; i < this.totalEpisodes; i++) {
                 const epDate = new Date(isoTime);
-                const delaysThisWeek = delayedEpsDict[`${i}`];
-                let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
-                delaysToAdd = delaysToAdd + addToTotalDelays;
-                epDate.setDate(epDate.getDate() + (7 * (i + delaysToAdd)));
-                epsArray.push(epDate.toISOString());
+
+                if(epCounter !== earlyValue) {
+                    epsArray.push(epDate.toISOString());
+                    epCounter += 1
+                } else {
+                    const delaysThisWeek = delayedEpsDict[`${i}`];
+                    let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
+                    delaysToAdd = delaysToAdd + addToTotalDelays;
+
+                    epDate.setDate(epDate.getDate() + (7 * ((i - earlyValue) + delaysToAdd)));
+                    epsArray.push(epDate.toISOString());
+                }
             }
         } else {
             // Calculates the user's next ep is total is unknown
+            let epCounter = 0
             for(let i = 0; i < this.currentProgress + 1; i++) {
                 const epDate = new Date(isoTime);
-                const delaysThisWeek = delayedEpsDict[`${i}`];
-                let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
-                delaysToAdd = delaysToAdd + addToTotalDelays;
-                epDate.setDate(epDate.getDate() + (7 * (i + delaysToAdd)));
-                epsArray.push(epDate.toISOString());
+
+                
+                if(epCounter !== earlyValue) {
+                    epsArray.push(epDate.toISOString());
+                    epCounter += 1
+                } else {
+                    const delaysThisWeek = delayedEpsDict[`${i}`];
+                    let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
+                    delaysToAdd = delaysToAdd + addToTotalDelays;
+
+                    epDate.setDate(epDate.getDate() + (7 * ((i - earlyValue) + delaysToAdd)));
+                    epsArray.push(epDate.toISOString());
+                }
             }
         }
 
@@ -147,9 +171,12 @@ export default class Anime {
             if(response.status === 200) {
                 this.minProgress = this.currentProgress;
                 this.displayProgress = this.currentProgress;
-                this.completed = true;
-                this.epsArray = this.getEpsArray();
 
+                if(this.currentProgress === this.totalEpisodes) {
+                    this.completed;
+                }
+
+                this.epsArray = this.getEpsArray();
                 return true;
             }
             

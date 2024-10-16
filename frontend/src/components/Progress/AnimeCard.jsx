@@ -7,6 +7,10 @@ function increaseAnimeProgress(anime, setUpdate) {
     anime.increaseProgress();
     setUpdate(u => !u);
 
+    if(anime.daysTillRelease > 0) {
+        document.getElementById(anime.id+'earlyMsg').style.display = "inline";
+    }
+
     if(anime.totalEpisodes > 0 && anime.currentProgress === anime.totalEpisodes) {
         document.getElementById(`increase-progress-${anime.id}`).disabled = true;
     }
@@ -18,12 +22,24 @@ function decreaseAnimeProgress(anime, setUpdate) {
 
     if (anime.currentProgress === anime.minProgress || anime.currentProgress < anime.totalEpisodes) {
         document.getElementById(`increase-progress-${anime.id}`).disabled = false;
+
+        if(anime.currentProgress === anime.minProgress) {
+            document.getElementById(anime.id+'earlyMsg').style.display = "none";
+        }
     }
 }
 
 function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating) {
     if(anime.currentProgress === anime.totalEpisodes) {
         anime.markCompleted();
+    }
+
+    if(anime.daysTillRelease > 0) {
+        if(localStorage.getItem(anime.id+'early') === null) {
+            localStorage.setItem(anime.id+'early',anime.currentProgress - anime.minProgress);
+        } else {
+            localStorage.setItem(anime.id+'early',parseInt(localStorage.getItem(anime.id+'early'))+1);
+        }
     }
 
     anime.setRating(rating);
@@ -93,6 +109,10 @@ function AnimeCard({anime, type}) {
                             <div className='anime-card-status'>
                                 <NextEpisodeStatus anime={anime} type={type}/>
                             </div>
+                            <p id={anime.id+'earlyMsg'} style={{display: 'none'}} className='early-message'>
+                                Are all episodes releasing <span className='status-highlight'>{anime.currentProgress - anime.minProgress} week(s)</span> early? Click 'Watched' to confirm
+                            </p>
+                            
                             {anime.currentProgress === anime.totalEpisodes && !anime.completed ?
                                 <div className='anime-card-rating'>
                                     <input

@@ -6,9 +6,9 @@ function Popup() {
 
     useEffect(() => {
         const consentGiven = localStorage.getItem('consentGiven');
-        if (!consentGiven) {
+        if (consentGiven === false) {
             setIsVisible(true);
-        } else {
+        } else if(consentGiven === true) {
             setIsVisible(false);
         }
     }, []);

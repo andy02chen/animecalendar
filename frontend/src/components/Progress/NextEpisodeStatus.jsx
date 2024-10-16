@@ -16,10 +16,12 @@ function NextEpisodeStatus({anime, type}) {
     
     const [countdown, setCountdown] = useState(anime.countdown);
 
+    
+
     useEffect(() => {
         const countdownInterval = setInterval(() => {
             setCountdown(c => {
-                if (c <= 0) {
+                if (c <= 0 || c >= 86400000) {
                     clearInterval(countdownInterval);
                     return 0;
                 }
@@ -37,9 +39,6 @@ function NextEpisodeStatus({anime, type}) {
         );
     } else if (type === 'cw') {
         
-        // Cases
-        // TODO No broadcast time anime 
-
         if(anime.completed) {
             return(
                 <p className='next-episode-status-text'>Completed 🎉</p>
