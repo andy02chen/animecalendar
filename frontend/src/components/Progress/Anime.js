@@ -14,10 +14,10 @@ export default class Anime {
         this.end_date = end_date;
         this.image = image;
         this.minProgress = currentProgress;
-        this.epsArray = this.getEpsArray();
         this.completed = false;
         this.countdown = null;
         this.rating = null;
+        this.epsArray = this.getEpsArray();
     }
 
     markCompleted() {

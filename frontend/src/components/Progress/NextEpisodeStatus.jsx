@@ -26,9 +26,10 @@ function NextEpisodeStatus({anime, type}) {
                 return c - 1000;
             });
         }, 1000);
-
+    
         return () => clearInterval(countdownInterval);
-    }, []);
+    }, [anime.countdown]);
+    
 
     if(type === 'ptw') {
         return(
@@ -48,7 +49,7 @@ function NextEpisodeStatus({anime, type}) {
         // If Anime has finished airing
         if(anime.air_status === 'finished_airing') {
             return(
-                <p className='next-episode-status-text'>All Eps. available to watch</p>
+                <p className='next-episode-status-text'><span className='status-highlight'>All Eps.</span> available to watch</p>
             );
         } else if (anime.air_status === "currently_airing") {
             // If anime if currently airing
@@ -60,23 +61,40 @@ function NextEpisodeStatus({anime, type}) {
                 const airDay = dateArr[0];
 
                 return(
-                    <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} is estimated to air on ${airDay}, ${airDate} ${airMonth} ${airYear}`}</p>
+                    <p className='next-episode-status-text'>
+                        <span className='status-highlight'>Ep. {anime.displayProgress + 1}</span>{` is estimated to air in ${Math.ceil(anime.daysTillRelease)} days on ${airDay}, ${airDate} ${airMonth} ${airYear}`}
+                    </p>
                 );
 
             } else if (anime.daysTillRelease > 0 && anime.daysTillRelease <= 1) {
+                // Anime does not broadcast
+                if(anime.broadcast_time === null) {
+                    return(
+                        <p className='next-episode-status-text'>This anime does not have an airing time.<br/>
+                            <span className='status-highlight'>Ep. {anime.displayProgress + 1} </span>
+                            will be available to watch 
+                            <span className='status-highlight'> within 24 hours.</span>
+                        </p>
+                    );
+                }
+
                 if(countdown > 0) {
                     return(
-                        <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} is estimated to air in ${formatTime(countdown)}`}</p>
+                        <p className='next-episode-status-text'><span className='status-highlight'>Ep. {anime.displayProgress + 1}</span>{` is estimated to air in ${formatTime(countdown)}`}</p>
                     );
                 }
 
                 return(
-                    <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} available to watch now`}</p>
+                    <p className='next-episode-status-text'>
+                        <span className='status-highlight'>Ep. {anime.displayProgress + 1}</span> available to <span className='status-highlight'>watch now</span>
+                        </p>
                 );
 
             } else if (anime.daysTillRelease < 0) {
                 return(
-                    <p className='next-episode-status-text'>{`Ep. ${anime.displayProgress + 1} available to watch now`}</p>
+                    <p className='next-episode-status-text'>
+                        <span className='status-highlight'>Ep. {anime.displayProgress + 1}</span> available to <span className='status-highlight'>watch now</span>
+                    </p>
                 );
             }
 

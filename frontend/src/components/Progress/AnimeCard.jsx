@@ -104,7 +104,7 @@ function AnimeCard({anime, type}) {
                                         max="10" 
                                         defaultValue={rating}
                                     />
-                                    <p style={{fontSize: "1.5rem", color: "var(--text)", fontWeight: "700"}} id="rating-output">{rating === '0' ? `None` : rating}</p>
+                                    <p style={{fontSize: "1.5rem", color: "var(--white)", fontWeight: "700"}} id="rating-output">{rating === '0' ? `None` : rating}</p>
                                 </div>
                                 :
                                 null
