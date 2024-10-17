@@ -18,6 +18,10 @@ export default class Anime {
         this.countdown = null;
         this.rating = null;
         this.epsArray = this.getEpsArray();
+
+        if(this.air_status === 'finished_airing') {
+            this.removeOutdatedLocalStorageData();
+        }
     }
 
     markCompleted() {
@@ -34,6 +38,20 @@ export default class Anime {
         }
 
         return 0;
+    }
+
+    removeOutdatedLocalStorageData() {
+        if(localStorage.getItem(this.id+"Colour")) {
+            localStorage.removeItem(this.id+"Colour");
+        }
+
+        if(localStorage.getItem(this.id+"Early")) {
+            localStorage.removeItem(this.id+"Early");
+        }
+
+        if(localStorage.getItem(this.id)) {
+            localStorage.removeItem(this.id);
+        }
     }
 
     getEpsArray() {
@@ -80,7 +98,7 @@ export default class Anime {
                     epsArray.push(epDate.toISOString());
                     epCounter += 1
                 } else {
-                    const delaysThisWeek = delayedEpsDict[`${i}`];
+                    const delaysThisWeek = delayedEpsDict[`${i+1}`];
                     let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
                     delaysToAdd = delaysToAdd + addToTotalDelays;
 
@@ -99,7 +117,7 @@ export default class Anime {
                     epsArray.push(epDate.toISOString());
                     epCounter += 1
                 } else {
-                    const delaysThisWeek = delayedEpsDict[`${i}`];
+                    const delaysThisWeek = delayedEpsDict[`${i+1}`];
                     let addToTotalDelays = delaysThisWeek === undefined ? 0 : delaysThisWeek;
                     delaysToAdd = delaysToAdd + addToTotalDelays;
 

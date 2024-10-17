@@ -3,9 +3,10 @@ import {useState, useContext} from 'react';
 import { AnimeContext } from '../Pages/CalendarPage';
 import NextEpisodeStatus from './NextEpisodeStatus';
 
-function increaseAnimeProgress(anime, setUpdate) {
+function increaseAnimeProgress(anime, setUpdate, setShowDelay) {
     anime.increaseProgress();
     setUpdate(u => !u);
+    setShowDelay(false);
 
     if(anime.daysTillRelease > 0) {
         document.getElementById(anime.id+'earlyMsg').style.display = "inline";
@@ -16,9 +17,10 @@ function increaseAnimeProgress(anime, setUpdate) {
     }
 }
 
-function decreaseAnimeProgress(anime, setUpdate) {
+function decreaseAnimeProgress(anime, setUpdate, setShowDelay) {
     anime.decreaseProgress();
     setUpdate(u => !u);
+    setShowDelay(false);
 
     if (anime.currentProgress === anime.minProgress || anime.currentProgress < anime.totalEpisodes) {
         document.getElementById(`increase-progress-${anime.id}`).disabled = false;
@@ -55,16 +57,63 @@ function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rati
     });
 }
 
+// Delay the ep
+function confirmDelay(anime, setShowDelay, delay, setDelay) {
+    if(localStorage.getItem(anime.id) !== null) {
+        const existingDictString = localStorage.getItem(anime.id);
+        let myDict = existingDictString ? JSON.parse(existingDictString) : {};
+
+        if(myDict[anime.currentProgress] === undefined) {
+            myDict[anime.currentProgress] = delay;
+        } else {
+            myDict[anime.currentProgress] = myDict[anime.currentProgress]+ delay;
+        }
+
+        localStorage.setItem(anime.id, JSON.stringify(myDict));
+    } else {
+        const dict = {};
+        dict[anime.currentProgress] = delay;
+        localStorage.setItem(anime.id, JSON.stringify(dict));
+    }
+
+    anime.getEpsArray();
+    setShowDelay(false);
+    setDelay(1);
+}
+
+function showDelayMessage(anime, setShowDelay, setDelay) {
+    setDelay(1);
+    setShowDelay(true);
+    document.getElementById(anime.id+'earlyMsg').style.display = "none";
+    anime.currentProgress = anime.minProgress;
+}
+
 function AnimeCard({anime, type}) {
 
     const [update, setUpdate] = useState(false);
     const [loading, setLoading] = useState(false);
     const { setDisplayError } = useContext(AnimeContext);
+    const [showDelay, setShowDelay] = useState(false);
 
     const [rating, setRating] = useState('0');
+    const [delay, setDelay] = useState(1);
 
     const handleInput = (event) => {
         setRating(event.target.value);
+    }
+
+    // Delay Functions
+    const handleInputChange = (e) => {
+        const newValue = parseInt(e.target.value) || '';
+        setDelay(newValue >= 1 ? newValue : 1);
+    };
+
+    const decreaseDelay = () => {
+        setDelay((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));
+    }
+
+    const increaseDelay = () => {
+        setDelay((prevValue) => prevValue + 1);
     }
     
     // Progress Bar Styling
@@ -101,9 +150,9 @@ function AnimeCard({anime, type}) {
                         <>
                             <div className='anime-card-progress-buttons'>
                                 <button className="anime-card-change-progress-button" id={`decrease-progress-${anime.id}`} disabled={anime.currentProgress <= anime.minProgress} 
-                                onClick={() => decreaseAnimeProgress(anime, setUpdate)}>-</button>
+                                onClick={() => decreaseAnimeProgress(anime, setUpdate, setShowDelay)}>-</button>
                                 <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
-                                <button className='anime-card-change-progress-button' id={`increase-progress-${anime.id}`} onClick={() => increaseAnimeProgress(anime, setUpdate)}>+</button>
+                                <button className='anime-card-change-progress-button' id={`increase-progress-${anime.id}`} onClick={() => increaseAnimeProgress(anime, setUpdate, setShowDelay)}>+</button>
                             </div>
                             <div style={outerProgress}><div style={innerProgress}></div></div>
                             <div className='anime-card-status'>
@@ -112,7 +161,20 @@ function AnimeCard({anime, type}) {
                             <p id={anime.id+'earlyMsg'} style={{display: 'none'}} className='early-message'>
                                 Are all episodes releasing <span className='status-highlight'>{anime.currentProgress - anime.minProgress} week(s)</span> early? Click 'Watched' to confirm
                             </p>
-                            
+                            {showDelay && (
+                                <div className='delay-message'>
+                                    <p>
+                                        How many weeks will <span className='status-highlight'> Ep. {anime.currentProgress + 1} </span>be delayed?
+                                    </p>
+                                    <div className='delay-amount'>
+                                        <button id="delay-decrease" onClick={() => decreaseDelay()}>◀</button>
+                                        <input type="number" id="delayInput" value={delay}
+                                        onChange={handleInputChange}
+                                        min="1"/>
+                                        <button id="delay-increase" onClick={() => increaseDelay()}>▶</button>
+                                    </div>
+                                </div>
+                            )}
                             {anime.currentProgress === anime.totalEpisodes && !anime.completed ?
                                 <div className='anime-card-rating'>
                                     <input
@@ -133,9 +195,15 @@ function AnimeCard({anime, type}) {
                                 {anime.air_status === 'finished_airing' ? 
                                     null
                                     :
-                                    <button className="card-progress-button negative-button">
-                                        Delayed
-                                    </button>
+                                    (showDelay ?
+                                        <button className="card-progress-button positive-button" onClick={() => confirmDelay(anime, setShowDelay, delay, setDelay)}>
+                                            Confirm
+                                        </button>
+                                        :
+                                        <button className="card-progress-button negative-button" onClick={() => showDelayMessage(anime, setShowDelay, setDelay)}>
+                                            Delayed
+                                        </button>
+                                    )
                                 }
                                 {anime.currentProgress === anime.minProgress || anime.completed?
                                     null
