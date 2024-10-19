@@ -70,7 +70,7 @@ function retryGetAnimeLists(handleSuccess, setError, setLoaded) {
 }
 
 // Displays current watching anime list
-function displayCurrWatchingAnimeList(animeArray, error, handleSuccess, setError, setLoaded) {
+function displayCurrWatchingAnimeList(animeArray, error, handleSuccess, setError, setLoaded, cwFilter) {
     if(error) {
         return (
             <div className='anime-card-error'>
@@ -88,6 +88,60 @@ function displayCurrWatchingAnimeList(animeArray, error, handleSuccess, setError
         );
     }
 
+    if(cwFilter === 'curr_airing') {
+        const newArr = [];
+        for(let anime of animeArray) {
+            if(anime.air_status === 'currently_airing') {
+                newArr.push(anime);
+            }
+        }
+
+        if(newArr.length === 0) {
+            return (
+                <div className='anime-card-error'>
+                    <h1 className='no-anime-cards-title'>No anime found for the selected filter</h1>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                {newArr.map((anime, index) => (
+                    <React.Fragment key={anime.id} >
+                        <AnimeCard anime={anime} type={'cw'} />
+                        {index !== newArr.length - 1 && <div className='anime-card-divider'></div>}
+                    </React.Fragment>
+                ))}
+            </>
+        );
+    } else if (cwFilter === 'fin_airing') {
+        const newArr = [];
+        for(let anime of animeArray) {
+            if(anime.air_status === 'finished_airing') {
+                newArr.push(anime);
+            }
+        }
+
+        if(newArr.length === 0) {
+            return (
+                <div className='anime-card-error'>
+                    <h1 className='no-anime-cards-title'>No anime found for the selected filter</h1>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                {newArr.map((anime, index) => (
+                    <React.Fragment key={anime.id} >
+                        <AnimeCard anime={anime} type={'cw'} />
+                        {index !== newArr.length - 1 && <div className='anime-card-divider'></div>}
+                    </React.Fragment>
+                ))}
+            </>
+        );
+    }
+
     return (
         <>
             {animeArray.map((anime, index) => (
@@ -101,7 +155,7 @@ function displayCurrWatchingAnimeList(animeArray, error, handleSuccess, setError
 }
 
 // Displays plan to watch list
-function displayPlanToWatchList(planToWatchArray, error, handleSuccess, setError, setLoaded) {
+function displayPlanToWatchList(planToWatchArray, error, handleSuccess, setError, setLoaded, ptwFilter) {
     if(error) {
         return (
             <div className='anime-card-error'>
@@ -116,6 +170,63 @@ function displayPlanToWatchList(planToWatchArray, error, handleSuccess, setError
             <div className='anime-card-error'>
                 <h1 className='no-anime-cards-title'>You do not have any anime in your <a href={`https://myanimelist.net/animelist/${localStorage.getItem('username')}`} target="_blank">Plan To Watch</a> list.</h1>
             </div>
+        );
+    }
+
+    if(ptwFilter === 'fin_only') {
+        const newArr = [];
+
+        for(let anime of planToWatchArray) {
+            if(anime.air_status === 'finished_airing') {
+                newArr.push(anime);
+            }
+        }
+
+        if(newArr.length === 0) {
+            return (
+                <div className='anime-card-error'>
+                    <h1 className='no-anime-cards-title'>No anime found for the selected filter.</h1>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                {newArr.map((anime, index) => (
+                    <React.Fragment key={anime.id} >
+                        <AnimeCard anime={anime} type={'ptw'}/>
+                        {index !== newArr.length - 1 && <div className='anime-card-divider'></div>}
+                    </React.Fragment>
+                ))}
+            </>
+        );
+
+    } else if (ptwFilter === 'curr_not_yet_airing') {
+        const newArr = [];
+
+        for(let anime of planToWatchArray) {
+            if(anime.air_status === 'not_yet_aired' || anime.air_status === "currently_airing") {
+                newArr.push(anime);
+            }
+        }
+
+        if(newArr.length === 0) {
+            return (
+                <div className='anime-card-error'>
+                    <h1 className='no-anime-cards-title'>No anime found for the selected filter.</h1>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                {newArr.map((anime, index) => (
+                    <React.Fragment key={anime.id} >
+                        <AnimeCard anime={anime} type={'ptw'}/>
+                        {index !== newArr.length - 1 && <div className='anime-card-divider'></div>}
+                    </React.Fragment>
+                ))}
+            </>
         );
     }
 
@@ -237,11 +348,11 @@ function DisplayAnimeProgress() {
             <div className='progress-display-anime' id='progress-display-anime-list'>
             {loaded ? (
                 <div className='list-of-anime-cards'>
-                    {listSelected === 'cw' ?
-                        displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded)
+                    {listSelected === 'cw'?
+                        displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded, cwFilter)
                         :
                         listSelected === 'ptw' ?
-                        displayPlanToWatchList(planToWatchList, error, handleSuccess, setError, setLoaded)
+                        displayPlanToWatchList(planToWatchList, error, handleSuccess, setError, setLoaded, ptwFilter)
                         :
                         null
                     }
