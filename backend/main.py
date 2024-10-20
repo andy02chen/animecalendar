@@ -64,6 +64,7 @@ scheduler.add_job(
 scheduler.start()
 
 
+# TODO uncomment for main push/merge
 # React Router should be doing this
 # @app.route('/a')
 # @app.route('/home')
@@ -533,6 +534,8 @@ def protectedRoute():
             find_user = find_user_function(user_session_id)
 
             if find_user:
+
+
                 return jsonify({
                     'loggedIn':True,
                     'username': find_user.user_id,

@@ -322,21 +322,36 @@ function DisplayAnimeProgress() {
     const handleCWFilter = (event) => {
         const value = event.target.value;
 
+        const div = document.getElementById('list-of-anime-cards');
+        div.classList.add('change');
+
         if(cwFilter === value) {
             setCWFilter(null);
+            
         } else {
             setCWFilter(value);
         }
+        
+        setTimeout(() => {
+            div.classList.remove('change');
+        }, 400);
     };
 
     const handlePTWFilter = (event) => {
         const value = event.target.value;
+
+        const div = document.getElementById('list-of-anime-cards');
+        div.classList.add('change');
 
         if(ptwFilter === value) {
             setPTWFilter(null);
         } else {
             setPTWFilter(value);
         }
+
+        setTimeout(() => {
+            div.classList.remove('change');
+        }, 400);
     };
 
     useEffect(() => {
@@ -347,7 +362,7 @@ function DisplayAnimeProgress() {
         <>
             <div className='progress-display-anime' id='progress-display-anime-list'>
             {loaded ? (
-                <div className='list-of-anime-cards'>
+                <div className='list-of-anime-cards' id='list-of-anime-cards'>
                     {listSelected === 'cw'?
                         displayCurrWatchingAnimeList(watchingList, error, handleSuccess, setError, setLoaded, cwFilter)
                         :
