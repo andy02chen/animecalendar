@@ -40,7 +40,7 @@ function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rati
         if(localStorage.getItem(anime.id+'early') === null) {
             localStorage.setItem(anime.id+'early',anime.currentProgress - anime.minProgress);
         } else {
-            localStorage.setItem(anime.id+'early',parseInt(localStorage.getItem(anime.id+'early'))+1);
+            localStorage.setItem(anime.id+'early',parseInt(localStorage.getItem(anime.id+'early'))+anime.currentProgress - anime.minProgress);
         }
     }
 
@@ -158,9 +158,18 @@ function AnimeCard({anime, type}) {
                             <div className='anime-card-status'>
                                 <NextEpisodeStatus anime={anime} type={type}/>
                             </div>
-                            <p id={anime.id+'earlyMsg'} style={{display: 'none'}} className='early-message'>
-                                Are all episodes releasing <span className='status-highlight'>{anime.currentProgress - anime.minProgress} week(s)</span> early? Click 'Watched' to confirm
-                            </p>
+                            {localStorage.getItem(anime.id+"early") === null ?
+                                <p id={anime.id+'earlyMsg'} style={{display: 'none'}} className='early-message'>
+                                    Are all episodes releasing <span className='status-highlight'>{anime.currentProgress - anime.minProgress} week(s)</span> early? Click 'Watched' to confirm
+                                </p>
+                                :
+                                <p id={anime.id+'earlyMsg'} style={{display: 'none'}} className='early-message'>
+                                    Episodes have already been confirmed to release 
+                                    <span className='status-highlight'> {localStorage.getItem(anime.id+'early')} week(s)</span> early. Would you like to add another 
+                                    <span className='status-highlight'> {anime.currentProgress - anime.minProgress} week(s)?</span>
+                                </p>
+                            }
+                            
                             {showDelay && (
                                 <div className='delay-message'>
                                     <p>
