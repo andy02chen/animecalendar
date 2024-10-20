@@ -244,14 +244,6 @@ function Auth()  {
                                 Calendar markers indicate episode dates for <span className='how-to-use-highlight'>currently airing</span> shows, with <span className='how-to-use-highlight'>all markers </span> displayed if the season's total episode count is known.
                                 </p>
                             </div>
-                            <div id='how-to-use-btn-3' onClick={() => expandInstructionDiv(3, selectedDiv)}>
-                                <h1>Delaying Episodes</h1>
-                                <p style={{display: "none"}} id='how-to-use-btn-3-text'>
-                                Next to each anime is a <span className='how-to-use-highlight'>delay button</span>, functional only for <span className='how-to-use-highlight'>currently airing </span> shows. 
-                                This button delays the estimated date by a <span className='how-to-use-highlight'>week</span>, and changes are reflected on the calendar. 
-                                Note that this data is stored <span className='how-to-use-highlight'> locally on your machine</span>, so progress may not match across devices.
-                                </p>
-                            </div>
                             <div id='how-to-use-btn-4' onClick={() => expandInstructionDiv(4, selectedDiv)}>
                                 <h1>Upcoming Anime Releases</h1>
                                 <p style={{display: "none"}} id='how-to-use-btn-4-text'>
@@ -266,13 +258,6 @@ function Auth()  {
                                 Click 'Watched' and <span className='how-to-use-highlight'> confirm </span> to update.
                                 The UI will refresh only after the update is <span className='how-to-use-highlight'> confirmed on MAL</span>. 
                                 If the progress fails to update, an error will be displayed. Please <span className='how-to-use-highlight'> double-check </span> on MAL if you have<span className='how-to-use-highlight'> concerns </span> and report any issues.
-                                </p>
-                            </div>
-                            <div id='how-to-use-btn-6' onClick={() => expandInstructionDiv(6, selectedDiv)}>
-                                <h1>Rate Your Anime</h1>
-                                <p style={{display: "none"}} id='how-to-use-btn-6-text'>
-                                Upon <span className='how-to-use-highlight'> completing </span> an anime, you'll have the option to rate it. 
-                                If you choose not to rate, you can simply skip this step.
                                 </p>
                             </div>
                             <div id='how-to-use-btn-7' onClick={() => expandInstructionDiv(7, selectedDiv)}>
