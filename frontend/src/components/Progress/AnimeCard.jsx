@@ -31,6 +31,14 @@ function decreaseAnimeProgress(anime, setUpdate, setShowDelay) {
     }
 }
 
+function setEarly(anime, setUpdate,weeksTillReleaseInt) {
+    if(localStorage.getItem(anime.id+'early') === null) {
+        localStorage.setItem(anime.id+'early',weeksTillReleaseInt);
+    }
+    anime.getEpsArray();
+    setUpdate(u => !u);
+}
+
 function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating) {
     if(anime.currentProgress === anime.totalEpisodes) {
         anime.markCompleted();
@@ -88,6 +96,10 @@ function showDelayMessage(anime, setShowDelay, setDelay) {
     anime.currentProgress = anime.minProgress;
 }
 
+function hideEarlyMessage(anime) {
+    document.getElementById(anime+'mark-early-div').style.display = 'none';
+}
+
 function AnimeCard({anime, type}) {
 
     const [update, setUpdate] = useState(false);
@@ -136,6 +148,23 @@ function AnimeCard({anime, type}) {
         border: "1px solid #666666",
     };
 
+    
+
+    // Gets delayed eps if any
+    let delaysThisWeek = 0;
+
+    // Ceiling for weeklyAnime
+    const weeklyAnimeCeiling = 8;
+
+    if(anime.delayed_eps > 0) {
+        const delayEpsDictString = localStorage.getItem(anime.id);
+        let delayedEpsDict = delayEpsDictString ? JSON.parse(delayEpsDictString) : {};
+
+        delaysThisWeek = delayedEpsDict[`${anime.currentProgress}`];
+    }
+
+    const weeksTillReleaseInt = Math.floor(Math.floor(anime.daysTillRelease) / 7);
+
     return(
         <div className='anime-card'>
             <div>
@@ -168,6 +197,19 @@ function AnimeCard({anime, type}) {
                                     <span className='status-highlight'> {localStorage.getItem(anime.id+'early')} week(s)</span> early. Would you like to add another 
                                     <span className='status-highlight'> {anime.currentProgress - anime.minProgress} week(s)?</span>
                                 </p>
+                            }
+
+                            {(anime.daysTillRelease > weeklyAnimeCeiling && delaysThisWeek === 0) ?
+                                <div className='mark-early-div' id={anime.id+'mark-early-div'}>
+                                    <p className='mark-early-text'>The estimated release date for the next episode is over <span className='status-highlight'>{weeksTillReleaseInt} week(s)</span>. 
+                                    Would you like to mark all episodes as releasing <span className='status-highlight'>{weeksTillReleaseInt} week(s)</span> early?</p>
+                                    <div>
+                                        <button className='mark-early-button negative-button' onClick={() => hideEarlyMessage(anime.id)}>No</button>
+                                        <button className='mark-early-button positive-button' onClick={() => setEarly(anime,setUpdate, weeksTillReleaseInt)}>Yes</button>
+                                    </div>
+                                </div>
+                                :
+                                null
                             }
                             
                             {showDelay && (

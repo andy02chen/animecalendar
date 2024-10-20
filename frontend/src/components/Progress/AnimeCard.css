@@ -235,3 +235,34 @@
     cursor: pointer;
     transform: scale(1.05);
 }
+
+.mark-early-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.mark-early-div > div {
+    display: flex;
+    gap: 5px;
+    margin: 5px;
+}
+
+.mark-early-text {
+    text-align: center;
+}
+
+.mark-early-button {
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 200ms, background 200ms;
+    font-family: "Montserrat", Arial, sans-serif;
+}
