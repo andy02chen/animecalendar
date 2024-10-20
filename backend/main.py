@@ -256,7 +256,7 @@ def check_expiry():
         return '',100
 
     except Exception as e:
-        app.logger.error(f"Unexpected error in check_expirty: {e}")
+        app.logger.error(f"Unexpected error in check_expiry: {e}")
         return '', 401
 
 # Function for checking if rate limited
@@ -716,7 +716,12 @@ def auth():
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri={API_URL}/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
     response = redirect(auth_url)
-    response.set_cookie('session', got_session, secure=True, httponly=True, samesite='Lax', path='/')
+    response.set_cookie('session', got_session, 
+                    secure=True, 
+                    httponly=True, 
+                    samesite='Lax', 
+                    path='/', 
+                    max_age=30*24*60*60)
     return response
 
 def query_auth(session_id, session_salt):
@@ -920,7 +925,12 @@ def guestLogin():
     session_id = get_session_id()
     if session_id == 'guest' or session_id == None:
         response = redirect('/home')
-        response.set_cookie('session', "guest", secure=True, httponly=True, samesite='Lax', path='/')
+        response.set_cookie('session', "guest", 
+                    secure=True, 
+                    httponly=True, 
+                    samesite='Lax', 
+                    path='/', 
+                    max_age=30*24*60*60)
         return response
 
     return redirect('/')

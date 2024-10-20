@@ -170,6 +170,7 @@
     width: 100%;
     background-color: var(--primary-500);
     top: 30px;
+    z-index: 999;
 }
 
 .progress-note {
