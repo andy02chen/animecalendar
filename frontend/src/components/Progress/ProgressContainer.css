@@ -151,6 +151,7 @@
 .progress-settings-buttons > img {
     width: 1.75rem;
     height: auto;
+    max-height: 1.875rem;
 }
 
 .progress-settings-title {

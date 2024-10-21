@@ -6,3 +6,17 @@
     color: var(--primary-200);
     font-weight: bold;
 }
+
+.ptw-season-year {
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 1.6rem;
+}
+
+.ptw-info-div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}

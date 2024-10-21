@@ -13,13 +13,6 @@ function formatTime(timeRemaining) {
 
 function CountDown({timer}) {
     const [countdown, setCountdown] = useState(timer);
-    
-    let hours = Math.floor(timer / (1000*60*60));
-    let mins = Math.floor(timer / (1000*60) % 60);
-    let sec = Math.floor(timer / (1000) % 60);
-    hours = String(hours).padStart(2, '0');
-    mins = String(mins).padStart(2, '0');
-    sec = String(sec).padStart(2, '0');
 
     useEffect(() => {
         if(countdown <= 0) return;
@@ -31,7 +24,11 @@ function CountDown({timer}) {
         return () => clearInterval(intervalId);
     }, [countdown]);
 
-    return formatTime(countdown);
+    if(countdown > 0) {
+        return ` in ${formatTime(countdown)}`;
+    }
+
+    return ` soon`;
 }
 
 export default CountDown;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default class Anime {
-    constructor(id, title, totalEpisodes, currentProgress, air_status, broadcast_time, delayed_eps, end_date, image, start_date) {
+    constructor(id, title, totalEpisodes, currentProgress, air_status, broadcast_time, delayed_eps, end_date, image, start_date, season) {
         this.id = id;
         this.title = title;
         this.currentProgress = currentProgress;
@@ -18,6 +18,7 @@ export default class Anime {
         this.countdown = null;
         this.rating = null;
         this.epsArray = this.getEpsArray();
+        this.season = season;
 
         if(this.air_status === 'finished_airing') {
             this.removeOutdatedLocalStorageData();

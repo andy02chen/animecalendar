@@ -1,5 +1,6 @@
 import './NextEpisodeStatus.css';
 import { useState, useEffect } from 'react';
+import CountDown from '../Anime/Countdown';
 
 // Formats the time into HH:MM:SS
 function formatTime(timeRemaining) {
@@ -34,8 +35,179 @@ function NextEpisodeStatus({anime, type}) {
     
 
     if(type === 'ptw') {
+        const monthString = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        // If anime has finished airing
+        if(anime.air_status === 'finished_airing') {
+            return(
+                <div className='ptw-info-div'>
+                    <h1 className='ptw-season-year'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</h1>
+                    <p className='next-episode-status-text'>
+                        This anime has <span className='status-highlight'>finished</span> airing.
+                    </p>
+                </div>
+            );
+        } else if(anime.air_status === 'currently_airing') {
+            // Anime is currently airing
+            return(
+                <div className='ptw-info-div'>
+                    <h1 className='ptw-season-year'>{anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}</h1>
+                    <p className='next-episode-status-text'>
+                        This anime is <span className='status-highlight'>currently</span> airing.
+                    </p>
+                </div>
+            );
+        } else if(anime.air_status === 'not_yet_aired') {
+            // Anime not yet aired
+            const start_date = anime.start_date;
+
+            if(start_date) {
+                const arr = start_date.split('-');
+
+                console.log(arr);
+
+                // Only year known
+                if(arr.length === 1) {
+                    const year = arr[0];
+
+                    return(
+                        <div className='ptw-info-div'>
+                            <h1 className='ptw-season-year'>
+                                {anime.season !== null ?
+                                    <>
+                                        {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                    </>
+                                    :
+                                    <>
+                                        TBD
+                                    </>
+                                }</h1>
+                            <p className='next-episode-status-text'>
+                                This anime is set to release sometime in<span className='status-highlight'> {year}</span>.
+                            </p>
+                        </div>
+                    );
+                }
+                // Only Year and month known
+                else if (arr.length === 2) {
+                    const year = arr[0];
+                    const month = arr[1];
+
+                    return(
+                        <div className='ptw-info-div'>
+                            <h1 className='ptw-season-year'>
+                                {anime.season !== null ?
+                                    <>
+                                        {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                    </>
+                                    :
+                                    <>
+                                        TBD
+                                    </>
+                                }
+                            </h1>
+                            <p className='next-episode-status-text'>
+                                This anime is set to release sometime in <span className='status-highlight'>{monthString[month-1]} {year}</span>.
+                            </p>
+                        </div>
+                    );
+                }
+                // Entire date is known
+                else if (arr.length === 3) {
+                    let isoTime = null;
+
+                    if(anime.broadcast_time !== null) {
+                        // Get anime broadcast date and time then convert it to local time
+                        const jstDateTimeStr = `${anime.start_date}T${anime.broadcast_time}:00+09:00`;
+                        const jstDate = new Date(jstDateTimeStr);
+                        isoTime = jstDate.toISOString();
+                    } else {
+                        // Default to 12am
+                        const defaultTime = "23:59:59";
+                        const dateTimeStr = `${anime.start_date}T${defaultTime}`;
+                        const newDate = new Date(dateTimeStr);
+                        isoTime = newDate.toISOString();
+                    }
+
+                    const startDate = new Date(isoTime);
+                    const dateNow = Date.now();
+                    let diff = startDate - dateNow;
+                    let days = Math.round(diff / (1000 * 60 * 60 * 24));
+                    let startDateArr = startDate.toString().trim().split(' ');
+
+                    console.log(days, diff);
+
+                    if(diff < 0) {
+                            return(
+                                <div className='ptw-info-div'>
+                                    <h1 className='ptw-season-year'>
+                                        {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                    </h1>
+                                    <p className='next-episode-status-text'>
+                                        This anime will air <span className='status-highlight'> soon</span>.
+                                    </p>
+                                </div>
+                            );
+                        }
+
+                    if(days > 1) {
+                        return(
+                            <div className='ptw-info-div'>
+                                <h1 className='ptw-season-year'>
+                                    {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                </h1>
+                                <p className='next-episode-status-text'>
+                                    This anime is estimated to air in&nbsp;
+                                    <span className='status-highlight'>{days}</span>
+                                    &nbsp;days on&nbsp;
+                                    <span className='status-highlight'>{startDateArr[0]}, {startDateArr[2]} {startDateArr[1]} {startDateArr[3]} </span>
+                                </p>
+                            </div>
+                        );
+                    } else if(days >= 0 && days <= 1) {
+                        return(
+                            <div className='ptw-info-div'>
+                                <h1 className='ptw-season-year'>
+                                    {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                                </h1>
+                                <p className='next-episode-status-text'>
+                                    This anime is estimated to air
+                                    <span className='status-highlight'>
+                                        <CountDown timer={diff}/>
+                                    </span>.
+                                </p>
+                            </div>
+                        );
+                    } 
+                }
+            }
+
+            // If no start date
+            return(
+                <div className='ptw-info-div'>
+                    <h1 className='ptw-season-year'>
+                    {anime.season !== null ?
+                        <>
+                            {anime.season[0].charAt(0).toUpperCase() + anime.season[0].slice(1)}&nbsp;{anime.season[1]}
+                        </>
+                        :
+                        <>
+                            TBD
+                        </>
+                    }
+                    </h1>
+                    <p className='next-episode-status-text'>
+                        Release info is unknown.
+                    </p>
+                </div>
+            );
+        }
+
         return(
-            <p>PlaceHolder text for plan to watch</p>
+            <div className='ptw-info-div'>
+                <h1 className='ptw-season-year'>N/A</h1>
+                <p className='next-episode-status-text'>There is no information available for this anime</p>
+            </div>
         );
     } else if (type === 'cw') {
         

@@ -37,7 +37,7 @@ function retryGetAnimeLists(handleSuccess, setError, setLoaded) {
             assignAnimeColour(animeData);
             animeList.push(
                 new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
-                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date)
+                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date, null)
             );
         }
 
@@ -50,7 +50,7 @@ function retryGetAnimeLists(handleSuccess, setError, setLoaded) {
             for (let animePlanned of storePlanToWatch) {
                 ptwList.push(
                     new Anime(
-                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date
+                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date, animePlanned.season
                     )
                 )
             }
@@ -275,7 +275,7 @@ function getUsersAnime(handleSuccess, setLoaded, setError) {
             assignAnimeColour(animeData);
             animeList.push(
                 new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
-                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date)
+                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date, null)
             );
         }
 
@@ -288,7 +288,7 @@ function getUsersAnime(handleSuccess, setLoaded, setError) {
             for (let animePlanned of storePlanToWatch) {
                 ptwList.push(
                     new Anime(
-                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date
+                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date, animePlanned.season
                     )
                 )
             }
