@@ -64,8 +64,6 @@ function NextEpisodeStatus({anime, type}) {
             if(start_date) {
                 const arr = start_date.split('-');
 
-                console.log(arr);
-
                 // Only year known
                 if(arr.length === 1) {
                     const year = arr[0];
@@ -134,8 +132,6 @@ function NextEpisodeStatus({anime, type}) {
                     let diff = startDate - dateNow;
                     let days = Math.round(diff / (1000 * 60 * 60 * 24));
                     let startDateArr = startDate.toString().trim().split(' ');
-
-                    console.log(days, diff);
 
                     if(diff < 0) {
                             return(

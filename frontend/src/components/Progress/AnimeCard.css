@@ -266,3 +266,7 @@
     transition: transform 200ms, background 200ms;
     font-family: "Montserrat", Arial, sans-serif;
 }
+
+.ptw-button {
+    margin: 10px;
+}

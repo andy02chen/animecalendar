@@ -1,5 +1,5 @@
 import './AnimeCard.css';
-import {useState, useContext} from 'react';
+import {useState, useContext, useRef} from 'react';
 import { AnimeContext } from '../Pages/CalendarPage';
 import NextEpisodeStatus from './NextEpisodeStatus';
 
@@ -40,7 +40,7 @@ function setEarly(anime, setUpdate,weeksTillReleaseInt) {
 }
 
 function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating) {
-    if(anime.currentProgress === anime.totalEpisodes) {
+    if(anime.currentProgress === anime.totalEpisodes && anime.air_status === 'finished_airing' && anime.totalEpisodes !== 0) {
         anime.markCompleted();
     }
 
@@ -107,6 +107,9 @@ function AnimeCard({anime, type}) {
     const { setDisplayError } = useContext(AnimeContext);
     const [showDelay, setShowDelay] = useState(false);
 
+    const [confirmStartedWatching, setConfirmStartedWatching] = useState(false);
+    const timeoutRef = useRef(null);
+
     const [rating, setRating] = useState('0');
     const [delay, setDelay] = useState(1);
 
@@ -164,6 +167,8 @@ function AnimeCard({anime, type}) {
     }
 
     const weeksTillReleaseInt = Math.floor(Math.floor(anime.daysTillRelease) / 7);
+
+    console.log(anime);
 
     return(
         <div className='anime-card'>
@@ -273,7 +278,34 @@ function AnimeCard({anime, type}) {
                             <div className='anime-card-status'>
                                 <NextEpisodeStatus anime={anime} type={type}/>
                             </div>
-                            {/* TODO add buttons for started watching */}
+                            {anime.air_status === 'currently_airing' || anime.air_status === 'finished_airing' ?
+                                (confirmStartedWatching ?
+                                    <button id={anime.id+'confirm-started-watching'} className='positive-button card-progress-button ptw-button'
+                                    onClick={() => {
+                                        clearTimeout(timeoutRef.current);
+                                        updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating);
+                                    }}>
+                                        Confirm
+                                    </button>
+                                    :
+                                    <button className='positive-button card-progress-button ptw-button'
+                                    onClick={() => {
+                                        setConfirmStartedWatching(true);
+
+                                        if (timeoutRef.current) {
+                                            clearTimeout(timeoutRef.current);
+                                        }
+
+                                        timeoutRef.current = setTimeout(() => {
+                                            setConfirmStartedWatching(false);
+                                        }, 3000);
+                                    }}>
+                                        Started Watching
+                                    </button>
+                                )
+                                :
+                                null
+                            }
                         </>
                     }
                     {loading && 
