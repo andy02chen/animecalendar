@@ -19,11 +19,21 @@ function CalendarPage() {
         setPlanToWatchList(planToWatch);
     };
 
+    const addToWatching = (toAdd) => {
+        setWatchingList(w => [...w, toAdd])
+    }
+
+    const removeFromPlanToWatch = (toRemove) => {
+        setPlanToWatchList(list => {
+            return list.filter(anime => anime.id !== toRemove)
+        })
+    }
+
     return(
         <>
             <Popup/>
             <div className='app-main'>
-                <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError}}>
+                <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError, addToWatching, removeFromPlanToWatch}}>
                     <ProgressContainer/>
                 </AnimeContext.Provider>
                 <NewCalendar/>

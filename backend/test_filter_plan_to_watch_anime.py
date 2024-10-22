@@ -84,7 +84,9 @@ def test_filter_plan_to_watch_anime_basic():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': '2024-01-04',
-            'broadcast_time': '22:30'
+            'broadcast_time': '22:30',
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     
@@ -129,7 +131,9 @@ def test_no_main_picture():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': '2024-01-04',
-            'broadcast_time': '22:30'
+            'broadcast_time': '22:30',
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     
@@ -178,7 +182,9 @@ def test_no_main_picture2():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': '2024-01-04',
-            'broadcast_time': '22:30'
+            'broadcast_time': '22:30',
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     
@@ -223,7 +229,9 @@ def test_no_start_season():
             'air_status': 'finished_airing',
             'season': None,
             'start_date': '2024-01-04',
-            'broadcast_time': '22:30'
+            'broadcast_time': '22:30',
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     
@@ -271,7 +279,9 @@ def test_no_start_date():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': None,
-            'broadcast_time': '22:30'
+            'broadcast_time': '22:30',
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     
@@ -316,7 +326,9 @@ def test_no_broadcast():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': '2024-01-04',
-            'broadcast_time': None
+            'broadcast_time': None,
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     
@@ -414,7 +426,9 @@ def test_multiple():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': '2024-01-04',
-            'broadcast_time': '22:30'
+            'broadcast_time': '22:30',
+            'eps': 24,
+            "end_date": "2024-06-13"
         },
         {
             'title': 'Fullmetal Alchemist: Brotherhood',
@@ -423,7 +437,9 @@ def test_multiple():
             'air_status': 'finished_airing',
             'season': ('spring', '2009'),
             'start_date': '2009-04-05',
-            'broadcast_time': '17:00'
+            'broadcast_time': '17:00',
+            'eps': 64,
+            "end_date": "2010-07-04"
         }
     ]
     
@@ -588,7 +604,9 @@ def test_no_start_time():
             'air_status': 'finished_airing',
             'season': ('winter', '2024'),
             'start_date': '2024-01-04',
-            'broadcast_time': None
+            'broadcast_time': None,
+            'eps': 24,
+            "end_date": "2024-06-13"
         }
     ]
     

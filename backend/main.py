@@ -319,6 +319,8 @@ def filter_plan_to_watch_anime(data):
         # Extract broadcast time
         broadcast = node.get('broadcast', {})
         details['broadcast_time'] = broadcast.get('start_time', None)
+        details['end_date'] = node.get('end_date', None)
+        details['eps'] = node.get('num_episodes', 0)
 
         data_to_return.append(details)
 

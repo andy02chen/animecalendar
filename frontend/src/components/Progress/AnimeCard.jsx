@@ -65,6 +65,21 @@ function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rati
     });
 }
 
+function moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFromPlanToWatch) {
+    setLoading(true);
+    anime.updateWatchedEpisodes().then((result) => {
+    if (result) {
+        setUpdate(u => !u);
+        addToWatching(anime);
+        removeFromPlanToWatch(anime.id);
+    } else {
+        localStorage.setItem('errorType', 'update_anime_error');
+        setDisplayError(e => !e);
+    }
+    setLoading(false);
+    });
+}
+
 // Delay the ep
 function confirmDelay(anime, setShowDelay, delay, setDelay) {
     if(localStorage.getItem(anime.id) !== null) {
@@ -104,7 +119,7 @@ function AnimeCard({anime, type}) {
 
     const [update, setUpdate] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { setDisplayError } = useContext(AnimeContext);
+    const { setDisplayError, addToWatching, removeFromPlanToWatch } = useContext(AnimeContext);
     const [showDelay, setShowDelay] = useState(false);
 
     const [confirmStartedWatching, setConfirmStartedWatching] = useState(false);
@@ -167,8 +182,6 @@ function AnimeCard({anime, type}) {
     }
 
     const weeksTillReleaseInt = Math.floor(Math.floor(anime.daysTillRelease) / 7);
-
-    console.log(anime);
 
     return(
         <div className='anime-card'>
@@ -283,7 +296,7 @@ function AnimeCard({anime, type}) {
                                     <button id={anime.id+'confirm-started-watching'} className='positive-button card-progress-button ptw-button'
                                     onClick={() => {
                                         clearTimeout(timeoutRef.current);
-                                        updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating);
+                                        moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFromPlanToWatch);
                                     }}>
                                         Confirm
                                     </button>

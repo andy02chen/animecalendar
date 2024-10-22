@@ -288,7 +288,7 @@ function getUsersAnime(handleSuccess, setLoaded, setError) {
             for (let animePlanned of storePlanToWatch) {
                 ptwList.push(
                     new Anime(
-                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date, animePlanned.season
+                        animePlanned.id, animePlanned.title, animePlanned.eps, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, animePlanned.end_date, animePlanned.img, animePlanned.start_date, animePlanned.season
                     )
                 )
             }
