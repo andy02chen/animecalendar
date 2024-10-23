@@ -658,3 +658,7 @@
         animation: none;
     }
 }
+
+.dark-mode-add {
+    background-color: var(--black);
+}

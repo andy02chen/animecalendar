@@ -1,5 +1,4 @@
 .calendar-container {
-    background: var(--white);
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -47,7 +46,6 @@
 
 @media screen and (min-width: 87.5rem) {
     .calendar-container {
-        background: var(--white);
         height: 100vh;
         max-width: 87.5rem;
         display: flex;

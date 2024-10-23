@@ -1,11 +1,16 @@
 import './Settings.css';
 import './MenuPages.css';
+import { useState } from 'react';
 
-function setDarkMode(event) {
+function setDarkMode(event, setIsDarkMode) {
     if (event.target.checked) {
         localStorage.setItem('darkMode', 'true');
+        setIsDarkMode(true);
+        document.body.classList.add('dark-mode');
     } else {
         localStorage.setItem('darkMode', 'false');
+        setIsDarkMode(false);
+        document.body.classList.remove('dark-mode');
     }
 }
 
@@ -16,6 +21,9 @@ function Settings() {
             div.style.display = 'none'
         }
     }
+
+    // Dark mode
+    const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
 
     return(
         <div id='settings-page' className='menu-page-hold' style={{display: 'none'}}>
@@ -29,8 +37,7 @@ function Settings() {
                         <div className='setting-row'>
                             <h1 className='setting-title'>Dark Mode</h1>
                             <label className='settings-checkbox'>
-                                <input type="checkbox" onChange={setDarkMode}/>
-                                {/* <input type="checkbox" name="option" value="curr_airing" checked={cwFilter === "curr_airing"} onChange={handleCWFilter}/> */}
+                                <input type="checkbox" checked={isDarkMode} onChange={(event) => setDarkMode(event, setIsDarkMode)}/>
                             </label>
                         </div>
                     </div>

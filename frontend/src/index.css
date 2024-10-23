@@ -100,6 +100,10 @@ body {
     background-color: var(--white);
 }
 
+body.dark-mode {
+    background-color: var(--black);
+}
+
 p,h1 {
     color: var(--text);
     font-family: 'Montserrat', Arial, sans-serif;
