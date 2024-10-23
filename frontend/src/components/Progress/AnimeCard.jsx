@@ -65,7 +65,7 @@ function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rati
     });
 }
 
-function moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFromPlanToWatch) {
+function moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFromPlanToWatch, setDisplayError) {
     setLoading(true);
     anime.updateWatchedEpisodes().then((result) => {
     if (result) {
@@ -296,7 +296,7 @@ function AnimeCard({anime, type}) {
                                     <button id={anime.id+'confirm-started-watching'} className='positive-button card-progress-button ptw-button'
                                     onClick={() => {
                                         clearTimeout(timeoutRef.current);
-                                        moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFromPlanToWatch);
+                                        moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFromPlanToWatch, setDisplayError);
                                     }}>
                                         Confirm
                                     </button>

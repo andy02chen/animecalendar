@@ -3,6 +3,7 @@ import ProgressContainer from '../Progress/ProgressContainer';
 import Feedback from '../MenuPages/Feedback';
 import Tutorial from '../MenuPages/Tutorial';
 import Popup from '../Alert/Popup';
+import Settings from '../MenuPages/Settings';
 import './CalendarPage.css';
 import { createContext, useState, useEffect } from 'react';
 import CalendarError from '../Alert/CalendarError';
@@ -40,6 +41,7 @@ function CalendarPage() {
             </div>
             <Feedback/>
             <Tutorial/>
+            <Settings/>
             <CalendarError displayError={displayError}/>
         </>
     );

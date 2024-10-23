@@ -26,7 +26,6 @@ function copyDiscord() {
 
 function Feedback() {
     return(
-        
         <div id='feedback-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-shape'>
                 <div className='menu-page-content'>

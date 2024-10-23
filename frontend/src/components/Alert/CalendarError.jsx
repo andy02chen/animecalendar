@@ -21,7 +21,7 @@ function CalendarError({displayError}) {
 
         if(errorType === 'update_anime_error') {
             setErrorMessage(
-                "There was an error updating progress. Please try again later."
+                "There was an error updating progress. Please wait and try again later."
             );
             setHasError(true); 
         }
