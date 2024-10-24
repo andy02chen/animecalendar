@@ -9,14 +9,16 @@
 .setting-page-body {
     min-width: 300px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
 .setting-row {
-    width: 70%;
+    width: 60%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -72,4 +74,19 @@
 	content: "ON";
 	left: 3.75rem;
 	color: #89befe;
+}
+
+.settings-row-button {
+    background: #2d2936;
+    cursor: pointer;
+    height: 2.5rem;
+    width: 100%;
+}
+
+.settings-row-button.confirmation {
+    background-color: var(--primary-500);
+}
+
+#clear-localstorage-confirmation {
+    flex-direction: column;
 }

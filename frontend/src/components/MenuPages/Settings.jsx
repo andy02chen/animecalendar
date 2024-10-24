@@ -22,6 +22,15 @@ function Settings() {
         }
     }
 
+    const displayConfirmation = () => {
+        document.getElementById('clear-localstorage-confirmation').style.display = "flex";
+    }
+
+    const clearLocalStorage = () => {
+        localStorage.clear();
+        location.reload();
+    }
+
     // Dark mode
     const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
 
@@ -39,6 +48,25 @@ function Settings() {
                             <label className='settings-checkbox'>
                                 <input type="checkbox" checked={isDarkMode} onChange={(event) => setDarkMode(event, setIsDarkMode)}/>
                             </label>
+                        </div>
+                        <div className='setting-row'>
+                            <button className='settings-row-button'>
+                                <h1 className='setting-title'>Clear LocalStorage (Unnecessary Data)</h1>
+                            </button>
+
+                        </div>
+                        <div className='setting-row'>
+                            <button className='settings-row-button' onClick={() => displayConfirmation()}>
+                                <h1 className='setting-title'>Clear LocalStorage (All Data)</h1>
+                            </button>
+                        </div>
+                        <div className='setting-row' id='clear-localstorage-confirmation' style={{display: 'none'}}>
+                            <h1 className='setting-title'>
+                                All you saved data will be cleared. This may affect the estimated release dates for animes.
+                            </h1>
+                            <button className='settings-row-button confirmation' onClick={() => clearLocalStorage()}>
+                                <h1 className='setting-title'>Click to Confirm</h1>
+                            </button>
                         </div>
                     </div>
                 </div>

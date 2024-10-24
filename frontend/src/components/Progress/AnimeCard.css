@@ -210,6 +210,7 @@
     font-family: "Montserrat", Arial, sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
+    -moz-appearance: textfield;
 }
 
 #delayInput::-webkit-inner-spin-button, 
