@@ -51,7 +51,7 @@ function CalendarPage() {
             </div>
             <Feedback/>
             <Tutorial/>
-            <Settings/>
+            <Settings watchingList={watchingList}/>
             <CalendarError displayError={displayError}/>
         </>
     );

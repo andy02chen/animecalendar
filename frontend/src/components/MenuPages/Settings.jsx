@@ -14,7 +14,7 @@ function setDarkMode(event, setIsDarkMode) {
     }
 }
 
-function Settings() {
+function Settings({watchingList}) {
     const closeSettings = () => {
         const div = document.getElementById('settings-page');
         if(div.style.display === 'flex') {
@@ -28,6 +28,34 @@ function Settings() {
 
     const clearLocalStorage = () => {
         localStorage.clear();
+        location.reload();
+    }
+
+    const clearUnnecessaryData = () => {
+        const dict = {};
+        for(let anime of watchingList) {
+            dict[anime.id] = 1;
+        }
+
+        const arr = []
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+
+            if(key !== 'username' && key !== "pfp" && key !== 'darkMode' && key !== 'consentGiven' && key !== 'seenAnnouncement') {
+                const id = key.match(/\d+/g);
+                
+                if(id !== null) {
+                    if(!(id[0] in dict)) {
+                        arr.push(key);
+                    }
+                }
+            }
+        }
+
+        for(let i of arr) {
+            localStorage.removeItem(i);
+        }
+        
         location.reload();
     }
 
@@ -50,7 +78,7 @@ function Settings() {
                             </label>
                         </div>
                         <div className='setting-row'>
-                            <button className='settings-row-button'>
+                            <button className='settings-row-button' onClick={() => clearUnnecessaryData()}>
                                 <h1 className='setting-title'>Clear LocalStorage (Unnecessary Data)</h1>
                             </button>
 
