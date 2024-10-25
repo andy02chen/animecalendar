@@ -13,6 +13,7 @@
     min-width: 20rem;
     min-height: 31.25rem;
     max-height: 64rem;
+    position: relative;
 }
 
 .calendar-svg-mobile {
@@ -65,5 +66,99 @@
     .calendar-container {
         overflow-y: auto;
         align-items: normal;
+    }
+}
+
+.calendar-page-main {
+    position: absolute;
+    height: 85%;
+    width: 85%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.calendar-month-header {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-300);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
+
+.calendar-dates-div {
+    background-color: var(--primary-500);
+    width: 100%;
+    height: 80%;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.prev-month-button-image, .next-month-button-image {
+    height: 1.5rem;
+    fill: var(--primary-300);
+    align-content: center;
+}
+
+.month-year-calendar {
+    font-size: 1.25rem;
+}
+
+.calendar-month-header-buttons-div {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.today-button {
+    font-size: 1rem;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-weight: 600;
+    color: var(--primary-300);
+}
+
+.change-month-button {
+    width: 1.5rem;
+}
+
+.calendar-month-header-buttons-div button{
+    border: none;
+}
+
+@media screen and (min-width: 64rem) {
+    .change-month-button {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .today-button {
+        width: 4rem;
+        height: 2.5rem;
+    }
+
+    .month-year-calendar {
+        font-size: 2rem;
+    }
+
+    .calendar-month-header {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .month-year-calendar:hover {
+        cursor: pointer;
+        text-decoration: underline;
+        user-select: none;
+    }
+
+    .calendar-month-header-buttons-div button:hover {
+        transition: 0.5s ease;
+        cursor: pointer;
+        transform: scale(1.05);
     }
 }

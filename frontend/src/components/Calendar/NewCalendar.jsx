@@ -110,6 +110,25 @@ function NewCalendar() {
                 <path d="M25.0535 119.625L13.0264 137.427V283.398L25.0535 270.581V119.625Z" fill="#7A848A"/>
                 <path d="M5.70117 820.289V786.823H17.7283L27.0134 798.511V963.316L37.7268 979.176H105.578L125.475 957.004H220.365L234.14 970.533H134.658L111.7 998.484H30.2783L15.2797 974.349V820.289H5.70117Z" fill="#F1F3F2"/>
                 </svg>
+                <div className='calendar-page-main'>
+                    <div className='calendar-month-header'>
+                        <div className='calendar-month-header-month-div'>
+                            <h1 className='month-year-calendar'>Month Year</h1>
+                        </div>
+                        <div className='calendar-month-header-buttons-div'>
+                            <button className='today-button'>Today</button>
+                            <button className='change-month-button'>
+                                <svg className="prev-month-button-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+                            </button>
+                            <button className='change-month-button'>
+                                <svg className="next-month-button-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div className='calendar-dates-div'>
+
+                    </div>
+                </div>
             </div>
         </div>
     );
