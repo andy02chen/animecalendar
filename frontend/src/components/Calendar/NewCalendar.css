@@ -147,13 +147,13 @@
 }
 
 #calendar-change-months::before {
-    height: 10px;
-    width: 30px;
+    height: 0.625rem;
+    width: 1.865rem;
     background-color: var(--accent-200);
     content: '';
     position: absolute;
-    top: -9px;
-    left: 20px;
+    top: -0.563rem;
+    left: 1.25rem;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
@@ -164,7 +164,7 @@
 .change-div-months-buttons {
     text-align: center;
     font-weight: bold;
-    color: var(--primary-300)
+    color: var(--primary-300);
 }
 
 @media screen and (min-width: 64rem) {
@@ -197,5 +197,34 @@
         transition: 0.5s ease;
         cursor: pointer;
         transform: scale(1.05);
+    }
+
+    #calendar-change-months::before {
+        height: 0.625rem;
+        width: 1.865rem;
+        top: -0.563rem;
+        left: 2rem;
+    }
+
+    #calendar-change-months {
+        height: 22rem;
+        width: 30rem;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .change-div-months-buttons {
+        font-size: 1.5rem;
+    }
+
+    .change-div-months-buttons:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
+@media screen and (min-width: 90rem) {
+    #calendar-change-months {
+        height: 30rem;
     }
 }
