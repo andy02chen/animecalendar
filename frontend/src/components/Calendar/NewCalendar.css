@@ -130,6 +130,43 @@
     border: none;
 }
 
+#calendar-change-months {
+    position: absolute;
+    min-height: 22rem;
+    min-width: 15rem;
+    border-radius: 10px;
+    margin-top: 10px;
+
+
+    background-color: var(--accent-200);
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    justify-content: center;
+    align-items: center;
+}
+
+#calendar-change-months::before {
+    height: 10px;
+    width: 30px;
+    background-color: var(--accent-200);
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 20px;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.calendar-month-header-month-div {
+    position: relative;
+}
+
+.change-div-months-buttons {
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-300)
+}
+
 @media screen and (min-width: 64rem) {
     .change-month-button {
         width: 2.5rem;

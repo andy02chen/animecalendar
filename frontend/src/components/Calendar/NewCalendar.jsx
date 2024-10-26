@@ -1,6 +1,31 @@
 import './NewCalendar.css';
 
+function expandChangeMonths() {
+    const div = document.getElementById('calendar-change-months');
+    if(div.style.display === 'none') {
+        div.style.display = 'grid';
+    } else {
+        div.style.display = 'none';
+    }
+}
+
 function NewCalendar() {
+    const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const months = [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+    ];
+
     return(
         <div className="calendar-container">
             <div>
@@ -113,7 +138,15 @@ function NewCalendar() {
                 <div className='calendar-page-main'>
                     <div className='calendar-month-header'>
                         <div className='calendar-month-header-month-div'>
-                            <h1 className='month-year-calendar'>Month Year</h1>
+                            <h1 className='month-year-calendar'
+                            onClick={() => expandChangeMonths()}>Month Year</h1>
+                            <div id='calendar-change-months' style={{display: 'none'}}>
+                                {months.map((month, index) => (
+                                    <p className='change-div-months-buttons' key={index}>
+                                        {month}
+                                    </p>
+                                ))}
+                            </div>
                         </div>
                         <div className='calendar-month-header-buttons-div'>
                             <button className='today-button'>Today</button>
