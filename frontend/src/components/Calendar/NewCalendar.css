@@ -198,8 +198,8 @@
     align-items: center;
 }
 
-.dates-list > div > p {
-    font-weight: 100;
+.dates-list > li > div > p {
+    font-weight: 500;
 }
 
 .inactive-date > div > p {
