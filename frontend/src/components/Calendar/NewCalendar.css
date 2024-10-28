@@ -167,6 +167,62 @@
     color: var(--primary-300);
 }
 
+.calendar-days-of-week {
+    width: 100%;
+    height: 1rem;
+    overflow: auto;
+
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    list-style: none;
+}
+
+.calendar-day-title {
+    font-size: 0.85rem;
+    font-family: "Montserrat", Arial, sans-serif;
+    color: var(--yellow-75);
+}
+
+.calendar-dates-on-calendar {
+    height: 100%;
+}
+
+.dates-list {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    height: 100%;
+    list-style: none;
+    text-align: center;
+    align-items: center;
+}
+
+.dates-list > div > p {
+    font-weight: 100;
+}
+
+.inactive-date > div > p {
+    color: rgb(59, 59, 59);
+}
+
+.today {
+    position: relative;
+}
+
+.today > div:before {
+    position: absolute;
+    content: "";
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--primary-100);
+    box-shadow: 0 0 6px var(--primary-100);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @media screen and (min-width: 64rem) {
     .change-month-button {
         width: 2.5rem;

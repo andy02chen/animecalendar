@@ -1,4 +1,5 @@
 import './NewCalendar.css';
+import { useState, useEffect, useRef } from 'react';
 
 function expandChangeMonths() {
     const div = document.getElementById('calendar-change-months');
@@ -7,6 +8,34 @@ function expandChangeMonths() {
     } else {
         div.style.display = 'none';
     }
+}
+
+// Get the month start and end dates
+function getMonthDates(year, month) {
+    // Get start dates
+    let startDate = new Date(year, month, 1).getDate();
+    let endDate = new Date(year, month + 1, 0).getDate();
+
+    // Get Prev Month End
+    let prevMonthStart = new Date(year, month, 0).getDay();
+    let prevMonthDate = new Date(year, month, 0).getDate();
+
+    // Get Next Month Start
+    let nextMonthStart = new Date(year, month + 1, 1).getDate();
+    let nextMonthDay = new Date(year, month + 1, 1).getDay();
+
+    let returnArr = [startDate, endDate, prevMonthStart, 
+        prevMonthDate, nextMonthStart, nextMonthDay];
+
+    return returnArr;
+}
+
+// Dates in day, month and year and creates a date string
+function createDateString(day,month,year) {
+    const dayString = String(day).padStart(2,'0');
+    const monthString = String(month).padStart(2,'0');
+    
+    return `${dayString}/${monthString}/${year}`;
 }
 
 function NewCalendar() {
@@ -25,6 +54,116 @@ function NewCalendar() {
         "NOV",
         "DEC"
     ];
+
+    // To store the dates and the episode releases
+    const markersMap = useRef(new Map());
+
+    // Today
+    const today = new Date();
+    let day = today.getDate();
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDay = today.getDate();
+    
+    // Which year to display
+    const [year, setYear] = useState(today.getFullYear());
+    const [month, setMonth] = useState(today.getMonth());
+
+    // Arrays to store prev, curr, and next month dates
+    const [prevMonthDates, setPrevMonthDates] = useState([]);
+    const [currMonthDates, setCurrMonthDates] = useState([]);
+    const [nextMonthDates, setNextMonthDates] = useState([]);
+
+    let startDate = 0;
+    let endDate = 0;
+    let prevMonthStart = 0;
+    let prevMonthDate = 0
+    let nextMonthDay = 0;
+    let nextMonthStart = 0;
+
+    useEffect(() => {
+        [startDate, endDate, prevMonthStart, 
+            prevMonthDate, nextMonthStart, nextMonthDay] = getMonthDates(year, month);
+
+        // Array of prev month dates
+        const pushPrevMonth = [];
+
+        let monthDateString;
+        let yearDateString;
+
+        if(prevMonthStart !== 6) {
+
+            if(month === 0) {
+                monthDateString = 12;
+                yearDateString = year-1;
+            } else {
+                monthDateString = month;
+                yearDateString = year;
+            }
+
+            for(let i = prevMonthDate - prevMonthStart; i <= prevMonthDate; i++) {
+                const dateString = createDateString(i,monthDateString,yearDateString);
+
+                const displayMarkers = markersMap.current.get(dateString);
+                const arrPush = [];
+                arrPush.push(i);
+                if(displayMarkers) {
+                    arrPush.push(displayMarkers);
+                }
+
+                pushPrevMonth.push(arrPush);
+            }
+        }
+
+        // Array of curr month dates
+        const pushCurrMonthDates = [];
+        monthDateString = month+1;
+        yearDateString = year;
+        for(let i = startDate; i <= endDate; i++) {
+
+            const dateString = createDateString(i,monthDateString,yearDateString);
+
+            const displayMarkers = markersMap.current.get(dateString);
+            const arrPush = [];
+            arrPush.push(i);
+            if(displayMarkers) {
+                arrPush.push(displayMarkers);
+            }
+
+            pushCurrMonthDates.push(arrPush);
+        }
+
+        let lengthCalendar = pushPrevMonth.length + pushCurrMonthDates.length;
+
+        // Array of next month dates
+        const pushNextMonthDates = [];
+
+        if(month === 11) {
+            monthDateString = 1;
+            yearDateString = year+1;
+        } else {
+            monthDateString = month+2;
+            yearDateString = year;
+        }
+        
+        for(let i = lengthCalendar; i < 42 ; i++) {
+            const dateString = createDateString(nextMonthStart,monthDateString,yearDateString);
+
+            const displayMarkers = markersMap.current.get(dateString);
+            const arrPush = [];
+            arrPush.push(nextMonthStart++);
+
+            if(displayMarkers) {
+                arrPush.push(displayMarkers);
+            }
+            pushNextMonthDates.push(arrPush);
+        }
+
+        setPrevMonthDates(pushPrevMonth);
+        setCurrMonthDates(pushCurrMonthDates);
+        setNextMonthDates(pushNextMonthDates);
+        
+    }, [month]);
 
     return(
         <div className="calendar-container">
@@ -159,7 +298,77 @@ function NewCalendar() {
                         </div>
                     </div>
                     <div className='calendar-dates-div'>
-
+                        <div className='calendar-days-of-week'>
+                            {daysOfWeek.map((day, index) => 
+                                <li key={index}>
+                                    <h1 className='calendar-day-title'>{day}</h1>
+                                </li>
+                            )}
+                        </div>
+                        <div className='calendar-dates-on-calendar'>
+                            <ul className='dates-list'>
+                                {prevMonthDates.map((date, index) => 
+                                    <li key={index} className='inactive-date'>
+                                        <div>
+                                            {date.length === 1 ?
+                                                <p>{date[0]}</p>
+                                                :
+                                                <>
+                                                    <p>
+                                                        {date[0]}
+                                                    </p>
+                                                    <div className='markers-div'>
+                                                        {date[1].map((color, index) =>
+                                                            <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            }
+                                        </div>
+                                    </li>
+                                )}
+                                {currMonthDates.map((date, index) => 
+                                    <li key={index} className={date[0] === todayDay && month === todayMonth & year === todayYear ? "today": null}>
+                                        <div>
+                                            {date.length === 1 ?
+                                                <p>{date[0]}</p>
+                                                :
+                                                <>
+                                                    <p>
+                                                        {date[0]}
+                                                    </p>
+                                                    <div className='markers-div'>
+                                                        {date[1].map((color, index) =>
+                                                            <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            }
+                                        </div>
+                                    </li>
+                                )}
+                                {nextMonthDates.map((date, index) => 
+                                    <li key={index} className='inactive-date'>
+                                        <div>
+                                            {date.length === 1 ?
+                                                <p>{date[0]}</p>
+                                                :
+                                                <>
+                                                    <p>
+                                                        {date[0]}
+                                                    </p>
+                                                    <div className='markers-div'>
+                                                        {date[1].map((color, index) =>
+                                                            <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            }
+                                        </div>
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

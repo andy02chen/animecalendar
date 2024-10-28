@@ -14,10 +14,7 @@ function formatTime(timeRemaining) {
 }
 
 function NextEpisodeStatus({anime, type}) {
-    
     const [countdown, setCountdown] = useState(anime.countdown);
-
-    
 
     useEffect(() => {
         const countdownInterval = setInterval(() => {
