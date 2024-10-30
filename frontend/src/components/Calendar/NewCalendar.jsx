@@ -49,6 +49,11 @@ function displayNextMonth(month, year, setMonth, setYear) {
     }
 }
 
+function displaySelectedMonth(month, setMonth) {
+    setMonth(month);
+    document.getElementById("calendar-change-months").style.display = 'none';
+}
+
 // Dates in day, month and year and creates a date string
 function createDateString(day,month,year) {
     const dayString = String(day).padStart(2,'0');
@@ -309,13 +314,22 @@ function NewCalendar() {
                         <div className='calendar-month-header-month-div'>
                             <h1 className='month-year-calendar' id='choose-month-div-opener'
                             onClick={() => expandChangeMonths()}>{months[month]} {year}</h1>
-                            <div id='calendar-change-months' style={{display: 'none'}}>
-                                {months.map((month, index) => (
-                                    <p className='change-div-months-buttons' key={index}>
-                                        {month}
-                                    </p>
-                                ))}
-                            </div>
+                                <div id='calendar-change-months' style={{display: 'none'}}>
+                                    {months.map((month, index) => (
+                                        <p className='change-div-months-buttons' key={index}
+                                        onClick={() => displaySelectedMonth(index, setMonth)}>
+                                            {month}
+                                        </p>
+                                    ))}
+                                    {/* {months.map((monthInList, index) => 
+                                    <li key={index} className='unselectable'>
+                                        <h3 className='month-selection-heading'
+                                        onClick={() => displaySelectedMonth(index, setMonth)}>
+                                            {monthInList}
+                                        </h3>
+                                    </li>
+                                )} */}
+                                </div>
                         </div>
                         <div className='calendar-month-header-buttons-div'>
                             <button className='today-button'
