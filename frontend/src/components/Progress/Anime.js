@@ -55,6 +55,10 @@ export default class Anime {
         }
     }
 
+    getNewEpsArray() {
+        this.epsArray = this.getEpsArray();
+    }
+
     getEpsArray() {
         if(this.air_status === 'finished_airing' || this.air_status === 'not_yet_aired') {
             return [];
@@ -88,7 +92,6 @@ export default class Anime {
             earlyValue = parseInt(localStorage.getItem(this.id + 'early'));
         }
 
-        
         if (this.totalEpisodes !== 0) {
             // Calculates estimated release dates for all episodes
             let epCounter = 0

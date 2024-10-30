@@ -15,6 +15,8 @@ function CalendarPage() {
     const [planToWatchList, setPlanToWatchList] = useState(null);
     const [displayError, setDisplayError] = useState(false);
 
+    const [refresh, setRefresh] = useState(false);
+
     const handleSuccess = (watching, planToWatch) => {
         setWatchingList(watching);
         setPlanToWatchList(planToWatch);
@@ -44,10 +46,10 @@ function CalendarPage() {
         <>
             <Popup/>
             <div className='app-main'>
-                <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError, addToWatching, removeFromPlanToWatch}}>
+                <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError, addToWatching, removeFromPlanToWatch, setRefresh}}>
                     <ProgressContainer/>
                 </AnimeContext.Provider>
-                <NewCalendar animeList={watchingList}/>
+                <NewCalendar animeList={watchingList} refresh={refresh}/>
             </div>
             <Feedback/>
             <Tutorial/>

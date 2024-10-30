@@ -31,15 +31,16 @@ function decreaseAnimeProgress(anime, setUpdate, setShowDelay) {
     }
 }
 
-function setEarly(anime, setUpdate,weeksTillReleaseInt) {
+function setEarly(anime, setUpdate,weeksTillReleaseInt, setRefresh) {
     if(localStorage.getItem(anime.id+'early') === null) {
         localStorage.setItem(anime.id+'early',weeksTillReleaseInt);
     }
-    anime.getEpsArray();
+    anime.getNewEpsArray();
     setUpdate(u => !u);
+    setRefresh(r => !u);
 }
 
-function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating) {
+function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating, setRefresh) {
     if(anime.currentProgress === anime.totalEpisodes && anime.air_status === 'finished_airing' && anime.totalEpisodes !== 0) {
         anime.markCompleted();
     }
@@ -57,6 +58,8 @@ function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rati
     anime.updateWatchedEpisodes().then((result) => {
     if (result) {
         setUpdate(u => !u);
+        anime.getNewEpsArray();
+        setRefresh(r => !r);
     } else {
         localStorage.setItem('errorType', 'update_anime_error');
         setDisplayError(e => !e);
@@ -81,27 +84,27 @@ function moveToWatchList(anime, addToWatching, setLoading, setUpdate, removeFrom
 }
 
 // Delay the ep
-function confirmDelay(anime, setShowDelay, delay, setDelay) {
+function confirmDelay(anime, setShowDelay, delay, setDelay, setRefresh) {
     if(localStorage.getItem(anime.id) !== null) {
         const existingDictString = localStorage.getItem(anime.id);
         let myDict = existingDictString ? JSON.parse(existingDictString) : {};
 
-        if(myDict[anime.currentProgress] === undefined) {
-            myDict[anime.currentProgress] = delay;
+        if(myDict[anime.currentProgress+1] === undefined) {
+            myDict[anime.currentProgress+1] = delay;
         } else {
-            myDict[anime.currentProgress] = myDict[anime.currentProgress]+ delay;
+            myDict[anime.currentProgress+1] = myDict[anime.currentProgress+1]+ delay;
         }
 
         localStorage.setItem(anime.id, JSON.stringify(myDict));
     } else {
         const dict = {};
-        dict[anime.currentProgress] = delay;
+        dict[anime.currentProgress+1] = delay;
         localStorage.setItem(anime.id, JSON.stringify(dict));
     }
-
-    anime.getEpsArray();
+    anime.getNewEpsArray();
     setShowDelay(false);
     setDelay(1);
+    setRefresh(r => !r);
 }
 
 function showDelayMessage(anime, setShowDelay, setDelay) {
@@ -119,7 +122,7 @@ function AnimeCard({anime, type}) {
 
     const [update, setUpdate] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { setDisplayError, addToWatching, removeFromPlanToWatch } = useContext(AnimeContext);
+    const { setDisplayError, addToWatching, removeFromPlanToWatch, setRefresh } = useContext(AnimeContext);
     const [showDelay, setShowDelay] = useState(false);
 
     const [confirmStartedWatching, setConfirmStartedWatching] = useState(false);
@@ -228,7 +231,7 @@ function AnimeCard({anime, type}) {
                                     Would you like to mark all episodes as releasing <span className='status-highlight'>{weeksTillReleaseInt} week(s)</span> early?</p>
                                     <div>
                                         <button className='mark-early-button negative-button' onClick={() => hideEarlyMessage(anime.id)}>No</button>
-                                        <button className='mark-early-button positive-button' onClick={() => setEarly(anime,setUpdate, weeksTillReleaseInt)}>Yes</button>
+                                        <button className='mark-early-button positive-button' onClick={() => setEarly(anime,setUpdate, weeksTillReleaseInt, setRefresh)}>Yes</button>
                                     </div>
                                 </div>
                                 :
@@ -270,7 +273,7 @@ function AnimeCard({anime, type}) {
                                     null
                                     :
                                     (showDelay ?
-                                        <button className="card-progress-button positive-button" onClick={() => confirmDelay(anime, setShowDelay, delay, setDelay)}>
+                                        <button className="card-progress-button positive-button" onClick={() => confirmDelay(anime, setShowDelay, delay, setDelay, setRefresh)}>
                                             Confirm
                                         </button>
                                         :
@@ -283,7 +286,7 @@ function AnimeCard({anime, type}) {
                                     null
                                     :
                                     <button className="card-progress-button positive-button"
-                                    onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating)}>
+                                    onClick={() => updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rating, setRefresh)}>
                                         Watched
                                     </button>
                                 }

@@ -70,7 +70,7 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-function NewCalendar({animeList}) {
+function NewCalendar({animeList, refresh}) {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const months = [
         "JAN",
@@ -116,7 +116,7 @@ function NewCalendar({animeList}) {
 
     // When the year changes need to empty the map
     useEffect(() => {
-        setMarkersMap(new Map());
+        // setMarkersMap(new Map());
         const tempMap = new Map();
         const startOfYear = new Date(`1/1/${year-1}`);
 
@@ -142,8 +142,7 @@ function NewCalendar({animeList}) {
         }
 
         setMarkersMap(tempMap);
-        console.log(tempMap);
-    }, [animeList]);
+    }, [animeList, refresh]);
 
     useEffect(() => {
         [startDate, endDate, prevMonthStart, 
@@ -227,7 +226,7 @@ function NewCalendar({animeList}) {
         setCurrMonthDates(pushCurrMonthDates);
         setNextMonthDates(pushNextMonthDates);
         
-    }, [month, markersMap]);
+    }, [month, markersMap, refresh]);
 
     document.addEventListener("click", function(event) {
         const div = document.getElementById('calendar-change-months');
