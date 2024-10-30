@@ -59,10 +59,18 @@ function createDateString(day,month,year) {
     const dayString = String(day).padStart(2,'0');
     const monthString = String(month).padStart(2,'0');
     
-    return `${dayString}/${monthString}/${year}`;
+    // return `${dayString}/${monthString}/${year}`;
+    return `${year}-${monthString}-${dayString}`
 }
 
-function NewCalendar() {
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function NewCalendar({animeList}) {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const months = [
         "JAN",
@@ -78,9 +86,6 @@ function NewCalendar() {
         "NOV",
         "DEC"
     ];
-
-    // To store the dates and the episode releases
-    const markersMap = useRef(new Map());
 
     // Today
     const today = new Date();
@@ -105,6 +110,41 @@ function NewCalendar() {
     let nextMonthDay = 0;
     let nextMonthStart = 0;
 
+    // To store the dates and the episode releases
+    // const markersMap = useRef(new Map());
+    const [markersMap, setMarkersMap] = useState(new Map());
+
+    // When the year changes need to empty the map
+    useEffect(() => {
+        setMarkersMap(new Map());
+        const tempMap = new Map();
+        const startOfYear = new Date(`1/1/${year-1}`);
+
+        if(animeList !== null) {
+
+            // Loop through the store the releases the map
+            for(const anime of animeList) {
+                for(const dateString of anime.epsArray) {
+                    const date = new Date(dateString);
+                    const formattedDate = formatDate(date);
+
+                    if(date >= startOfYear) {
+                        if(tempMap.has(formattedDate)) {
+                            const array = tempMap.get(formattedDate);
+                            array.push(localStorage.getItem(anime.id+"Colour"));
+                            tempMap.set(formattedDate, array);
+                        } else {
+                            tempMap.set(formattedDate, [localStorage.getItem(anime.id+'Colour')]);
+                        }
+                    }
+                }
+            }
+        }
+
+        setMarkersMap(tempMap);
+        console.log(tempMap);
+    }, [animeList]);
+
     useEffect(() => {
         [startDate, endDate, prevMonthStart, 
             prevMonthDate, nextMonthStart, nextMonthDay] = getMonthDates(year, month);
@@ -128,7 +168,7 @@ function NewCalendar() {
             for(let i = prevMonthDate - prevMonthStart; i <= prevMonthDate; i++) {
                 const dateString = createDateString(i,monthDateString,yearDateString);
 
-                const displayMarkers = markersMap.current.get(dateString);
+                const displayMarkers = markersMap.get(dateString);
                 const arrPush = [];
                 arrPush.push(i);
                 if(displayMarkers) {
@@ -147,7 +187,7 @@ function NewCalendar() {
 
             const dateString = createDateString(i,monthDateString,yearDateString);
 
-            const displayMarkers = markersMap.current.get(dateString);
+            const displayMarkers = markersMap.get(dateString);
             const arrPush = [];
             arrPush.push(i);
             if(displayMarkers) {
@@ -173,7 +213,7 @@ function NewCalendar() {
         for(let i = lengthCalendar; i < 42 ; i++) {
             const dateString = createDateString(nextMonthStart,monthDateString,yearDateString);
 
-            const displayMarkers = markersMap.current.get(dateString);
+            const displayMarkers = markersMap.get(dateString);
             const arrPush = [];
             arrPush.push(nextMonthStart++);
 
@@ -187,7 +227,7 @@ function NewCalendar() {
         setCurrMonthDates(pushCurrMonthDates);
         setNextMonthDates(pushNextMonthDates);
         
-    }, [month]);
+    }, [month, markersMap]);
 
     document.addEventListener("click", function(event) {
         const div = document.getElementById('calendar-change-months');
@@ -321,14 +361,6 @@ function NewCalendar() {
                                             {month}
                                         </p>
                                     ))}
-                                    {/* {months.map((monthInList, index) => 
-                                    <li key={index} className='unselectable'>
-                                        <h3 className='month-selection-heading'
-                                        onClick={() => displaySelectedMonth(index, setMonth)}>
-                                            {monthInList}
-                                        </h3>
-                                    </li>
-                                )} */}
                                 </div>
                         </div>
                         <div className='calendar-month-header-buttons-div'>
@@ -364,9 +396,9 @@ function NewCalendar() {
                                                     <p>
                                                         {date[0]}
                                                     </p>
-                                                    <div className='markers-div'>
+                                                    <div className='calendar-marker-div'>
                                                         {date[1].map((color, index) =>
-                                                            <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
                                                         )}
                                                     </div>
                                                 </>
@@ -384,9 +416,9 @@ function NewCalendar() {
                                                     <p>
                                                         {date[0]}
                                                     </p>
-                                                    <div className='markers-div'>
+                                                    <div className='calendar-marker-div'>
                                                         {date[1].map((color, index) =>
-                                                            <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
                                                         )}
                                                     </div>
                                                 </>
@@ -404,9 +436,9 @@ function NewCalendar() {
                                                     <p>
                                                         {date[0]}
                                                     </p>
-                                                    <div className='markers-div'>
+                                                    <div className='calendar-marker-div'>
                                                         {date[1].map((color, index) =>
-                                                            <div key={index} className='anime-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
                                                         )}
                                                     </div>
                                                 </>

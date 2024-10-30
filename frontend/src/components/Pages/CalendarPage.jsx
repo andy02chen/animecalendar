@@ -47,7 +47,7 @@ function CalendarPage() {
                 <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError, addToWatching, removeFromPlanToWatch}}>
                     <ProgressContainer/>
                 </AnimeContext.Provider>
-                <NewCalendar/>
+                <NewCalendar animeList={watchingList}/>
             </div>
             <Feedback/>
             <Tutorial/>

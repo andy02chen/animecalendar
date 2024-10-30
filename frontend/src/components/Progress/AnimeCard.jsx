@@ -185,8 +185,13 @@ function AnimeCard({anime, type}) {
 
     return(
         <div className='anime-card'>
-            <div>
+            <div className='anime-card-header'>
                 <h1 className='anime-card-title'>{anime.title}</h1>
+                {anime.air_status === 'currently_airing' ?
+                    <div className='anime-card-marker-color' style={{backgroundColor: `${localStorage.getItem(anime.id+'Colour')}`}}/>
+                    :
+                    null
+                }
             </div>
             <div className='anime-progress-container'>
                 <div className='card-image-div'>
@@ -217,7 +222,7 @@ function AnimeCard({anime, type}) {
                                 </p>
                             }
 
-                            {(anime.daysTillRelease > weeklyAnimeCeiling && delaysThisWeek === 0) ?
+                            {(anime.daysTillRelease > weeklyAnimeCeiling && localStorage.getItem(anime.id + 'Early') !== null) ?
                                 <div className='mark-early-div' id={anime.id+'mark-early-div'}>
                                     <p className='mark-early-text'>The estimated release date for the next episode is over <span className='status-highlight'>{weeksTillReleaseInt} week(s)</span>. 
                                     Would you like to mark all episodes as releasing <span className='status-highlight'>{weeksTillReleaseInt} week(s)</span> early?</p>
