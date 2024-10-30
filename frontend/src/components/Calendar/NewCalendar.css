@@ -169,9 +169,7 @@
 
 .calendar-days-of-week {
     width: 100%;
-    height: 1rem;
-    overflow: auto;
-
+    /* height: 1rem; */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
@@ -277,10 +275,37 @@
         cursor: pointer;
         text-decoration: underline;
     }
+
+    .calendar-day-title {
+        font-size: 1.25rem;
+    }
+
+    .dates-list > li > div > p {
+        font-size: 1.25rem;
+    }
+
+    .today > div:before {
+        height: 2.5rem;
+        width: 2.5rem;
+    }
 }
 
 @media screen and (min-width: 90rem) {
     #calendar-change-months {
         height: 30rem;
+    }
+
+    .calendar-day-title {
+        font-size: 1.5rem;
+    }
+
+    .dates-list > li > div > p {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .today > div:before {
+        height: 3rem;
+        width: 3rem;
     }
 }

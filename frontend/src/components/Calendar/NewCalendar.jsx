@@ -165,6 +165,17 @@ function NewCalendar() {
         
     }, [month]);
 
+    document.addEventListener("click", function(event) {
+        const div = document.getElementById('calendar-change-months');
+        const monthClicked = document.getElementById('choose-month-div-opener');
+
+        let isClickInside = div.contains(event.target) || monthClicked.contains(event.target);
+    
+        if (!isClickInside) {
+            div.style.display = "none";
+        }
+    });
+
     return(
         <div className="calendar-container">
             <div>
@@ -277,8 +288,8 @@ function NewCalendar() {
                 <div className='calendar-page-main'>
                     <div className='calendar-month-header'>
                         <div className='calendar-month-header-month-div'>
-                            <h1 className='month-year-calendar'
-                            onClick={() => expandChangeMonths()}>Month Year</h1>
+                            <h1 className='month-year-calendar' id='choose-month-div-opener'
+                            onClick={() => expandChangeMonths()}>{months[month]} {year}</h1>
                             <div id='calendar-change-months' style={{display: 'none'}}>
                                 {months.map((month, index) => (
                                     <p className='change-div-months-buttons' key={index}>
