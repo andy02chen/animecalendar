@@ -122,7 +122,7 @@
     display: flex;
     position: relative;
     align-items: flex-start;
-    min-width: 7rem;
+    min-width: 9rem;
 }
 
 .progress-settings-buttons {
@@ -227,4 +227,14 @@
     font-style: normal;
     width: 70%;
     text-align: center;
+}
+
+.notice-noti {
+    position: absolute;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 50%;
+    background-color: red;
+    left: 91%;
+    top: 5%;
 }

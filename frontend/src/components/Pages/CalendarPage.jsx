@@ -7,6 +7,7 @@ import Settings from '../MenuPages/Settings';
 import './CalendarPage.css';
 import { createContext, useState, useEffect } from 'react';
 import CalendarError from '../Alert/CalendarError';
+import Notice from '../MenuPages/Notice';
 
 export const AnimeContext = createContext([]);
 
@@ -47,10 +48,11 @@ function CalendarPage() {
             <Popup/>
             <div className='app-main'>
                 <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError, addToWatching, removeFromPlanToWatch, setRefresh}}>
-                    <ProgressContainer/>
+                    <ProgressContainer refresh={refresh}/>
                 </AnimeContext.Provider>
                 <NewCalendar animeList={watchingList} refresh={refresh}/>
             </div>
+            <Notice setRefresh={setRefresh}/>
             <Feedback/>
             <Tutorial/>
             <Settings watchingList={watchingList}/>

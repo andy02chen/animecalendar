@@ -196,7 +196,6 @@ export default class Anime {
     }
 
     // Update watched progress
-    // TODO when move from plan to watch to watching
     async updateWatchedEpisodes() {
         try {
             let response = null;

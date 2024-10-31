@@ -242,29 +242,6 @@ function displayPlanToWatchList(planToWatchArray, error, handleSuccess, setError
     );
 }
 
-// function generateRandomColour() {
-//     const hue = Math.floor(Math.random() * 360);
-//     const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
-//     const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
-
-//     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-// }
-
-// // Assigns a colour to anime if necessary
-// function assignAnimeColour(animeData) {
-//     if(animeData.air_status === 'currently_airing') {
-//         if(localStorage.getItem(animeData.id+"Colour") === null) {
-//             localStorage.setItem(animeData.id+"Colour", generateRandomColour());
-//         }
-//     } else if (animeData.air_status === 'finished_airing') {
-//         // Removes the colour marker if anime is no longer airing
-//         localStorage.removeItem(animeData.id+"Colour");
-
-//         // Removes any delayed eps
-//         localStorage.removeItem(animeData.id);
-//     }
-// }
-
 // Gets user's anime lists
 function getUsersAnime(handleSuccess, setLoaded, setError) {
     // Get users watch list
