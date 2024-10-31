@@ -1,6 +1,6 @@
 import React, {useState, useEffect, createContext} from 'react'
 import axios from "axios"
-import MainComponent from '../MainComponent'
+import CalendarPage from './CalendarPage';
 
 function loginRedirect() {
     window.location.href = `/a`
@@ -14,12 +14,15 @@ function refreshAccessToken() {
     .catch(error => {
         axios.delete('/api/logout')
         .then(response => {
-            localStorage.setItem('errorMsgDiv', true);
-            document.cookie = "username" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure; path=/';
-            document.cookie = "pfp" + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure; path=/';
-            document.cookie = 'session=; Max-Age=-99999999; SameSite=Lax; Secure; path=/';
+            localStorage.setItem("errorType", "refresh_token_error");
+            localStorage.removeItem("username");
+            localStorage.removeItem("pfp");
             window.location.href = response.data.redirect_url;
         })
+        .catch(error => {
+            localStorage.setItem('errorType', 'error_force_logout');
+            window.location.href = '/';
+        });
     })
 }
 
@@ -38,40 +41,57 @@ export const MyContext = createContext("");
 
 function HomePage() {
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [hasLoaded, setLoaded] = useState(false);
-    const [user, setUser] = useState("");
+    const [loginChecked, setLoginChecked] = useState(false);
 
     // Calls API to check if user is logged in
     useEffect(() => {
         axios.get("/api/check-login")
             .then(response => {
                 setLoggedIn(response.data.loggedIn);
-                setLoaded(true);
-
-                document.cookie = `username=${response.data.username}; SameSite=Lax; Secure; path=/`
-                document.cookie = `pfp=${response.data.picture}; SameSite=Lax; Secure; path=/`
-
-                setUser(response.data.username);
+                localStorage.setItem("username",response.data.username);
+                localStorage.setItem("pfp", response.data.picture);
+                setLoginChecked(true);
 
                 if(response.data.loggedIn) {
                     refreshInterval = setInterval(refreshAccessToken,refreshTime);
                 }
             })
             .catch(error => {
-                localStorage.setItem('errorMsgDiv', '4');
-                setLoaded(true);
+                if(error.response.status === 429) {
+                    axios.delete('/api/logout')
+                    .then(response => {
+                        localStorage.setItem("errorType", "rate_limit_error");
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("pfp");
+                        window.location.href = '/';
+                    })
+                    .catch(error => {
+                        localStorage.setItem("errorType", "rate_limit_error");
+                        window.location.href = '/';
+                    });
+                } else {
+                    axios.delete('/api/logout')
+                    .then(response => {
+                        localStorage.setItem('errorType', "check_login_error");
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("pfp");
+                        window.location.href = response.data.redirect_url;
+                    })
+                    .catch(error => {
+                        localStorage.setItem('errorType', 'error_force_logout');
+                        window.location.href = '/';
+                    });
+                }
             });
     }, []);
 
     // Redirects to login page if not logged in
     return(
-        <> 
-            {hasLoaded ?
+        <>
+            {loginChecked ?
                 <>
-                    {isLoggedIn ?
-                        <MyContext.Provider value={user}>
-                            <MainComponent/>
-                        </MyContext.Provider>
+                    {isLoggedIn?
+                        <CalendarPage/>
                         :
                         <>
                             {loginRedirect()}
@@ -79,12 +99,7 @@ function HomePage() {
                     }
                 </>
                 :
-                <>
-                    <div className='loading-div'>
-                        <svg className='loading-spinner' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>
-                        <p className='message-text'>Loading...</p>
-                    </div>
-                </>
+                null
             }
         </>
     );

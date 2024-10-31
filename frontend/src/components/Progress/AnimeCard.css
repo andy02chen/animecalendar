@@ -1,0 +1,320 @@
+.anime-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.anime-card-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.anime-card-title {
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: "Montserrat", Arial, sans-serif;
+}
+
+.anime-progress-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-image-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.card-image-div > img {
+    max-height: 12.5rem;
+}
+
+.card-progress {
+    text-align: center;
+    font-family: "Lato", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 1.5rem;
+    user-select: none;
+}
+
+.card-progress-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.card-progress-buttons {
+    padding-top: 15px;
+    display: flex;
+    gap: 20px;
+}
+
+/* Button designs */
+.card-progress-button {
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 200ms, background 200ms;
+    font-family: "Montserrat", Arial, sans-serif;
+}
+
+.positive-button {
+    background: var(--primary-200);
+    color: var(--white);
+}
+
+.negative-button {
+    background: var(--accent-400);
+    color: var(--black);
+}
+
+.negative-button:hover {
+    background: var(--accent-300);
+}
+
+.positive-button:hover {
+    background: var(--primary-100);
+}
+
+.positive-button[disabled] {
+    opacity: 50%;
+    pointer-events: none;
+    user-select: none;
+}
+
+.positive-button:active {
+    background: var(--primary-300);
+}
+
+.negative-button:active {
+    background: var(--accent-500);
+}
+
+.anime-card-progress-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.anime-card-progress-buttons > button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+}
+
+.anime-card-change-progress-button {
+    background-color: var(--white);
+    color: var(--primary-200);
+    border: 1px solid var(--primary-300);
+    border-radius: 50%;
+    text-align: center;
+    user-select: none;
+}
+
+.anime-card-change-progress-button:hover{
+    cursor: pointer;
+}
+
+.anime-card-change-progress-button:active{
+    background-color: var(--primary-50);
+}
+
+.anime-card-change-progress-button[disabled] {
+    opacity: 20%;
+    pointer-events: none;
+}
+
+.loading-update-anime {
+    height: auto;
+    width: 75px;
+    animation: spin 0.8s linear infinite;
+    fill: var(--text);
+}
+
+.loading-update-anime-text {
+    font-size: 1.25rem;
+    font-family: "Lato", Arial, sans-serif;
+}
+
+@keyframes spin {
+    0% {transform:rotate(0deg);}
+    100% {transform:rotate(360deg);}
+}
+
+.loading-container-update-anime {
+    margin-top: 10px;
+}
+
+.anime-card-status {
+    height: 3.125rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-progress-button {
+    animation: fadeIn 0.5s forwards;
+}
+
+.anime-card-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+}
+
+.early-message {
+    text-align: center;
+}
+
+.delay-message {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.delay-amount {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+#delayInput {
+    text-align: center;
+    width: 4rem;
+    height: 2.5rem;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    -moz-appearance: textfield;
+}
+
+#delayInput::-webkit-inner-spin-button, 
+#delayInput::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.delay-amount > button {
+    height: 2.5rem;
+    width: 2.5rem;
+    font-size: 1.5rem;
+    font-family: "Montserrat", Arial, sans-serif;
+    border: none;
+    border-radius: 10px;
+    border: 2px solid var(--primary-300);
+    color: var(--primary-300);
+    transition: scale 0.5s ease-in-out;
+}
+
+.delay-amount > button:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.mark-early-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.mark-early-div > div {
+    display: flex;
+    gap: 5px;
+    margin: 5px;
+}
+
+.mark-early-text {
+    text-align: center;
+}
+
+.mark-early-button {
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 200ms, background 200ms;
+    font-family: "Montserrat", Arial, sans-serif;
+}
+
+.ptw-button {
+    margin: 10px;
+}
+
+.marker-color-picker[type="color"] {
+    height: 0;
+    width: 0;
+    opacity: 0;
+    position: relative;
+}
+
+.marker-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.anime-card-marker-color {
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+    border: 1px solid var(--black);
+    transition: 0.5s ease;
+}
+
+.anime-card-marker-color:hover {
+    cursor: pointer;
+    transform: scale(1.25);
+}
+
+.button-confirm-color {
+    position: absolute;
+    left: calc(50% + 1rem);
+
+    background: var(--accent-300);
+    border: 1px solid var(--black);
+    padding: 3px;
+    margin: 0;
+    font-family: "Lato", Arial, sans-serif;
+    color: var(--black);
+}
+
+.button-confirm-color:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}

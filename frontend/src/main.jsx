@@ -4,7 +4,7 @@ import Auth from './components/Pages/Auth.jsx'
 import HomePage from './components/Pages/HomePage.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Alert from './components/Alert/Alert.jsx'
+import Error from './components/Alert/Error.jsx'
 
 const router = createBrowserRouter([
   {
@@ -19,11 +19,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Alert/>
+    <Error/>
     <RouterProvider router={router}/>
   </React.StrictMode>
-  // <>
-  //   <Alert/>
-  //   <RouterProvider router={router}/>
-  // </>
 )

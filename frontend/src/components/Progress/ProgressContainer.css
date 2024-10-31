@@ -1,0 +1,240 @@
+#expand-progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.trapezium {
+    position: relative;
+    width: 1.25rem;
+    height: 12.5rem;
+    background-color: var(--progress-div-colour);
+    clip-path: polygon(0 0, 100% 10%, 100% 90%, 0 100%);
+    border: 2px solid var(--primary-300);
+}
+
+.trapezium:hover {
+    background-color: var(--primary-500);
+    cursor: pointer;
+}
+
+@media (hover: none) {
+    .trapezium:hover {
+        background-color: var(--progress-div-colour);
+        cursor: pointer;
+    }
+}
+
+.arrow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.25rem;
+    font-family: "Furore", sans-serif;
+}
+
+/* Progress Container */
+#progress-container {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100%;
+    background-color: var(--black-70);
+    position: fixed;
+    overflow-y: hidden;
+    overflow-x: auto;
+    display: none;
+    z-index: 1;
+}
+
+.progress-div1 {
+    height: 100vh;
+    width: 70vw;
+    min-width: 18.75rem;
+    max-width: 31.25rem;
+    position: relative;
+    animation: slide-in 0.5s ease-out forwards;
+    transform: translateY(-100%);
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translateY(-100%);
+    }
+    75% {
+        transform: translateY(10%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.progress-div1-svg {
+    height: 100%;
+    width: 100%;
+}
+
+/* Collapse Div */
+#collapse-progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+}
+
+/* Div Content */
+.progress-content-div {
+    position: absolute;
+    height: 95%;
+    width: 100%;
+    top: 0px;
+    padding: 20px 20px 0px 20px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.progress-header-div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.progress-header-div > h1 {
+    font-family: "Furore", sans-serif;
+    color: var(--yellow-100);
+    font-weight: 500;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Settings Div */
+.progress-settings-div {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    min-width: 9rem;
+}
+
+.progress-settings-buttons {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.875rem;
+    width: 100%;
+}
+
+#progress-settings-user {
+    background-color: var(--primary-500);
+}
+
+.progress-settings-buttons:hover, #progress-settings-user:hover {
+    background-color: var(--primary-400);
+}
+
+.expanded-settings-active {
+    background-color: var(--primary-500);
+}
+
+.progress-settings-buttons > img {
+    width: 1.75rem;
+    height: auto;
+    max-height: 1.875rem;
+}
+
+.progress-settings-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+}
+
+.progress-settings-icon {
+    margin-left: 5px;
+    height: 1rem;
+    width: 1rem;
+    fill: var(--text);
+}
+
+#progress-hidden-settings {
+    position: absolute;
+    width: 100%;
+    background-color: var(--primary-500);
+    top: 30px;
+    z-index: 999;
+}
+
+.progress-note {
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: "Montserrat", sans-serif;
+}
+
+/* Top Divider */
+.progress-top-divider {
+    width: 100%;
+    height: 1.875rem;
+}
+
+@media screen and (min-width: 90rem) {
+    #progress-container {
+        display: block !important;
+        max-width: 31.25rem;
+        position: static;
+        background-color: transparent;
+        flex-grow: 1;
+    }
+
+    #collapse-progress-container, #expand-progress-container {
+        display: none !important;
+    }
+}
+
+.progress-loading-div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-loading {
+    height: auto;
+    width: 4.688rem;
+    animation: spin 0.8s linear infinite;
+    fill: var(--text);
+}
+
+.loading-text {
+    margin: 10px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    font-style: normal;
+    width: 70%;
+    text-align: center;
+}
+
+.notice-noti {
+    position: absolute;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 50%;
+    background-color: red;
+    left: 91%;
+    top: 5%;
+}

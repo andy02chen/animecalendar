@@ -1,0 +1,70 @@
+.error-alert-div-shape {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 43.813rem;
+    height: 100%;
+    max-height: 12.5rem;
+    background-color: black;
+    z-index: 99999;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    clip-path: polygon(100% 0, 100% 90%, 95% 100%, 0 100%, 0 0);
+    overflow: auto;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.error-alert-div-shape.show {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.error-alert-div-contents {
+    clip-path: polygon(100% 0, 100% 90%, 95% 100%, 0 100%, 0 0);
+    background-color: #F58888;
+    width: 99%;
+    min-width: 19.375rem;
+    max-width: 43.75rem;
+    height: 98%;
+    position: absolute;
+    top: 1.5%;
+    left: 0.5%;
+    padding: 15px;
+    overflow: auto;
+    white-space: normal; 
+}
+
+.error-close-button {
+    cursor: pointer;
+}
+
+.error-alert-header-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.error-alert-header-div h1 {
+    color: black;
+    font-family: "Furore", Arial, sans-serif;
+}
+
+.error-divider {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.error-divider div {
+    width: 75%;
+    border: 1px solid var(--white);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.error-alert-message {
+    font-family: "Montserrat", Arial, sans-serif;
+    font-size: 1.25rem;
+    color: var(--white);
+}

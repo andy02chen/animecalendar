@@ -27,6 +27,7 @@
     --primary-500: #0F589C;
 
     --black: #2C2C2C;
+    --black-70: #2b2b2bb3;
     --white: #F1F3F2;
 
     --accent-50: #F7F8F9;
@@ -52,6 +53,8 @@
     --yellow-300: #CDA145;
     --yellow-400: #907130;
     --yellow-500: #8D5673;
+
+    --progress-div-colour: #1A344E;
 }
 
 @font-face {
@@ -89,28 +92,35 @@
 }
 
 body {
-    height: 100svh;
+    height: 100vh;
+    height: 100dvh;
     width: 100vw;
     max-width: 100%;
-    font-family: 'Lato', sans-serif;
-    background-color: var(--background);
+    font-family: 'Lato', Arial, sans-serif;
+    background-color: var(--white);
+}
+
+body.dark-mode {
+    background-color: var(--black);
 }
 
 p,h1 {
     color: var(--text);
+    font-family: 'Montserrat', Arial, sans-serif;
 }
 
 img {
     color: var(--text);
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 0.5em;
+    height: 0.5em;
 }
 
 ::-webkit-scrollbar-track {
     background: #333333;
-    border-radius: 100vw;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -280,10 +290,6 @@ img {
     .calendar-div {
         flex: 0 0 65%;
     }
-
-    .feedback-div {
-        width: 75%;
-    }
 }
 
 /* Tablets */
@@ -329,22 +335,6 @@ img {
         height: 8px;
     }
 
-    .popup-localStorage {
-        width: 80%;
-    }
-
-    .popup-localStorage-title {
-        font-size: 2rem;
-    }
-
-    .popup-localStorage-text {
-        font-size: 1.5rem;
-    }
-
-    .feedback-div {
-        width: 80%;
-    }
-
     button {
         font-size: 1.5rem;
     }
@@ -372,14 +362,6 @@ img {
 
     .anime-progress-checkbox {
         font-size: 1.5rem;
-    }
-
-    .feedback-title {
-        font-size: 2rem;
-    }
-
-    .feedback-text {
-        font-size: 1.6rem;
     }
 
     .announcement-text {

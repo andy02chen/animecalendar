@@ -1,0 +1,70 @@
+#tutorial-page {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--black-70);
+    top: 0;
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 4.375rem;
+}
+
+.tutorial-expand-symbol {
+    height: auto;
+    width: 1.875rem;
+    min-width: 1.875rem;
+    fill: var(--white);
+    transform: rotate(45deg);
+    transition: transform 0.5s ease;;
+}
+
+.tutorial-page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tutorial-page-expand-button {
+    width: 100%;
+    border: 5px solid var(--primary-200);
+    min-height: 4.375rem;
+    transition: max-height 0.5s ease;
+    max-height: 4.375rem;
+    overflow: hidden;
+}
+
+.tutorial-page-expand-button:hover {
+    border: 5px solid var(--primary-100);
+    cursor: pointer;
+}
+
+.tutorial-page-expand-button > p {
+    text-align: center;
+    padding: 10px;
+}
+
+.tutorial-title {
+    text-align: left;
+    font-size: 1.25rem;
+    font-family: "Montserrat", Arial, sans-serif;
+}
+
+.expand-tutorial-text {
+    max-height: 31.25rem;
+}
+
+.expand-symbol {
+    transform: rotate(0deg);
+}
+
+@media (hover: none) {
+    .tutorial-page-expand-button:hover {
+        border: 5px solid var(--primary-200);
+    }
+}

@@ -95,7 +95,10 @@ function Auth()  {
                 setLoggedIn(response.data.loggedIn);
             })
             .catch(error => {
-                // TODO maybe need to handle
+                if(error.response.status === 429) {
+                    localStorage.setItem("errorType", "rate_limit_error");
+                }
+                setLoggedIn(false);
             });
     }, []);
 
@@ -106,6 +109,18 @@ function Auth()  {
 
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    
+        if (isDarkMode) {
+            document.getElementById('login-page-how-to-use').classList.add('dark-mode-add');
+            document.getElementById('login-page-header').classList.add('dark-mode-add');
+        } else {
+            document.getElementById('login-page-how-to-use').classList.remove('dark-mode-add');
+            document.getElementById('login-page-header').classList.remove('dark-mode-add');
+        }
+    })
 
     return(
         <>
@@ -118,7 +133,7 @@ function Auth()  {
                 <div id='copied-discord-popup'>
                     <p>Username copied to clipboard</p>
                 </div>
-                <div className='login-page-header'>
+                <div className='login-page-header' id='login-page-header'>
                     <div>
                         <img className='logo' src={logo} alt='logo'></img>
                         <button className='login-page-header-login-btn' onClick={() => {
@@ -187,14 +202,14 @@ function Auth()  {
                                 <button onClick={() => {
                                     document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax; Secure; path=/';
                                     authRedirect();
-                                }} className='login-div-mal-button'>Login with MAL</button>
+                                }} className='login-div-mal-button' id='login-div-mal-button'>Login with MAL</button>
                                 <div className='choice-div-line'></div>
-                                <button className='login-div-guest-button' onClick={() => guestRedirect()}>Continue as Guest</button>
+                                <button className='login-div-guest-button' id="login-div-guest-button" onClick={() => guestRedirect()}>Continue as Guest</button>
                             </div>
                         </div>
                     </div>
                 </section>
-                <section className="login-page-how-to-use">
+                <section className="login-page-how-to-use" id='login-page-how-to-use'>
                     <div className='how-to-use-div'>
                         <svg className='how-to-use-title' width="483" height="71" viewBox="0 0 483 71" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g filter="url(#filter0_d_140_260)">
@@ -241,14 +256,6 @@ function Auth()  {
                                 Calendar markers indicate episode dates for <span className='how-to-use-highlight'>currently airing</span> shows, with <span className='how-to-use-highlight'>all markers </span> displayed if the season's total episode count is known.
                                 </p>
                             </div>
-                            <div id='how-to-use-btn-3' onClick={() => expandInstructionDiv(3, selectedDiv)}>
-                                <h1>Delaying Episodes</h1>
-                                <p style={{display: "none"}} id='how-to-use-btn-3-text'>
-                                Next to each anime is a <span className='how-to-use-highlight'>delay button</span>, functional only for <span className='how-to-use-highlight'>currently airing </span> shows. 
-                                This button delays the estimated date by a <span className='how-to-use-highlight'>week</span>, and changes are reflected on the calendar. 
-                                Note that this data is stored <span className='how-to-use-highlight'> locally on your machine</span>, so progress may not match across devices.
-                                </p>
-                            </div>
                             <div id='how-to-use-btn-4' onClick={() => expandInstructionDiv(4, selectedDiv)}>
                                 <h1>Upcoming Anime Releases</h1>
                                 <p style={{display: "none"}} id='how-to-use-btn-4-text'>
@@ -263,13 +270,6 @@ function Auth()  {
                                 Click 'Watched' and <span className='how-to-use-highlight'> confirm </span> to update.
                                 The UI will refresh only after the update is <span className='how-to-use-highlight'> confirmed on MAL</span>. 
                                 If the progress fails to update, an error will be displayed. Please <span className='how-to-use-highlight'> double-check </span> on MAL if you have<span className='how-to-use-highlight'> concerns </span> and report any issues.
-                                </p>
-                            </div>
-                            <div id='how-to-use-btn-6' onClick={() => expandInstructionDiv(6, selectedDiv)}>
-                                <h1>Rate Your Anime</h1>
-                                <p style={{display: "none"}} id='how-to-use-btn-6-text'>
-                                Upon <span className='how-to-use-highlight'> completing </span> an anime, you'll have the option to rate it. 
-                                If you choose not to rate, you can simply skip this step.
                                 </p>
                             </div>
                             <div id='how-to-use-btn-7' onClick={() => expandInstructionDiv(7, selectedDiv)}>

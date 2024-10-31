@@ -64,12 +64,14 @@ scheduler.add_job(
 scheduler.start()
 
 
+# TODO uncomment for main push/merge
 # React Router should be doing this
 @app.route('/a')
 @app.route('/home')
 def serve_react_pages():
     try:
         return render_template('index.html')
+        # return redirect("https://localhost:5173", code=302)
     except Exception:
         app.logger.error('Unable to load home page.')
         abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
@@ -124,7 +126,7 @@ def updateStatus():
                     return 'Invalid request data for updating anime', 400
 
                 anime_id = data['anime-id']
-                eps_watched = int(data['eps-watched']) + 1
+                eps_watched = int(data['eps-watched'])
 
                 mal_update_anime = f'https://api.myanimelist.net/v2/anime/{anime_id}/my_list_status'
 
@@ -189,7 +191,9 @@ def delete_user_session():
     try:
         # Check limit
         if is_rate_limited(request.remote_addr, request.endpoint, limit=5, period=60):
-            return jsonify({"error": "rate limit exceeded"}), 429
+            response = jsonify({"error": "rate limit exceeded"})
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response, 429
 
         session_id = get_session_id()
 
@@ -211,9 +215,13 @@ def delete_user_session():
 
                 return jsonify({"redirect_url": "/"}), 200
 
-            return jsonify({"redirect_url": "/"}), 401
+            response = jsonify({"redirect_url": "/"})
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response, 401
 
-        return jsonify({"redirect_url": "/"}), 401
+        response = jsonify({"redirect_url": "/"})
+        response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+        return response, 401
     
     except Exception as e:
         app.logger.error(f"Unexpected error in delete_user_session: {e}")
@@ -248,7 +256,7 @@ def check_expiry():
         return '',100
 
     except Exception as e:
-        app.logger.error(f"Unexpected error in check_expirty: {e}")
+        app.logger.error(f"Unexpected error in check_expiry: {e}")
         return '', 401
 
 # Function for checking if rate limited
@@ -311,6 +319,8 @@ def filter_plan_to_watch_anime(data):
         # Extract broadcast time
         broadcast = node.get('broadcast', {})
         details['broadcast_time'] = broadcast.get('start_time', None)
+        details['end_date'] = node.get('end_date', None)
+        details['eps'] = node.get('num_episodes', 0)
 
         data_to_return.append(details)
 
@@ -526,6 +536,8 @@ def protectedRoute():
             find_user = find_user_function(user_session_id)
 
             if find_user:
+
+
                 return jsonify({
                     'loggedIn':True,
                     'username': find_user.user_id,
@@ -706,7 +718,12 @@ def auth():
     auth_url = f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id={client_id}&state={oauth_state}&redirect_uri={API_URL}/oauth/callback&code_challenge={code_challenge}&code_challenge_method=plain"
     
     response = redirect(auth_url)
-    response.set_cookie('session', got_session, secure=True, httponly=True, samesite='Lax', path='/')
+    response.set_cookie('session', got_session, 
+                    secure=True, 
+                    httponly=True, 
+                    samesite='Lax', 
+                    path='/', 
+                    max_age=30*24*60*60)
     return response
 
 def query_auth(session_id, session_salt):
@@ -910,7 +927,12 @@ def guestLogin():
     session_id = get_session_id()
     if session_id == 'guest' or session_id == None:
         response = redirect('/home')
-        response.set_cookie('session', "guest", secure=True, httponly=True, samesite='Lax', path='/')
+        response.set_cookie('session', "guest", 
+                    secure=True, 
+                    httponly=True, 
+                    samesite='Lax', 
+                    path='/', 
+                    max_age=30*24*60*60)
         return response
 
     return redirect('/')

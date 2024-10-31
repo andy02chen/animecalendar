@@ -61,7 +61,19 @@ export default defineConfig({
         target: "https://localhost:5000",
         secure: false,
         changeOrigin: true
-      },
+      }
+      // ,
+      // '/home': {
+      //   target: "https://localhost:5000",
+      //   secure: false,
+      //   changeOrigin: true
+      // },
+      // '/a': {
+      //   target: "https://localhost:5000",
+      //   secure: false,
+      //   changeOrigin: true
+      // }
+      ,
       '/': {
         target: "https://localhost:5000",
         secure: false,
