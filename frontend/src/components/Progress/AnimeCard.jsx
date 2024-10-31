@@ -171,6 +171,7 @@ function AnimeCard({anime, type}) {
 
     const handleColorChange = (event) => {
         anime.changeColour(event.target.value);
+        console.log(event.target.value);
     };
 
     const confirmColorChange = () => {
@@ -199,10 +200,17 @@ function AnimeCard({anime, type}) {
             <div className='anime-card-header'>
                 <h1 className='anime-card-title'>{anime.title}</h1>
                 {anime.air_status === 'currently_airing' ?
-                    <>
-                        <div className='anime-card-marker-color' style={{backgroundColor: `${localStorage.getItem(anime.id+'Colour')}`}}/>
-                        <input type='color' />
-                    </>
+                    <div className='marker-container'>
+                        <div className='anime-card-marker-color' style={{backgroundColor: anime.marker_colour}}
+                        onClick={() => {
+                            document.getElementById(anime.id+"color-picker").click();
+                            document.getElementById(anime.id+'confirm-color').style.display = "block";
+                        }}/>
+                        <input type="color" id={anime.id+'color-picker'} className="marker-color-picker" value={anime.marker_colour}
+                        onChange={handleColorChange}/>
+                        <button style={{display: "none"}} id={anime.id+'confirm-color'} className='button-confirm-color'
+                        onClick={() => confirmColorChange()}>Confirm</button>
+                    </div>
                     :
                     null
                 }

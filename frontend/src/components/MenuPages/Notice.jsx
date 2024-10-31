@@ -56,6 +56,9 @@ function Notice({setRefresh}) {
                             <li>
                                 <p>More accurate status for anime with no broadcast time</p>
                             </li>
+                            <li>
+                                <p>Stay signed in for 30 days</p>
+                            </li>
                         </ul>
                         <br/>
 
