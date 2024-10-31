@@ -19,10 +19,50 @@ export default class Anime {
         this.rating = null;
         this.epsArray = this.getEpsArray();
         this.season = season;
+        this.marker_colour = this.assignAnimeColour();
+        
 
         if(this.air_status === 'finished_airing') {
             this.removeOutdatedLocalStorageData();
         }
+    }
+
+    changeColour(color) {
+        localStorage.setItem(this.id+"Colour", color);
+        this.marker_colour = color;
+    }
+
+    generateRandomColour() {
+        const minBrightness = 100; // Minimum brightness for RGB values (0-255)
+    
+        // Generate RGB values ensuring they are above the minimum brightness
+        const r = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+        const g = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+        const b = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+
+        // Convert RGB to Hex
+        const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        
+        return hex;
+    }
+    
+    // Assigns a colour to anime if necessary
+    assignAnimeColour() {
+        if(this.air_status === 'currently_airing') {
+            if(localStorage.getItem(this.id+"Colour") === null) {
+                const color = this.generateRandomColour();
+                localStorage.setItem(this.id+"Colour", color);
+                return color;
+            }
+            return localStorage.getItem(this.id+"Colour");
+        } else if (this.air_status === 'finished_airing') {
+            // Removes the colour marker if anime is no longer airing
+            localStorage.removeItem(this.id+"Colour");
+    
+            // Removes any delayed eps
+            localStorage.removeItem(this.id);
+        }
+        return null;
     }
 
     markCompleted() {

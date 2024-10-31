@@ -131,10 +131,10 @@ function NewCalendar({animeList, refresh}) {
                     if(date >= startOfYear) {
                         if(tempMap.has(formattedDate)) {
                             const array = tempMap.get(formattedDate);
-                            array.push(localStorage.getItem(anime.id+"Colour"));
+                            array.push(anime.marker_colour);
                             tempMap.set(formattedDate, array);
                         } else {
-                            tempMap.set(formattedDate, [localStorage.getItem(anime.id+'Colour')]);
+                            tempMap.set(formattedDate, [anime.marker_colour]);
                         }
                     }
                 }

@@ -242,26 +242,28 @@ function displayPlanToWatchList(planToWatchArray, error, handleSuccess, setError
     );
 }
 
-function generateRandomColour() {
-    const hue = Math.floor(Math.random() * 360);
-    const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
-    const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
+// function generateRandomColour() {
+//     const hue = Math.floor(Math.random() * 360);
+//     const saturation = 70 + Math.round(Math.random() * 30 * 10)/10;
+//     const lightness = 50 + Math.round(Math.random() * 30 * 10)/10;
 
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
+//     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+// }
 
-// Assigns a colour to anime if necessary
-function assignAnimeColour(animeData) {
-    if(animeData.air_status === 'currently_airing') {
-        localStorage.setItem(animeData.id+"Colour", generateRandomColour());
-    } else if (animeData.air_status === 'finished_airing') {
-        // Removes the colour marker if anime is no longer airing
-        localStorage.removeItem(animeData.id+"Colour");
+// // Assigns a colour to anime if necessary
+// function assignAnimeColour(animeData) {
+//     if(animeData.air_status === 'currently_airing') {
+//         if(localStorage.getItem(animeData.id+"Colour") === null) {
+//             localStorage.setItem(animeData.id+"Colour", generateRandomColour());
+//         }
+//     } else if (animeData.air_status === 'finished_airing') {
+//         // Removes the colour marker if anime is no longer airing
+//         localStorage.removeItem(animeData.id+"Colour");
 
-        // Removes any delayed eps
-        localStorage.removeItem(animeData.id);
-    }
-}
+//         // Removes any delayed eps
+//         localStorage.removeItem(animeData.id);
+//     }
+// }
 
 // Gets user's anime lists
 function getUsersAnime(handleSuccess, setLoaded, setError) {
@@ -272,7 +274,7 @@ function getUsersAnime(handleSuccess, setLoaded, setError) {
         const animeList = [];
 
         for (let animeData of storeAnime) {
-            assignAnimeColour(animeData);
+            // assignAnimeColour(animeData);
             animeList.push(
                 new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
                     animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date, null)
