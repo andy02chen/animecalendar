@@ -186,6 +186,59 @@ function AnimeCard({anime, type}) {
 
     const weeksTillReleaseInt = Math.floor(Math.floor(anime.daysTillRelease) / 7);
 
+    if(localStorage.getItem('username') === "Guest") {
+        return(
+            <div className='anime-card'>
+            <div className='anime-card-header'>
+                <h1 className='anime-card-title'>{anime.title}</h1>
+                {anime.air_status === 'currently_airing' ?
+                    <div className='anime-card-marker-color' style={{backgroundColor: `${localStorage.getItem(anime.id+'Colour')}`}}/>
+                    :
+                    null
+                }
+            </div>
+            <div className='anime-progress-container'>
+                <div className='card-image-div'>
+                    <img src={anime.image} alt='Img of Anime'/>
+                </div>
+                <div className='card-progress-div'>
+                    {type === "cw" && !loading && 
+                        <>
+                            <div className='anime-card-progress-buttons'>
+                                <button className="anime-card-change-progress-button" id={`decrease-progress-${anime.id}`} disabled={anime.currentProgress <= anime.minProgress} 
+                                onClick={() => decreaseAnimeProgress(anime, setUpdate, setShowDelay)}>-</button>
+                                <p className='card-progress'>{anime.currentProgress}/{anime.totalEpisodes === 0 ? "?" : anime.totalEpisodes}</p>
+                                <button className='anime-card-change-progress-button' id={`increase-progress-${anime.id}`} onClick={() => increaseAnimeProgress(anime, setUpdate, setShowDelay)}>+</button>
+                            </div>
+                            <div style={outerProgress}><div style={innerProgress}></div></div>
+                            <div className='anime-card-status'>
+                                <NextEpisodeStatus anime={anime} type={type}/>
+                            </div>
+                        </>
+                    }
+                    {type === "ptw" && !loading && 
+                        <>
+                            <div className='anime-card-status'>
+                                <NextEpisodeStatus anime={anime} type={type}/>
+                            </div>
+                        </>
+                    }
+                    {loading && 
+                        (
+                            <div className='loading-container-update-anime'>
+                                <svg className='loading-update-anime' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/>
+                                </svg>
+                                <p className='loading-update-anime-text'>Loading...</p>
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+        );
+    }
+
     return(
         <div className='anime-card'>
             <div className='anime-card-header'>

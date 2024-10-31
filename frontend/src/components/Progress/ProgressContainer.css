@@ -122,6 +122,7 @@
     display: flex;
     position: relative;
     align-items: flex-start;
+    min-width: 7rem;
 }
 
 .progress-settings-buttons {

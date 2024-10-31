@@ -140,7 +140,7 @@ function NewCalendar({animeList, refresh}) {
                 }
             }
         }
-
+        
         setMarkersMap(tempMap);
     }, [animeList, refresh]);
 
@@ -396,9 +396,30 @@ function NewCalendar({animeList, refresh}) {
                                                         {date[0]}
                                                     </p>
                                                     <div className='calendar-marker-div'>
-                                                        {date[1].map((color, index) =>
-                                                            <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
-                                                        )}
+                                                        {date[1].length > 3 ? 
+                                                            <div className='calendar-date-marker-more'>
+                                                                <div className='calendar-date-marker-1 calendar-date-marker' 
+                                                                style={{
+                                                                    backgroundColor: date[1][0]
+                                                                }}></div>
+
+                                                                <div className='calendar-date-marker-2 calendar-date-marker' 
+                                                                style={{
+                                                                    backgroundColor: date[1][1]
+                                                                }}></div>
+
+                                                                <div className='calendar-date-marker-3 calendar-date-marker' 
+                                                                style={{
+                                                                    backgroundColor: date[1][2]
+                                                                }}></div>
+
+                                                                <div className='calendar-date-marker-4 calendar-date-marker'>+</div>
+                                                            </div>
+                                                            : 
+                                                            date[1].map((color, index) =>
+                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            )
+                                                        }
                                                     </div>
                                                 </>
                                             }
@@ -418,22 +439,22 @@ function NewCalendar({animeList, refresh}) {
                                                     <div className='calendar-marker-div'>
                                                         {date[1].length > 3 ? 
                                                             <div className='calendar-date-marker-more'>
-                                                                <div key={index} className='calendar-date-marker-1 calendar-date-marker' 
+                                                                <div className='calendar-date-marker-1 calendar-date-marker' 
                                                                 style={{
                                                                     backgroundColor: date[1][0]
                                                                 }}></div>
 
-                                                                <div key={index} className='calendar-date-marker-2 calendar-date-marker' 
+                                                                <div className='calendar-date-marker-2 calendar-date-marker' 
                                                                 style={{
                                                                     backgroundColor: date[1][1]
                                                                 }}></div>
 
-                                                                <div key={index} className='calendar-date-marker-3 calendar-date-marker' 
+                                                                <div className='calendar-date-marker-3 calendar-date-marker' 
                                                                 style={{
                                                                     backgroundColor: date[1][2]
                                                                 }}></div>
 
-                                                                <div key={index} className='calendar-date-marker-4 calendar-date-marker'>+</div>
+                                                                <div className='calendar-date-marker-4 calendar-date-marker'>+</div>
                                                             </div>
                                                             : 
                                                             date[1].map((color, index) =>
@@ -457,9 +478,30 @@ function NewCalendar({animeList, refresh}) {
                                                         {date[0]}
                                                     </p>
                                                     <div className='calendar-marker-div'>
-                                                        {date[1].map((color, index) =>
-                                                            <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
-                                                        )}
+                                                        {date[1].length > 3 ? 
+                                                            <div className='calendar-date-marker-more'>
+                                                                <div className='calendar-date-marker-1 calendar-date-marker' 
+                                                                style={{
+                                                                    backgroundColor: date[1][0]
+                                                                }}></div>
+
+                                                                <div className='calendar-date-marker-2 calendar-date-marker' 
+                                                                style={{
+                                                                    backgroundColor: date[1][1]
+                                                                }}></div>
+
+                                                                <div className='calendar-date-marker-3 calendar-date-marker' 
+                                                                style={{
+                                                                    backgroundColor: date[1][2]
+                                                                }}></div>
+
+                                                                <div className='calendar-date-marker-4 calendar-date-marker'>+</div>
+                                                            </div>
+                                                            : 
+                                                            date[1].map((color, index) =>
+                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            )
+                                                        }
                                                     </div>
                                                 </>
                                             }
