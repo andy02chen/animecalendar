@@ -1,5 +1,6 @@
+import ExpandDate from './ExpandDate';
 import './NewCalendar.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo} from 'react';
 
 function expandChangeMonths() {
     const div = document.getElementById('calendar-change-months');
@@ -70,6 +71,24 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
+//expand date
+function expandDate(setDateDisplay, day, month, year) {
+    document.getElementById('expand-date').style.display = "flex";
+
+    let changeMonth = month+1;
+    let changeYear = year;
+
+    if(month === 12) {
+        changeMonth = 1;
+        changeYear = year+1;
+    } else if (month === -1) {
+        changeMonth = 12;
+        changeYear = year-1;
+    }
+
+    setDateDisplay(`${changeYear}-${String(changeMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`);
+}
+
 function NewCalendar({animeList, refresh}) {
     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const months = [
@@ -111,12 +130,22 @@ function NewCalendar({animeList, refresh}) {
     let nextMonthStart = 0;
 
     // To store the dates and the episode releases
-    // const markersMap = useRef(new Map());
     const [markersMap, setMarkersMap] = useState(new Map());
+
+    const [dateDisplay, setDateDisplay] = useState(null);
+    const animeDictionary = useMemo(() => {
+        if(animeList === null) {
+            return {};
+        }
+
+        return animeList.reduce((acc, anime) => {
+            acc[anime.id] = anime;
+            return acc;
+        }, {});
+    }, [animeList]);
 
     // When the year changes need to empty the map
     useEffect(() => {
-        // setMarkersMap(new Map());
         const tempMap = new Map();
         const startOfYear = new Date(`1/1/${year-1}`);
 
@@ -131,10 +160,10 @@ function NewCalendar({animeList, refresh}) {
                     if(date >= startOfYear) {
                         if(tempMap.has(formattedDate)) {
                             const array = tempMap.get(formattedDate);
-                            array.push(anime.marker_colour);
+                            array.push(anime.id);
                             tempMap.set(formattedDate, array);
                         } else {
-                            tempMap.set(formattedDate, [anime.marker_colour]);
+                            tempMap.set(formattedDate, [anime.id]);
                         }
                     }
                 }
@@ -242,6 +271,7 @@ function NewCalendar({animeList, refresh}) {
     return(
         <div className="calendar-container">
             <div>
+                <ExpandDate animeDictonary={animeDictionary} dateDisplay={dateDisplay} markersMap={markersMap}/>
                 {/* SVG for mobile and tablets */}
                 <svg className='calendar-svg-mobile' preserveAspectRatio='none' viewBox="0 0 350 991" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.8585 0L0 30.1351V125.975L11.8585 168.46L0 199.089V991H134.106L144.22 966.793L154.5 991L164.101 966.793L175.959 991H350V679.769L342.85 651.61V466.353L349.826 443.628V0H304.136L291.579 30.1351H248.854L236.298 0L224.788 30.1351H110.563L100.623 0H11.8585Z" fill="#3FA4FF"/>
@@ -386,7 +416,7 @@ function NewCalendar({animeList, refresh}) {
                         <div className='calendar-dates-on-calendar'>
                             <ul className='dates-list'>
                                 {prevMonthDates.map((date, index) => 
-                                    <li key={index} className='inactive-date'>
+                                    <li key={index} className='inactive-date' onClick={() => expandDate(setDateDisplay, date[0], month-1,year)}>
                                         <div>
                                             {date.length === 1 ?
                                                 <p>{date[0]}</p>
@@ -400,24 +430,24 @@ function NewCalendar({animeList, refresh}) {
                                                             <div className='calendar-date-marker-more'>
                                                                 <div className='calendar-date-marker-1 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][0]
+                                                                    backgroundColor: localStorage.getItem(date[1][0]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-2 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][1]
+                                                                    backgroundColor: localStorage.getItem(date[1][1]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-3 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][2]
+                                                                    backgroundColor: localStorage.getItem(date[1][2]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-4 calendar-date-marker'>+</div>
                                                             </div>
                                                             : 
-                                                            date[1].map((color, index) =>
-                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            date[1].map((a, index) =>
+                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${localStorage.getItem(a+"Colour")}`}}></div>
                                                             )
                                                         }
                                                     </div>
@@ -427,7 +457,8 @@ function NewCalendar({animeList, refresh}) {
                                     </li>
                                 )}
                                 {currMonthDates.map((date, index) => 
-                                    <li key={index} className={date[0] === todayDay && month === todayMonth & year === todayYear ? "today": null}>
+                                    <li key={index} className={date[0] === todayDay && month === todayMonth & year === todayYear ? "today": null}
+                                    onClick={() => expandDate(setDateDisplay, date[0], month,year)}>
                                         <div>
                                             {date.length === 1 ?
                                                 <p>{date[0]}</p>
@@ -441,24 +472,24 @@ function NewCalendar({animeList, refresh}) {
                                                             <div className='calendar-date-marker-more'>
                                                                 <div className='calendar-date-marker-1 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][0]
+                                                                    backgroundColor: localStorage.getItem(date[1][0]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-2 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][1]
+                                                                    backgroundColor: localStorage.getItem(date[1][1]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-3 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][2]
+                                                                    backgroundColor: localStorage.getItem(date[1][2]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-4 calendar-date-marker'>+</div>
                                                             </div>
                                                             : 
-                                                            date[1].map((color, index) =>
-                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            date[1].map((a, index) =>
+                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${localStorage.getItem(a+"Colour")}`}}></div>
                                                             )
                                                         }
                                                     </div>
@@ -468,7 +499,8 @@ function NewCalendar({animeList, refresh}) {
                                     </li>
                                 )}
                                 {nextMonthDates.map((date, index) => 
-                                    <li key={index} className='inactive-date'>
+                                    <li key={index} className='inactive-date'
+                                    onClick={() => expandDate(setDateDisplay, date[0], month+1,year)}>
                                         <div>
                                             {date.length === 1 ?
                                                 <p>{date[0]}</p>
@@ -482,24 +514,24 @@ function NewCalendar({animeList, refresh}) {
                                                             <div className='calendar-date-marker-more'>
                                                                 <div className='calendar-date-marker-1 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][0]
+                                                                    backgroundColor: localStorage.getItem(date[1][0]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-2 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][1]
+                                                                    backgroundColor: localStorage.getItem(date[1][1]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-3 calendar-date-marker' 
                                                                 style={{
-                                                                    backgroundColor: date[1][2]
+                                                                    backgroundColor: localStorage.getItem(date[1][2]+"Colour")
                                                                 }}></div>
 
                                                                 <div className='calendar-date-marker-4 calendar-date-marker'>+</div>
                                                             </div>
                                                             : 
-                                                            date[1].map((color, index) =>
-                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${color}`}}></div>
+                                                            date[1].map((a, index) =>
+                                                                <div key={index} className='calendar-date-marker' style={{backgroundColor: `${localStorage.getItem(a+"Colour")}`}}></div>
                                                             )
                                                         }
                                                     </div>
