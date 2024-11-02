@@ -20,22 +20,12 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
 
     const markers= markersMap.get(dateDisplay);
 
-    // const sortedMarkers = markers.slice().sort((a, b) => {
-    //     const today = new Date().toISOString().split("T")[0];
-    
-    //     // Convert JST times to Date objects for comparison
-    //     const aJstTime = `${today}T${animeDictonary[a].jstTime}+09:00`;
-    //     const bJstTime = `${today}T${animeDictonary[b].jstTime}+09:00`;
-    
-    //     return new Date(aJstTime) - new Date(bJstTime);
-    // });
-
     return(
         <div id='expand-date' style={{display: 'none'}}>
             <div className='date-info'>
                 <div className='date-header'>
                     <h1>
-                        {date === null ? null : `${date[2]}-${date[1]}-${date[0]}`}
+                        {date === null ? null : `Estimated releases for ${date[2]}-${date[1]}-${date[0]}`}
                     </h1>
                     <h1 className='menu-page-close-button' onClick={() => closeExpand()}>&#10006;</h1>
                 </div>
@@ -44,19 +34,27 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
                         {markers === undefined ?
                             <h2>There are no episodes releasing</h2>
                             :
-                            markers.map((id, index) => {
+                            markers
+                            .map((id) => {
                                 const jstTimeOnly = animeDictonary[id].broadcast_time;
                                 const today = new Date().toISOString().split("T")[0];
                                 const jstDateTimeString = `${today}T${jstTimeOnly}+09:00`;
                                 const jstDate = new Date(jstDateTimeString);
                                 const localTime = jstDate.toLocaleTimeString();
-                            
-                                return (
-                                    <h2 key={index}>
-                                        <span className='expand-date-time'>{localTime}</span> - {animeDictonary[id].title}
-                                    </h2>
-                                );
+
+                                return {
+                                    id,
+                                    title: animeDictonary[id].title,
+                                    localTime,
+                                    jstDate
+                                };
                             })
+                            .sort((a, b) => a.jstDate - b.jstDate)
+                            .map((anime, index) => (
+                                <h2 key={index}>
+                                    <span className='expand-date-time'>{anime.localTime}</span> - {anime.title}
+                                </h2>
+                            ))
                         }
                     </div>
                 </div>
