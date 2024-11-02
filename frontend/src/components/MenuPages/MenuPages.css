@@ -53,5 +53,5 @@
 .menu-page-hold {
     display: flex;
     justify-content: center;
-    z-index: 2;
+    z-index: 11;
 }

@@ -1,0 +1,67 @@
+#expand-date {
+    position: absolute;
+    background-color: var(--black-70);
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-info {
+    height: 70%;
+    width: 70%;
+    background-color: var(--primary-300);
+    padding: 1.5rem;
+    border-radius: 15px;
+    max-height: 25rem;
+}
+
+.date-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 25%;
+}
+
+.date-header > h1 {
+    color: var(--white);
+}
+
+.date-body {
+    height: 75%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: auto;
+}
+
+.date-body h2 {
+    color: var(--white);
+    text-align: left;
+    width: 100%;
+}
+
+.expand-date-time {
+    color: var(--secondary-75);
+}
+
+@media screen and (min-width: 23.438rem) {
+    .date-header {
+        height: 15%;
+    }
+
+    .date-body {
+        height: 85%;
+    }
+}
+
+@media screen and (min-width: 48rem) {
+    .date-info {
+        height: 50%;
+        width: 70%;
+    }
+}

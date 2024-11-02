@@ -12,6 +12,8 @@ import Notice from '../MenuPages/Notice';
 export const AnimeContext = createContext([]);
 
 function CalendarPage() {
+    const version = "2.1";
+
     const [watchingList, setWatchingList] = useState(null);
     const [planToWatchList, setPlanToWatchList] = useState(null);
     const [displayError, setDisplayError] = useState(false);
@@ -48,11 +50,11 @@ function CalendarPage() {
             <Popup/>
             <div className='app-main'>
                 <AnimeContext.Provider value ={{handleSuccess, watchingList, planToWatchList, setDisplayError, addToWatching, removeFromPlanToWatch, setRefresh}}>
-                    <ProgressContainer refresh={refresh}/>
+                    <ProgressContainer refresh={refresh} version={version}/>
                 </AnimeContext.Provider>
                 <NewCalendar animeList={watchingList} refresh={refresh}/>
             </div>
-            <Notice setRefresh={setRefresh}/>
+            <Notice setRefresh={setRefresh} version={version}/>
             <Feedback/>
             <Tutorial/>
             <Settings watchingList={watchingList}/>

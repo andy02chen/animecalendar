@@ -203,6 +203,11 @@
 
 .dates-list > li > div > p {
     font-weight: 500;
+    user-select: none;
+}
+
+.dates-list > li:hover {
+    cursor: pointer;
 }
 
 .inactive-date > div > p {
