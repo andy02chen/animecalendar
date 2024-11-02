@@ -6,8 +6,21 @@ function createDateString(day,month,year) {
     const dayString = String(day).padStart(2,'0');
     const monthString = String(month).padStart(2,'0');
     
-    // return `${dayString}/${monthString}/${year}`;
     return `${year}-${monthString}-${dayString}`
+}
+
+function getEpisodeNumber(anime, clicked_date) {
+    const differenceInMilliseconds = new Date(clicked_date) - new Date(anime.start_date);
+    const millisecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
+    const weeksDifference = Math.floor(differenceInMilliseconds / millisecondsPerWeek);
+    const weeksEarly = Number(anime.early);
+
+    if(weeksEarly > 0 && weeksDifference === 0) {
+        return `1 - ${weeksDifference + 1 + weeksEarly}`;
+    }
+
+    // Add 1 because starting week has 0 difference
+    return weeksDifference + 1 + weeksEarly;
 }
 
 function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
@@ -18,7 +31,7 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
 
     const date = dateDisplay ? dateDisplay.split('-') : null;
 
-    const markers= markersMap.get(dateDisplay);
+    const markers= [... new Set(markersMap.get(dateDisplay))];
 
     return(
         <div id='expand-date' style={{display: 'none'}}>
@@ -46,13 +59,15 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
                                     id,
                                     title: animeDictonary[id].title,
                                     localTime,
-                                    jstDate
+                                    jstDate,
+                                    start_date: animeDictonary[id].start_date,
+                                    early: localStorage.getItem(animeDictonary[id].id+"early")
                                 };
                             })
                             .sort((a, b) => a.jstDate - b.jstDate)
-                            .map((anime, index) => (
-                                <h2 key={index}>
-                                    <span className='expand-date-time'>{anime.localTime}</span> - {anime.title}
+                            .map((anime) => (
+                                <h2 key={anime.id}>
+                                    <span className='expand-date-time'>{anime.localTime}</span> - {anime.title} (Ep. {getEpisodeNumber(anime, dateDisplay)})
                                 </h2>
                             ))
                         }
