@@ -271,7 +271,11 @@ function NewCalendar({animeList, refresh}) {
     return(
         <div className="calendar-container">
             <div>
+                {/* {dateDisplay === null ? null :
+                    // <ExpandDate animeDictonary={animeDictionary} dateDisplay={dateDisplay} markersMap={markersMap}/>
+                } */}
                 <ExpandDate animeDictonary={animeDictionary} dateDisplay={dateDisplay} markersMap={markersMap}/>
+
                 {/* SVG for mobile and tablets */}
                 <svg className='calendar-svg-mobile' preserveAspectRatio='none' viewBox="0 0 350 991" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.8585 0L0 30.1351V125.975L11.8585 168.46L0 199.089V991H134.106L144.22 966.793L154.5 991L164.101 966.793L175.959 991H350V679.769L342.85 651.61V466.353L349.826 443.628V0H304.136L291.579 30.1351H248.854L236.298 0L224.788 30.1351H110.563L100.623 0H11.8585Z" fill="#3FA4FF"/>
