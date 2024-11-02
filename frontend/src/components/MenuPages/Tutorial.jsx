@@ -144,6 +144,25 @@ function Tutorial() {
                             Please note that all data is stored in local storage, so <span className='how-to-use-highlight'>do not clear it from your browser</span>. You can remove unnecessary data through the settings.
                             </p>
                         </div>
+                        <div id='tutorial-9-title' className='tutorial-page-expand-button' onClick={() => expandTutorial(9)}>
+                            <div className='tutorial-header'>
+                                <h1 className='tutorial-title'>Expanding Dates</h1>
+                                <svg id='tutorial-symbol-9' className='tutorial-expand-symbol' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                            </div>
+                            <p id='tutorial-9-text' style={{display: "none"}}>
+                            Dates on the calendar can be <span className='how-to-use-highlight'>expanded</span> to reveal the time the anime episode releases. 
+                            More information may be added in future updates.
+                            </p>
+                        </div>
+                        <div id='tutorial-10-title' className='tutorial-page-expand-button' onClick={() => expandTutorial(10)}>
+                            <div className='tutorial-header'>
+                                <h1 className='tutorial-title'>Changing Marker Colour</h1>
+                                <svg id='tutorial-symbol-10' className='tutorial-expand-symbol' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                            </div>
+                            <p id='tutorial-10-text' style={{display: "none"}}>
+                            The <span className='how-to-use-highlight'>circle</span> next to the anime title can be clicked to choose your desired colour for each anime.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

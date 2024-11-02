@@ -2,11 +2,11 @@ import './MenuPages.css';
 import './Notice.css';
 
 // Close Notice Page
-function closeNotice(setRefresh) {
+function closeNotice(setRefresh, version) {
     const div = document.getElementById('notice-page');
 
-    if(localStorage.getItem('seenAnnouncement') !== '2.0') {
-        localStorage.setItem('seenAnnouncement', '2.0');
+    if(localStorage.getItem('seenAnnouncement') !== version) {
+        localStorage.setItem('seenAnnouncement', version);
         setRefresh(r => !r);
     }
 
@@ -15,17 +15,17 @@ function closeNotice(setRefresh) {
     }
 }
 
-function Notice({setRefresh}) {
+function Notice({setRefresh, version}) {
     return(
         <div id="notice-page" className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-shape'>
                 <div className='menu-page-content'>
                     <div className='menu-page-header'>
                         <h1>Notice</h1>
-                        <h1 className='menu-page-close-button' onClick={() => closeNotice(setRefresh)}>&#10006;</h1>
+                        <h1 className='menu-page-close-button' onClick={() => closeNotice(setRefresh, version)}>&#10006;</h1>
                     </div>
                     <div className='menupage-content-text notice-page-content'>
-                        <h1 className='big-title'>Version 2.0!</h1>
+                        <h1 className='big-title'>Version {version}!</h1>
                         <h2 className='smaller-title'>Changes:</h2>
                         <ul className='list'>
                             <li>
@@ -50,14 +50,15 @@ function Notice({setRefresh}) {
                             <li>
                                 <p>Ability to change marker colour</p>
                             </li>
-                            <li>
-                                <p>Optimised storage of information on browser (~30mb RAM usage on my PC)</p>
-                            </li>
+                            
                             <li>
                                 <p>More accurate status for anime with no broadcast time</p>
                             </li>
                             <li>
                                 <p>Stay signed in for 30 days</p>
+                            </li>
+                            <li>
+                                <p>Expandable Dates</p>
                             </li>
                         </ul>
                         <br/>

@@ -96,10 +96,7 @@ function expandSettingsOptions() {
     }
 }
 
-function ProgressContainer({refresh}) {
-    // TODO update 
-    const version = "2.0";
-
+function ProgressContainer({refresh, version}) {
     const div1 = useRef(null);
     const progressDiv = useRef(null);
 

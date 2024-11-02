@@ -20,18 +20,18 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
 
     const markers= markersMap.get(dateDisplay);
 
-    const sortedMarkers = markers.slice().sort((a, b) => {
-        const today = new Date().toISOString().split("T")[0];
+    // const sortedMarkers = markers.slice().sort((a, b) => {
+    //     const today = new Date().toISOString().split("T")[0];
     
-        // Convert JST times to Date objects for comparison
-        const aJstTime = `${today}T${animeDictonary[a].jstTime}+09:00`;
-        const bJstTime = `${today}T${animeDictonary[b].jstTime}+09:00`;
+    //     // Convert JST times to Date objects for comparison
+    //     const aJstTime = `${today}T${animeDictonary[a].jstTime}+09:00`;
+    //     const bJstTime = `${today}T${animeDictonary[b].jstTime}+09:00`;
     
-        return new Date(aJstTime) - new Date(bJstTime);
-    });
+    //     return new Date(aJstTime) - new Date(bJstTime);
+    // });
 
     return(
-        <div id='expand-date'>
+        <div id='expand-date' style={{display: 'none'}}>
             <div className='date-info'>
                 <div className='date-header'>
                     <h1>
@@ -42,9 +42,9 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
                 <div className='date-body'>
                     <div>
                         {markers === undefined ?
-                            <h2>There are no episodes releasing today</h2>
+                            <h2>There are no episodes releasing</h2>
                             :
-                            sortedMarkers.map((id, index) => {
+                            markers.map((id, index) => {
                                 const jstTimeOnly = animeDictonary[id].broadcast_time;
                                 const today = new Date().toISOString().split("T")[0];
                                 const jstDateTimeString = `${today}T${jstTimeOnly}+09:00`;

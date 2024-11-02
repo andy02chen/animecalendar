@@ -49,8 +49,9 @@ export default class Anime {
     
     // Assigns a colour to anime if necessary
     assignAnimeColour() {
+        const version = '2.1';
         if(this.air_status === 'currently_airing') {
-            if(localStorage.getItem(this.id+"Colour") === null || localStorage.getItem('seenAnnouncement') !== '2.0') {
+            if(localStorage.getItem(this.id+"Colour") === null || localStorage.getItem('seenAnnouncement') !== version) {
                 const color = this.generateRandomColour();
                 localStorage.setItem(this.id+"Colour", color);
                 return color;
