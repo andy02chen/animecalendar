@@ -28,6 +28,8 @@ function Notice({setRefresh, version}) {
                         <h1 className='big-title'>Version {version}!</h1>
                         <h2 className='smaller-title'>Changes:</h2>
                         <ul className='list'>
+                            <br/>
+                            <h2>2.0</h2>
                             <li>
                                 <p>UI Redesigned</p>
                             </li>
@@ -50,15 +52,20 @@ function Notice({setRefresh, version}) {
                             <li>
                                 <p>Ability to change marker colour</p>
                             </li>
-                            
                             <li>
                                 <p>More accurate status for anime with no broadcast time</p>
                             </li>
                             <li>
                                 <p>Stay signed in for 30 days</p>
                             </li>
+                            <br/>
+                            <h2>2.1</h2>
                             <li>
-                                <p>Expandable Dates</p>
+                                <p>Expandable Dates for more information</p>
+                            </li>
+                            <h2>2.1.1</h2>
+                            <li>
+                                <p>Changed time to be sorted by ascending order when expanding dates</p>
                             </li>
                         </ul>
                         <br/>
@@ -69,13 +76,10 @@ function Notice({setRefresh, version}) {
                                 <p>Dashboard with data about your anime viewing preferences. Prob will be similar to Spotify Wrapped.</p>
                             </li>
                             <li>
-                                <p>Ability to click on dates for more information</p>
+                                <p>Notifications when estimated release</p>
                             </li>
                             <li>
-                                <p>Notications when estimated release</p>
-                            </li>
-                            <li>
-                                <p>Control calendar by scrolling</p>
+                                <p>Control calendar by scrolling + scroll animation</p>
                             </li>
                         </ul>
                     </div>

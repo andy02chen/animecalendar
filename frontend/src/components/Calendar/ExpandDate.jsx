@@ -33,6 +33,8 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
 
     const markers= [... new Set(markersMap.get(dateDisplay))];
 
+    const today = new Date().toISOString().split("T")[0];
+
     return(
         <div id='expand-date' style={{display: 'none'}}>
             <div className='date-info'>
@@ -47,27 +49,24 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
                         {markers === undefined ?
                             <h2>There are no episodes releasing</h2>
                             :
-                            markers
-                            .map((id) => {
+                            markers.map((id) => {
                                 const jstTimeOnly = animeDictonary[id].broadcast_time;
-                                const today = new Date().toISOString().split("T")[0];
                                 const jstDateTimeString = `${today}T${jstTimeOnly}+09:00`;
                                 const jstDate = new Date(jstDateTimeString);
                                 const localTime = jstDate.toLocaleTimeString();
-
+                        
                                 return {
-                                    id,
-                                    title: animeDictonary[id].title,
-                                    localTime,
-                                    jstDate,
-                                    start_date: animeDictonary[id].start_date,
-                                    early: localStorage.getItem(animeDictonary[id].id+"early")
-                                };
+                                        id,
+                                        title: animeDictonary[id].title,
+                                        localTime,
+                                        start_date: animeDictonary[id].start_date,
+                                        early: localStorage.getItem(animeDictonary[id].id + "early")
+                                    };
                             })
-                            .sort((a, b) => a.jstDate - b.jstDate)
+                            .sort((a,b) => a.localTime - b.localTime)
                             .map((anime) => (
                                 <h2 key={anime.id}>
-                                    <span className='expand-date-time'>{anime.localTime}</span> - {anime.title} (Ep. {getEpisodeNumber(anime, dateDisplay)})
+                                    <span className="expand-date-time">{anime.localTime}</span> - {anime.title} (Ep. {getEpisodeNumber(anime, dateDisplay)})
                                 </h2>
                             ))
                         }

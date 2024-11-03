@@ -12,7 +12,7 @@ import Notice from '../MenuPages/Notice';
 export const AnimeContext = createContext([]);
 
 function CalendarPage() {
-    const version = "2.1";
+    const version = "2.1.1";
 
     const [watchingList, setWatchingList] = useState(null);
     const [planToWatchList, setPlanToWatchList] = useState(null);
