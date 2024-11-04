@@ -17,6 +17,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 import logging
 from logging.handlers import RotatingFileHandler
+import pandas as pd
+from pandas import json_normalize
+import json
 
 load_dotenv()
 
@@ -66,15 +69,15 @@ scheduler.start()
 
 # TODO uncomment for main push/merge
 # React Router should be doing this
-@app.route('/a')
-@app.route('/home')
-def serve_react_pages():
-    try:
-        return render_template('index.html')
-        # return redirect("https://localhost:5173", code=302)
-    except Exception:
-        app.logger.error('Unable to load home page.')
-        abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
+# @app.route('/a')
+# @app.route('/home')
+# def serve_react_pages():
+#     try:
+#         return render_template('index.html')
+#         # return redirect("https://localhost:5173", code=302)
+#     except Exception:
+#         app.logger.error('Unable to load home page.')
+#         abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
 
 # Get Logo Image
 @app.route('/api/logo', methods=["GET"])
@@ -447,6 +450,128 @@ def filter_watching_anime(data):
         data_to_return.append(details)
 
     return data_to_return
+
+# Filter user data and return JSON
+def filter_user_anime_for_stats(data):
+    animeList = data['data']
+    completed_anime = [anime for anime in animeList if anime['node']['my_list_status']['status'] == 'completed']
+
+    df = pd.json_normalize(
+        completed_anime,
+        record_path=['node', 'studios'],
+        meta=[
+            ['node', 'id'],
+            ['node', 'main_picture', 'medium'],
+            ['node', 'mean'],
+            ['node', 'my_list_status', 'score'],
+            ['node', 'rank'],
+            ['node', 'rating'],
+            ['node', 'source'],
+            ['node', 'start_season', 'season'],
+            ['node', 'start_season', 'year'],
+            ['node', 'title'],
+            ['node', 'genres']
+        ]
+    )
+
+    df['node.genres'] = df['node.genres'].apply(lambda x: ','.join([genre['name'] for genre in x]))
+    df.columns = [
+        'studio_id','studio_name','anime_id','img','mal_score','your_score','rank','rating','source','start_season','start_year','title','genres'
+    ]
+
+    genre_df = df[['genres','your_score']]
+    genre_df.loc[:, 'genres'] = genre_df['genres'].str.split(',')
+    genre_df = genre_df.explode('genres')
+
+    genre_df = genre_df.groupby('genres').agg(
+        total_score=('your_score', 'sum'),
+        count=('your_score', 'size')
+    ).reset_index()
+
+    genre_df['average'] = genre_df['total_score'] / genre_df['count']
+    
+    genre_df.columns = ['genre', 'total_score', 'count', 'average']
+
+    genre_popular = genre_df[['genre','count']].sort_values(by='count', ascending=False).head(10)
+    genre_top_average = genre_df[['genre','average']].sort_values(by='average', ascending=False).head(10)    
+
+    response_data = {
+        "top_10_genres_count": genre_popular.to_dict(orient='records'),
+        "top_10_genres_avg": genre_top_average.to_dict(orient='records')
+    }
+
+    return jsonify(response_data)
+
+# Get user data function
+@app.route('/api/user-stats', methods=["GET"])
+def userData():
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+            return jsonify({"error": "rate limit exceeded"}), 429
+
+        # Find user using session id
+        user_session_id = get_session_id()
+
+        if user_session_id:
+
+            # TODO when guest
+            if user_session_id == 'guest':
+                mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=watching&
+                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
+                headers = {
+                    'X-MAL-CLIENT-ID': f'{client_id}'
+                }
+
+                response = requests.get(mal_get_anime, headers=headers)
+
+                if response.status_code == 200:
+                    data = filter_watching_anime(response.json())
+                    data_to_return = {'anime': data}
+                    return data_to_return
+
+                app.logger.error("Error weekly anime as guest in weekly_anime")
+                return 'Unable to get anime watchlist from MAL',500
+
+            find_user = find_user_function(user_session_id)
+
+            if find_user:
+                msg, code = check_expiry()
+
+                # Login again
+                if code == 401 or code == 403:
+                    return msg, code
+
+                mal_get_user_data = '''
+                    https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
+                '''
+
+                user_token = cipher_suite.decrypt(find_user.access_token)
+                mal_access_token = user_token.decode()
+                headers = {
+                    'Authorization': f'Bearer {mal_access_token}'
+                }
+
+                response = requests.get(mal_get_user_data, headers=headers)
+                
+                if response.status_code == 200:
+                    data_to_return = filter_user_anime_for_stats(response.json())
+                    return data_to_return
+
+                app.logger.error("Error fetching weekly anime for authenticated user in userData")
+                return 'Unable to get user data from MAL',500
+
+            # User not found
+            response = redirect("/")
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response
+
+        # User not logged in
+        return redirect('/')
+
+    except Exception as e:
+        app.logger.error(f"Unexpected error in userData function: {e}")
+        return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Functions gets user's weekly watching anime
 @app.route('/api/get-weekly-anime', methods=["GET"])
@@ -936,6 +1061,7 @@ def guestLogin():
         return response
 
     return redirect('/')
+
 
 if __name__ == '__main__':
     with app.app_context():
