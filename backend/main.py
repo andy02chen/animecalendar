@@ -528,14 +528,14 @@ def filter_user_anime_for_stats(data):
     studio_popular = studio_df[['studio_name', 'count']].sort_values(by="count", ascending=False).head(10)
     studio_top_average = studio_df[['studio_name', 'average', 'count']].sort_values(by="average", ascending=False).head(10)
 
-    print(studio_popular)
-    print(studio_top_average)
-
     # Get top anime by rating
     anime_df= df[['anime_id','title','your_score','mal_score']]
     top_20_anime = anime_df[['title','your_score','mal_score']].sort_values(by='your_score', ascending=False).head(20)
 
     # You vs MAL avg
+    you_vs_mal_df = anime_df[anime_df['your_score'] > 0][['your_score','mal_score']]
+    you_vs_mal_df = you_vs_mal_df.astype('float64')
+    average_scores = you_vs_mal_df.mean().round(2)
 
 
     response_data = {
@@ -545,7 +545,8 @@ def filter_user_anime_for_stats(data):
         "sources": sources_df.to_dict(orient='records'),
         "top_10_studios_count": studio_popular.to_dict(orient='records'),
         "top_10_studios_avg": studio_top_average.to_dict(orient='records'),
-        "top_20_anime": top_20_anime.to_dict(orient='records')
+        "top_20_anime": top_20_anime.to_dict(orient='records'),
+        "average_rating": average_scores.to_dict()
     }
 
     return jsonify(response_data)
