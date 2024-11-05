@@ -453,9 +453,11 @@ def filter_watching_anime(data):
 
 # Filter user data and return JSON
 def filter_user_anime_for_stats(data):
+    # Sort for only completed anime
     animeList = data['data']
     completed_anime = [anime for anime in animeList if anime['node']['my_list_status']['status'] == 'completed']
 
+    # Flatten
     df = pd.json_normalize(
         completed_anime,
         record_path=['node', 'studios'],
@@ -474,30 +476,76 @@ def filter_user_anime_for_stats(data):
         ]
     )
 
+    # Rename col
     df['node.genres'] = df['node.genres'].apply(lambda x: ','.join([genre['name'] for genre in x]))
     df.columns = [
         'studio_id','studio_name','anime_id','img','mal_score','your_score','rank','rating','source','start_season','start_year','title','genres'
     ]
 
+    # For finding average and most popular anime genres
     genre_df = df[['genres','your_score']]
     genre_df.loc[:, 'genres'] = genre_df['genres'].str.split(',')
     genre_df = genre_df.explode('genres')
 
     genre_df = genre_df.groupby('genres').agg(
-        total_score=('your_score', 'sum'),
-        count=('your_score', 'size')
+        total_score=('your_score', lambda x: x[x > 0].sum()),
+        count=('your_score', 'size'),
+        non_zero_count=('your_score', lambda x: (x > 0).sum()) 
     ).reset_index()
 
-    genre_df['average'] = genre_df['total_score'] / genre_df['count']
-    
-    genre_df.columns = ['genre', 'total_score', 'count', 'average']
+    genre_df['average'] = (genre_df['total_score'] / genre_df['non_zero_count']).round(2)
+    genre_df.columns = ['genre', 'total_score', 'count', 'non_zero_count', 'average']
 
-    genre_popular = genre_df[['genre','count']].sort_values(by='count', ascending=False).head(10)
-    genre_top_average = genre_df[['genre','average']].sort_values(by='average', ascending=False).head(10)    
+    genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
+    genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
+
+    # Find most watched ratings
+    ratings_df = df[['rating']]
+    ratings_df = ratings_df.groupby('rating').agg(
+        count=('rating','size')
+    ).reset_index()
+
+    # Find most watched sources
+    sources_df = df[['source']]
+    sources_df = sources_df.groupby('source').agg(
+        count=('source','size')
+    ).reset_index()
+
+    
+    sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
+
+    # Get popular and highest avg rated studio
+    studio_df = df[['studio_id','studio_name', 'your_score']]
+    studio_df = studio_df.groupby('studio_id').agg(
+        studio_name=('studio_name', 'first'),
+        total_score=('your_score',lambda x: x[x > 0].sum()),
+        count=('studio_id','size'),
+        non_zero_count=('your_score', lambda x: (x > 0).sum()) 
+    ).reset_index()
+
+    studio_df['average'] = (studio_df['total_score'] / studio_df['non_zero_count']).round(2)
+
+    studio_popular = studio_df[['studio_name', 'count']].sort_values(by="count", ascending=False).head(10)
+    studio_top_average = studio_df[['studio_name', 'average', 'count']].sort_values(by="average", ascending=False).head(10)
+
+    print(studio_popular)
+    print(studio_top_average)
+
+    # Get top anime by rating
+    anime_df= df[['anime_id','title','your_score','mal_score']]
+    top_20_anime = anime_df[['title','your_score','mal_score']].sort_values(by='your_score', ascending=False).head(20)
+
+    # You vs MAL avg
+
 
     response_data = {
         "top_10_genres_count": genre_popular.to_dict(orient='records'),
-        "top_10_genres_avg": genre_top_average.to_dict(orient='records')
+        "top_10_genres_avg": genre_top_average.to_dict(orient='records'),
+        "popular_ratings": ratings_df.to_dict(orient='records'),
+        "sources": sources_df.to_dict(orient='records'),
+        "top_10_studios_count": studio_popular.to_dict(orient='records'),
+        "top_10_studios_avg": studio_top_average.to_dict(orient='records'),
+        "top_20_anime": top_20_anime.to_dict(orient='records')
     }
 
     return jsonify(response_data)
