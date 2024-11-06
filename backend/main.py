@@ -537,6 +537,10 @@ def filter_user_anime_for_stats(data):
     you_vs_mal_df = you_vs_mal_df.astype('float64')
     average_scores = you_vs_mal_df.mean().round(2)
 
+    # Popular season/year
+    season_year_df = df[['start_season','start_year']]
+    season_year_df = season_year_df.value_counts().reset_index(name='count')
+    season_year_df.columns = ['start_season', 'start_year', 'count']
 
     response_data = {
         "top_10_genres_count": genre_popular.to_dict(orient='records'),
@@ -546,7 +550,8 @@ def filter_user_anime_for_stats(data):
         "top_10_studios_count": studio_popular.to_dict(orient='records'),
         "top_10_studios_avg": studio_top_average.to_dict(orient='records'),
         "top_20_anime": top_20_anime.to_dict(orient='records'),
-        "average_rating": average_scores.to_dict()
+        "average_rating": average_scores.to_dict(),
+        "season_anime": season_year_df.head(5).to_dict(orient='records')
     }
 
     return jsonify(response_data)
@@ -556,7 +561,7 @@ def filter_user_anime_for_stats(data):
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
