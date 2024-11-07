@@ -27,18 +27,14 @@ function AnimeStats() {
 
     const [data, setData] = useState(null);
 
-    
 
-    // For revealing information
-    const [isMalScoreVisible, setMalScoreVisible] = useState(false);
+    // Effects For revealing information
     const [isYourScoreVisible, setYourScoreVisible] = useState(false);
 
     useEffect(() => {
-        const malScoreTimer = setTimeout(() => setMalScoreVisible(true), 3000);
-        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 4000);
+        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 8000);
 
         return () => {
-            clearTimeout(malScoreTimer);
             clearTimeout(yourScoreTimer);
         };
     }, []);
@@ -79,15 +75,11 @@ function AnimeStats() {
                                 </h1>
                                 <h2 className='data-h2'>
                                     The average score for the animes you have rated is: <br/>
-                                    <span className={isMalScoreVisible ? 'show-data' : 'hide-data'}>
                                     {data["average_rating"]["mal_score"]}
-                                    </span>
                                 </h2>
-                                <h2 className='data-h2'>
+                                <h2 className={`data-h2 ${isYourScoreVisible ? 'show-data' : 'hide-data'}`}>
                                     Your Average Rating is: <br/>
-                                    <span className={isYourScoreVisible ? 'show-data' : 'hide-data'}>
                                     {data["average_rating"]["your_score"]}
-                                    </span>
                                 </h2>
                             </div>
                         )
