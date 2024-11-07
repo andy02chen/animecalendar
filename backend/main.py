@@ -524,6 +524,7 @@ def filter_user_anime_for_stats(data):
     ).reset_index()
 
     studio_df['average'] = (studio_df['total_score'] / studio_df['non_zero_count']).round(2)
+    studio_df['average'] = studio_df['average'].fillna(0)
 
     studio_popular = studio_df[['studio_name', 'count']].sort_values(by="count", ascending=False).head(10)
     studio_top_average = studio_df[['studio_name', 'average', 'count']].sort_values(by="average", ascending=False).head(10)
@@ -554,14 +555,16 @@ def filter_user_anime_for_stats(data):
         "season_anime": season_year_df.head(5).to_dict(orient='records')
     }
 
-    return jsonify(response_data)
+    return response_data
 
 # Get user data function
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+        # TODO CHANGE TO 1 PER 5MINS
+        # if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=100, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
@@ -610,7 +613,7 @@ def userData():
                 
                 if response.status_code == 200:
                     data_to_return = filter_user_anime_for_stats(response.json())
-                    return data_to_return
+                    return jsonify(data_to_return)
 
                 app.logger.error("Error fetching weekly anime for authenticated user in userData")
                 return 'Unable to get user data from MAL',500

@@ -73,3 +73,32 @@
     font-style: normal;
     width: 70%;
 }
+
+.display-data-div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.data-h1 {
+    text-align: center;
+}
+
+.data-h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--primary-75);
+    transition: visibility 1s ease;
+}
+
+.hide-data {
+    visibility: hidden;
+}
+
+.show-data {
+    visibility: visible;
+}
