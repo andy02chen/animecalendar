@@ -127,16 +127,18 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Anime Sources
                 </h1>
-                <BarChart width={730} height={250} data={data}>
-                    <XAxis dataKey="source" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" name="Count">
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={graphGetColor()} />
-                        ))}
-                    </Bar>
-                </BarChart>
+                <ResponsiveContainer width="100%" height="80%" minWidth="20rem">
+                    <BarChart data={data} className='source-bar-chart'>
+                        <XAxis dataKey="source" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="count" name="Count">
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
             </>
         )
     }
