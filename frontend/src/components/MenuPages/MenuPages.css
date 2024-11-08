@@ -10,6 +10,17 @@
     max-width: 1024px;
 }
 
+.menu-page-no-shape {
+    background-color: var(--progress-div-colour);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    max-width: 1024px;
+}
+
 .menu-page-text {
     font-family: "Montserrat", sans-serif;
 }

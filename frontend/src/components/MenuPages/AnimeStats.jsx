@@ -15,9 +15,11 @@ function getUserStats(setLoading, setAPICallSuccess, setData) {
     then(response => {
         setData(response.data);
         setAPICallSuccess(true);
+        setLoading(false);
     }).catch(error => {
         setData(null);
         setAPICallSuccess(false);
+        setLoading(false);
     })
 }
 
@@ -26,26 +28,59 @@ function AnimeStats() {
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(null);
+    const [dataDisplay, setDataDisplay] = useState(0);
+
+    const dataMax = 9;
+
+    const backSlide = () => {
+        if(dataDisplay > 0) {
+            setDataDisplay(d => d - 1);
+        }
+    }
+
+    const forwardSlide = () => {
+        if(dataDisplay < 9) {
+            setDataDisplay(d => d + 1);
+        }
+    }
 
 
     // Effects For revealing information
     const [isYourScoreVisible, setYourScoreVisible] = useState(false);
 
     useEffect(() => {
-        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 8000);
+        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 5000);
 
         return () => {
             clearTimeout(yourScoreTimer);
         };
     }, []);
-    
-    useEffect(() => {
-        setLoading(false);
-    }, [data]); 
+
+    // Structure for data
+    const userVsMal = (mal_score, your_score) => {
+        return(
+        <>
+            <h1 className='data-h1'>
+                Are you a harsh critic?<br/>
+                Your Average Rating vs MAL Average
+            </h1>
+            <h2 className='data-h2'>
+                The average score for the animes you have rated is: <br/>
+                {mal_score}
+            </h2>
+            <h2 className={`data-h2 ${isYourScoreVisible ? 'show-data' : 'hide-data'}`}>
+                Your Average Rating is: <br/>
+                {your_score}
+            </h2>
+        </>
+        );
+    }
+
+    console.log(data);
 
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
-            <div className='menu-page-shape'>
+            <div className='menu-page-no-shape'>
                 <div className='menu-page-content'>
                     <div className='menu-page-header'>
                         <h1>Your Anime Stats</h1>
@@ -68,22 +103,31 @@ function AnimeStats() {
                                 <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get my Stats </button>
                             </>
                             :
-                            <div className='display-data-div'>
-                                <h1 className='data-h1'>
-                                    Are you a harsh critic?<br/>
-                                    Your Average Rating vs MAL Average
-                                </h1>
-                                <h2 className='data-h2'>
-                                    The average score for the animes you have rated is: <br/>
-                                    {data["average_rating"]["mal_score"]}
-                                </h2>
-                                <h2 className={`data-h2 ${isYourScoreVisible ? 'show-data' : 'hide-data'}`}>
-                                    Your Average Rating is: <br/>
-                                    {data["average_rating"]["your_score"]}
-                                </h2>
-                            </div>
+                            <>
+                                <div className='display-data-div'>
+                                {(() => {
+                                    switch (dataDisplay) {
+                                        case 0:
+                                            return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+
+                                        default:
+                                            return <div>No data available</div>;
+                                    }
+                                })()}
+                                </div>
+                                <div className='switch-data-screen'>
+                                    <button className='switch-data-buttons' onClick={() => backSlide()}>
+                                        ◀
+                                    </button>
+                                    <div className='data-slides'>
+
+                                    </div>
+                                    <button className='switch-data-buttons' onClick={() => forwardSlide()}>
+                                        ▶
+                                    </button>
+                                </div>
+                            </>
                         )
-                        
                         }
                     </div>
                 </div>

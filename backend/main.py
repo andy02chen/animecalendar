@@ -20,6 +20,7 @@ from logging.handlers import RotatingFileHandler
 import pandas as pd
 from pandas import json_normalize
 import json
+import numpy as np
 
 load_dotenv()
 
@@ -483,35 +484,34 @@ def filter_user_anime_for_stats(data):
     ]
 
     # For finding average and most popular anime genres
-    genre_df = df[['genres','your_score']]
+    genre_df = df[['genres','your_score']].infer_objects(copy=False)
     genre_df.loc[:, 'genres'] = genre_df['genres'].str.split(',')
     genre_df = genre_df.explode('genres')
 
     genre_df = genre_df.groupby('genres').agg(
         total_score=('your_score', lambda x: x[x > 0].sum()),
         count=('your_score', 'size'),
-        non_zero_count=('your_score', lambda x: (x > 0).sum()) 
+        non_zero_count=('your_score', lambda x: (x > 0).sum())
     ).reset_index()
 
-    genre_df['average'] = (genre_df['total_score'] / genre_df['non_zero_count']).round(2)
+    genre_df['average'] = (genre_df['total_score'] / genre_df['non_zero_count'].replace({0: np.nan})).round(2)
     genre_df.columns = ['genre', 'total_score', 'count', 'non_zero_count', 'average']
 
     genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
     genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
 
     # Find most watched ratings
-    ratings_df = df[['rating']]
+    ratings_df = df[['rating']].dropna()
     ratings_df = ratings_df.groupby('rating').agg(
         count=('rating','size')
     ).reset_index()
 
     # Find most watched sources
-    sources_df = df[['source']]
+    sources_df = df[['source']].fillna('Unknown')
     sources_df = sources_df.groupby('source').agg(
         count=('source','size')
     ).reset_index()
 
-    
     sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
 
     # Get popular and highest avg rated studio
