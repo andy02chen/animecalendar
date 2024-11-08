@@ -49,13 +49,17 @@
     color: var(--secondary-75);
 }
 
-@media screen and (min-width: 23.438rem) {
+@media screen and (max-width: 48rem) {
+    .date-header > h1 {
+        font-size: 1.6rem;
+    }
+
     .date-header {
-        height: 15%;
+        height: 30%;
     }
 
     .date-body {
-        height: 85%;
+        height: 70%;
     }
 }
 
@@ -63,5 +67,13 @@
     .date-info {
         height: 50%;
         width: 70%;
+    }
+
+    .date-header {
+        height: 25%;
+    }
+
+    .date-body {
+        height: 75%;
     }
 }

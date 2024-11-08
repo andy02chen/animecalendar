@@ -470,7 +470,6 @@ def filter_user_anime_for_stats(data):
             ['node', 'rank'],
             ['node', 'rating'],
             ['node', 'source'],
-            ['node', 'start_season', 'season'],
             ['node', 'start_season', 'year'],
             ['node', 'title'],
             ['node', 'genres']
@@ -480,7 +479,7 @@ def filter_user_anime_for_stats(data):
     # Rename col
     df['node.genres'] = df['node.genres'].apply(lambda x: ','.join([genre['name'] for genre in x]))
     df.columns = [
-        'studio_id','studio_name','anime_id','img','mal_score','your_score','rank','rating','source','start_season','start_year','title','genres'
+        'studio_id','studio_name','anime_id','img','mal_score','your_score','rank','rating','source','start_year','title','genres'
     ]
 
     # For finding average and most popular anime genres
@@ -505,6 +504,7 @@ def filter_user_anime_for_stats(data):
     ratings_df = ratings_df.groupby('rating').agg(
         count=('rating','size')
     ).reset_index()
+    ratings_df = ratings_df.rename(columns={'rating': 'name', 'count': 'value'})
 
     # Find most watched sources
     sources_df = df[['source']].fillna('Unknown')
@@ -539,9 +539,9 @@ def filter_user_anime_for_stats(data):
     average_scores = you_vs_mal_df.mean().round(2)
 
     # Popular season/year
-    season_year_df = df[['start_season','start_year']]
+    season_year_df = df[['start_year']]
     season_year_df = season_year_df.value_counts().reset_index(name='count')
-    season_year_df.columns = ['start_season', 'start_year', 'count']
+    season_year_df.columns = ['start_year', 'count']
 
     response_data = {
         "top_10_genres_count": genre_popular.to_dict(orient='records'),

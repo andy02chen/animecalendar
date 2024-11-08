@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import './AnimeStats.css';
 import axios from 'axios';
 
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer} from 'recharts';
+
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
     if(div.style.display === 'flex') {
@@ -9,6 +11,7 @@ function closeStats() {
     }
 }
 
+// Calls api
 function getUserStats(setLoading, setAPICallSuccess, setData) {
     setLoading(true);
     axios.get("/api/user-stats").
@@ -21,6 +24,19 @@ function getUserStats(setLoading, setAPICallSuccess, setData) {
         setAPICallSuccess(false);
         setLoading(false);
     })
+}
+
+// Generate random color for the graph
+function graphGetColor() {
+    const minBrightness = 100;
+    
+    const r = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+    const g = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+    const b = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+
+    const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    
+    return hex;
 }
 
 function AnimeStats() {
@@ -76,6 +92,29 @@ function AnimeStats() {
         );
     }
 
+    const RatingPieChart = (data) => {
+        return(
+            <ResponsiveContainer width="100%">
+                <PieChart className='rating-pie-chart'>
+                    <Pie
+                        data={data}
+                        cx="50%"
+                        cy="50%"
+                        label
+                        outerRadius={150}
+                        fill="#8884d8"
+                        dataKey="value"
+                    >
+                        {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={graphGetColor()}/>
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                </PieChart>
+            </ResponsiveContainer>
+        );
+    }
+
     console.log(data);
 
     return(
@@ -109,6 +148,9 @@ function AnimeStats() {
                                     switch (dataDisplay) {
                                         case 0:
                                             return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+
+                                        case 1:
+                                            return RatingPieChart(data['popular_ratings']);
 
                                         default:
                                             return <div>No data available</div>;
