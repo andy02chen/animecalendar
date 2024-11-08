@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './AnimeStats.css';
 import axios from 'axios';
 
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend} from 'recharts';
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis} from 'recharts';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -121,6 +121,26 @@ function AnimeStats() {
         );
     }
 
+    const animeSourcesChart = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Anime Sources
+                </h1>
+                <BarChart width={730} height={250} data={data}>
+                    <XAxis dataKey="source" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="count" name="Count">
+                        {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                        ))}
+                    </Bar>
+                </BarChart>
+            </>
+        )
+    }
+
     const animeYears = (data) => {
         return(
             <>
@@ -175,6 +195,9 @@ function AnimeStats() {
 
                                         case 2:
                                             return animeYears(data['season_anime']);
+
+                                        case 3:
+                                            return animeSourcesChart(data['sources'])
 
                                         default:
                                             return <div>No data available</div>;

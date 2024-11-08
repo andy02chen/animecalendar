@@ -511,6 +511,7 @@ def filter_user_anime_for_stats(data):
     sources_df = sources_df.groupby('source').agg(
         count=('source','size')
     ).reset_index()
+    ratings_df = ratings_df.rename(columns={'source': 'name', 'count': 'value'})
 
     sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
 
