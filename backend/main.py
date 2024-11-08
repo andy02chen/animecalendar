@@ -552,7 +552,7 @@ def filter_user_anime_for_stats(data):
         "top_10_studios_avg": studio_top_average.to_dict(orient='records'),
         "top_20_anime": top_20_anime.to_dict(orient='records'),
         "average_rating": average_scores.to_dict(),
-        "season_anime": season_year_df.head(5).to_dict(orient='records')
+        "season_anime": season_year_df.head(3).to_dict(orient='records')
     }
 
     return response_data

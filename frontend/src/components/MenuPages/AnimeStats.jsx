@@ -121,6 +121,21 @@ function AnimeStats() {
         );
     }
 
+    const animeYears = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    You completed the most anime released in these years
+                </h1>
+                {data.map((entry, index) => (
+                    <h2 key={index} className='data-h2'>
+                        {entry["start_year"]} <span className='yellow-stat'>- {entry['count']} completed</span>
+                    </h2>
+                ))}
+            </>
+        );
+    }
+
     console.log(data);
 
     return(
@@ -157,6 +172,9 @@ function AnimeStats() {
 
                                         case 1:
                                             return RatingPieChart(data['popular_ratings']);
+
+                                        case 2:
+                                            return animeYears(data['season_anime']);
 
                                         default:
                                             return <div>No data available</div>;
