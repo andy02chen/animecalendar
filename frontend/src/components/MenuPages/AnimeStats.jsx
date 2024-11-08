@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './AnimeStats.css';
 import axios from 'axios';
 
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer} from 'recharts';
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend} from 'recharts';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -28,7 +28,7 @@ function getUserStats(setLoading, setAPICallSuccess, setData) {
 
 // Generate random color for the graph
 function graphGetColor() {
-    const minBrightness = 100;
+    const minBrightness = 80;
     
     const r = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
     const g = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
@@ -55,7 +55,7 @@ function AnimeStats() {
     }
 
     const forwardSlide = () => {
-        if(dataDisplay < 9) {
+        if(dataDisplay < dataMax) {
             setDataDisplay(d => d + 1);
         }
     }
@@ -94,7 +94,11 @@ function AnimeStats() {
 
     const RatingPieChart = (data) => {
         return(
-            <ResponsiveContainer width="100%">
+            <>
+            <h1 className='data-h1'>
+                Ratings of Completed Anime
+            </h1>
+            <ResponsiveContainer width="100%" height="80%" minWidth="20rem">
                 <PieChart className='rating-pie-chart'>
                     <Pie
                         data={data}
@@ -110,8 +114,10 @@ function AnimeStats() {
                         ))}
                     </Pie>
                     <Tooltip />
+                    <Legend verticalAlign="bottom" height={50}/>
                 </PieChart>
             </ResponsiveContainer>
+            </>
         );
     }
 
