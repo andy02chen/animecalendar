@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './AnimeStats.css';
 import axios from 'axios';
 
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis} from 'recharts';
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList} from 'recharts';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -158,6 +158,29 @@ function AnimeStats() {
         );
     }
 
+    const top10GenresByAvg = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Your Top 10 Genres by Average Rating
+                </h1>
+                <ResponsiveContainer width="100%" height="80%" minWidth="20rem">
+                <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
+                    <XAxis type="number" dataKey="average" domain={['auto', 10]}/>
+                    <YAxis type="category" dataKey="genre" width={100} />
+                    <Tooltip/>
+                    <Bar dataKey="average" name="Average">
+                        <LabelList dataKey="average" position="right" />
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor(entry.genre, index)} />
+                            ))}
+                    </Bar>
+                </BarChart>
+                </ResponsiveContainer>
+            </>
+        )
+    }
+
     console.log(data);
 
     return(
@@ -200,6 +223,9 @@ function AnimeStats() {
 
                                         case 3:
                                             return animeSourcesChart(data['sources'])
+
+                                        case 4:
+                                            return top10GenresByAvg(data['top_10_genres_avg']);
 
                                         default:
                                             return <div>No data available</div>;

@@ -499,6 +499,10 @@ def filter_user_anime_for_stats(data):
     genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
     genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
 
+    
+    # genre_popular = genre_popular.rename(columns={'genre': 'name', 'count': 'value'})
+    # genre_top_average = genre_top_average.rename(columns={'genre': 'name', 'average': 'value'})
+
     # Find most watched ratings
     ratings_df = df[['rating']].dropna()
     ratings_df = ratings_df.groupby('rating').agg(
