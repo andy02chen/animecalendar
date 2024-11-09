@@ -179,7 +179,11 @@ function ProgressContainer({refresh, version}) {
 
                     <div className='progress-content-div'>
                         <div className='progress-header-div'>
-                            <h1>YOUR LIST</h1>
+                            {localStorage.getItem('username') === "Guest" ?
+                                <h1>DEMO LIST</h1>
+                                :
+                                <h1>YOUR LIST</h1>
+                            }
                             <div className='progress-settings-div' id='progress-settings-div'>
                                 <button id='progress-settings-user' className='progress-settings-buttons' onClick={() => expandSettings()}>
                                     <img alt="pfp" src={localStorage.getItem('pfp') === 'null' ? defaultpfp : localStorage.getItem('pfp') }></img>
