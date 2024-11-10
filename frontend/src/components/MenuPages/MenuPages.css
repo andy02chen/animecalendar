@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     overflow: auto;
-    max-width: 1024px;
+    max-width: 64rem;
 }
 
 .menu-page-no-shape {
@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: center;
     overflow: auto;
-    max-width: 1024px;
+    max-width: 64rem;
 }
 
 .menu-page-text {
@@ -35,7 +35,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    min-width: 300px;
+    min-width: 18.75rem;
 }
 
 .menu-page-header > h1 {
@@ -58,7 +58,7 @@
 }
 
 .menupage-content-text {
-    min-width: 300px;
+    min-width: 18.75rem;
 }
 
 .menu-page-hold {

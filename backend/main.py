@@ -499,10 +499,6 @@ def filter_user_anime_for_stats(data):
     genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
     genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
 
-    
-    # genre_popular = genre_popular.rename(columns={'genre': 'name', 'count': 'value'})
-    # genre_top_average = genre_top_average.rename(columns={'genre': 'name', 'average': 'value'})
-
     # Find most watched ratings
     ratings_df = df[['rating']].dropna()
     ratings_df = ratings_df.groupby('rating').agg(
@@ -535,8 +531,8 @@ def filter_user_anime_for_stats(data):
     studio_top_average = studio_df[['studio_name', 'average', 'count']].sort_values(by="average", ascending=False).head(10)
 
     # Get top anime by rating
-    anime_df= df[['anime_id','title','your_score','mal_score']]
-    top_20_anime = anime_df[['title','your_score','mal_score']].sort_values(by='your_score', ascending=False).head(20)
+    anime_df= df[['anime_id','title','your_score','mal_score','img']]
+    top_20_anime = anime_df[['title','your_score','mal_score','img']].sort_values(by='your_score', ascending=False).head(20)
 
     # You vs MAL avg
     you_vs_mal_df = anime_df[anime_df['your_score'] > 0][['your_score','mal_score']]

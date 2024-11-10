@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './AnimeStats.css';
 import axios from 'axios';
+import React from 'react';
 
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList} from 'recharts';
 
@@ -98,7 +99,7 @@ function AnimeStats() {
             <h1 className='data-h1'>
                 Ratings of Completed Anime
             </h1>
-            <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+            <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <PieChart className='rating-pie-chart'>
                     <Pie
                         data={data}
@@ -127,7 +128,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Anime Sources
                 </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart data={data} className='source-bar-chart'>
                         <XAxis dataKey="source" />
                         <YAxis />
@@ -164,7 +165,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Your Top 10 Genres by Average Rating
                 </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
                     <XAxis type="number" dataKey="average" domain={['auto', 10]}/>
                     <YAxis type="category" dataKey="genre" width={100} />
@@ -187,7 +188,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Your Top 10 Genres by Count
                 </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
                     <XAxis type="number" dataKey="count"/>
                     <YAxis type="category" dataKey="genre" width={100} />
@@ -210,7 +211,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Your Most Watched Studios
                 </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-studios-count">
                     <XAxis type="number" dataKey="count"/>
                     <YAxis type="category" dataKey="studio_name" width={100} />
@@ -233,7 +234,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Top 10 Studios by Average Rating
                 </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
                         <XAxis type="number" dataKey="average" domain={['auto', 10]} />
                         <YAxis type="category" dataKey="studio_name" width={100} />
@@ -253,7 +254,42 @@ function AnimeStats() {
         );
     }
 
-    console.log(data);
+    const top20Anime = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Your Top 20 Highest Rated Anime
+                </h1>
+                <div className='top-20-anime'>
+                    {data.map((entry, index) => (
+                        <React.Fragment key={index}>
+                            <div>
+                                <div className='top-anime-left'>
+                                    <h2 className='data-h2'>
+                                        {index+1}.
+                                    </h2>
+                                </div>
+                                <div className='top-anime-right'>
+                                    <div className='top-anime-header'>
+                                        <img className='top-20-anime-img' src={entry['img']}/>
+                                        <h2 className='data-h2'>
+                                            <span className='yellow-stat'>{entry['title']}</span>
+                                        </h2>
+                                    </div>
+                                    <h2 className='data-h2'>
+                                        MAL Score: {entry['mal_score']}
+                                    </h2>
+                                    <h2 className='data-h2'>
+                                        Your Score: {entry['your_score']}
+                                    </h2>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    ))}
+                </div>
+            </>
+        );
+    }
 
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
@@ -307,6 +343,9 @@ function AnimeStats() {
 
                                         case 7:
                                             return topStudiosAvg(data['top_10_studios_avg']);
+                                        
+                                        case 8:
+                                            return top20Anime(data['top_20_anime']);
 
                                         default:
                                             return <div>No data available</div>;
