@@ -28,7 +28,7 @@ function getUserStats(setLoading, setAPICallSuccess, setData) {
 
 // Generate random color for the graph
 function graphGetColor() {
-    const minBrightness = 80;
+    const minBrightness = 60;
     
     const r = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
     const g = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
@@ -98,7 +98,7 @@ function AnimeStats() {
             <h1 className='data-h1'>
                 Ratings of Completed Anime
             </h1>
-            <ResponsiveContainer width="100%" height="80%" minWidth="20rem">
+            <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
                 <PieChart className='rating-pie-chart'>
                     <Pie
                         data={data}
@@ -127,7 +127,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Anime Sources
                 </h1>
-                <ResponsiveContainer width="100%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
                     <BarChart data={data} className='source-bar-chart'>
                         <XAxis dataKey="source" />
                         <YAxis />
@@ -164,7 +164,7 @@ function AnimeStats() {
                 <h1 className='data-h1'>
                     Your Top 10 Genres by Average Rating
                 </h1>
-                <ResponsiveContainer width="100%" height="80%" minWidth="20rem">
+                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
                 <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
                     <XAxis type="number" dataKey="average" domain={['auto', 10]}/>
                     <YAxis type="category" dataKey="genre" width={100} />
@@ -172,13 +172,85 @@ function AnimeStats() {
                     <Bar dataKey="average" name="Average">
                         <LabelList dataKey="average" position="right" />
                             {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={graphGetColor(entry.genre, index)} />
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
                             ))}
                     </Bar>
                 </BarChart>
                 </ResponsiveContainer>
             </>
-        )
+        );
+    }
+
+    const top10GenresByCount = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Your Top 10 Genres by Count
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
+                    <XAxis type="number" dataKey="count"/>
+                    <YAxis type="category" dataKey="genre" width={100} />
+                    <Tooltip/>
+                    <Bar dataKey="count" name="Count">
+                        <LabelList dataKey="count" position="right" />
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                    </Bar>
+                </BarChart>
+                </ResponsiveContainer>
+            </>
+        );
+    }
+
+    const mostWatchedStudios = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Your Most Watched Studios
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                <BarChart layout="vertical" data={data} className="top-studios-count">
+                    <XAxis type="number" dataKey="count"/>
+                    <YAxis type="category" dataKey="studio_name" width={100} />
+                    <Tooltip/>
+                    <Bar dataKey="count" name="Count">
+                        <LabelList dataKey="count" position="right" />
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                    </Bar>
+                </BarChart>
+                </ResponsiveContainer>
+            </>
+        );
+    }
+
+    const topStudiosAvg = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Top 10 Studios by Average Rating
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="20rem">
+                    <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
+                        <XAxis type="number" dataKey="average" domain={['auto', 10]} />
+                        <YAxis type="category" dataKey="studio_name" width={100} />
+                        <Tooltip formatter={(value, name, props) => {
+                            const count = props.payload.count;
+                            return `${value}, Count: ${count}`;
+                        }}/>
+                        <Bar dataKey="average" name="Average">
+                            <LabelList dataKey="average" position="right" />
+                            {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </>
+        );
     }
 
     console.log(data);
@@ -226,6 +298,15 @@ function AnimeStats() {
 
                                         case 4:
                                             return top10GenresByAvg(data['top_10_genres_avg']);
+
+                                        case 5:
+                                            return top10GenresByCount(data['top_10_genres_count']);
+
+                                        case 6:
+                                            return mostWatchedStudios(data['top_10_studios_count']);
+
+                                        case 7:
+                                            return topStudiosAvg(data['top_10_studios_avg']);
 
                                         default:
                                             return <div>No data available</div>;
