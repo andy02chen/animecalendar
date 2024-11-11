@@ -120,6 +120,20 @@
 .switch-data-buttons {
     height: 100%;
     width: 10%;
+    font-size: 1rem;
+    text-align: center;
+    color: var(--primary-400);
+    background-color: var(--accent-300);
+    border: none;
+    border-radius: 5px;
+}
+
+.switch-data-buttons:hover {
+    background-color: var(--accent-400);
+}
+
+.switch-data-buttons:active {
+    background-color: var(--accent-500);
 }
 
 .data-slides {
