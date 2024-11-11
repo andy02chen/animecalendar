@@ -48,7 +48,11 @@ function AnimeStats() {
     const [dataDisplay, setDataDisplay] = useState(0);
 
     // Changing Slides
-    const dataMax = 9;
+    let dataMax = 9;
+
+    if(localStorage.getItem('username') === "Guest") {
+        dataMax = 5;
+    }
 
     const backSlide = () => {
         const back = document.getElementById('back-switch-data');
@@ -378,39 +382,64 @@ function AnimeStats() {
                             :
                             <>
                                 <div className='display-data-div'>
-                                {(() => {
-                                    switch (dataDisplay) {
-                                        case 0:
-                                            return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+                                    {localStorage.getItem('username') === "Guest" ?
+                                        (() => {
+                                            switch (dataDisplay) {
+                                                case 0:
+                                                    return top10GenresByCount(data['top_10_genres_count']);
 
-                                        case 1:
-                                            return RatingPieChart(data['popular_ratings']);
+                                                case 1:
+                                                    return RatingPieChart(data['popular_ratings']);
 
-                                        case 2:
-                                            return animeYears(data['season_anime']);
+                                                case 2:
+                                                    return animeYears(data['season_anime']);
 
-                                        case 3:
-                                            return animeSourcesChart(data['sources'])
+                                                case 3:
+                                                    return animeSourcesChart(data['sources'])
 
-                                        case 4:
-                                            return top10GenresByAvg(data['top_10_genres_avg']);
+                                                case 4:
+                                                    return mostWatchedStudios(data['top_10_studios_count']);
 
-                                        case 5:
-                                            return top10GenresByCount(data['top_10_genres_count']);
+                                                default:
+                                                    return <div>No data available</div>;
+                                            }
+                                        })()
+                                        :
+                                        (() => {
+                                            switch (dataDisplay) {
+                                                case 0:
+                                                    return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
 
-                                        case 6:
-                                            return mostWatchedStudios(data['top_10_studios_count']);
+                                                case 1:
+                                                    return RatingPieChart(data['popular_ratings']);
 
-                                        case 7:
-                                            return topStudiosAvg(data['top_10_studios_avg']);
-                                        
-                                        case 8:
-                                            return top20Anime(data['top_20_anime']);
+                                                case 2:
+                                                    return animeYears(data['season_anime']);
 
-                                        default:
-                                            return <div>No data available</div>;
+                                                case 3:
+                                                    return animeSourcesChart(data['sources'])
+
+                                                case 4:
+                                                    return top10GenresByAvg(data['top_10_genres_avg']);
+
+                                                case 5:
+                                                    return top10GenresByCount(data['top_10_genres_count']);
+
+                                                case 6:
+                                                    return mostWatchedStudios(data['top_10_studios_count']);
+
+                                                case 7:
+                                                    return topStudiosAvg(data['top_10_studios_avg']);
+                                                
+                                                case 8:
+                                                    return top20Anime(data['top_20_anime']);
+
+                                                default:
+                                                    return <div>No data available</div>;
+                                            }
+                                        })()
                                     }
-                                })()}
+                                    
                                 </div>
                                 <div className='switch-data-screen'>
                                     <button id='back-switch-data' className='switch-data-buttons' onClick={() => backSlide()}>

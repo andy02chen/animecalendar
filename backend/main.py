@@ -558,6 +558,85 @@ def filter_user_anime_for_stats(data):
 
     return response_data
 
+def guest_filter_user_anime_for_stats(data):
+    # Sort for only completed anime
+    animeList = data['data']
+    completed_anime = [anime for anime in animeList if 'end_date' in anime['node'] and 'mean' in anime['node'] and 'start_season' in anime['node']]
+
+    # Flatten
+    df = pd.json_normalize(
+        completed_anime,
+        record_path=['node', 'studios'],
+        meta=[
+            ['node', 'id'],
+            ['node', 'main_picture', 'medium'],
+            ['node', 'mean'],
+            ['node', 'rank'],
+            ['node', 'rating'],
+            ['node', 'source'],
+            ['node', 'start_season', 'year'],
+            ['node', 'title'],
+            ['node', 'genres']
+        ]
+    )
+    
+
+    # Rename col
+    df['node.genres'] = df['node.genres'].apply(lambda x: ','.join([genre['name'] for genre in x]))
+    df.columns = [
+        'studio_id','studio_name','anime_id','img','mal_score','rank','rating','source','start_year','title','genres'
+    ]
+
+    # For finding average and most popular anime genres
+    genre_df = df[['genres']].infer_objects(copy=False)
+    genre_df.loc[:, 'genres'] = genre_df['genres'].str.split(',')
+    genre_df = genre_df.explode('genres')
+
+    genre_df = genre_df['genres'].value_counts()
+    genre_df = genre_df.reset_index()
+    genre_df.columns = ['genre', 'count']
+
+    genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
+
+    # Find most watched ratings
+    ratings_df = df[['rating']].dropna()
+    ratings_df = ratings_df.groupby('rating').agg(
+        count=('rating','size')
+    ).reset_index()
+    ratings_df = ratings_df.rename(columns={'rating': 'name', 'count': 'value'})
+
+    # Find most watched sources
+    sources_df = df[['source']].fillna('Unknown')
+    sources_df = sources_df.groupby('source').agg(
+        count=('source','size')
+    ).reset_index()
+    ratings_df = ratings_df.rename(columns={'source': 'name', 'count': 'value'})
+
+    sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
+
+    # Get popular and highest avg rated studio
+    studio_df = df[['studio_id','studio_name']]
+    studio_df = studio_df.groupby('studio_id').agg(
+        studio_name=('studio_name', 'first'),
+        count=('studio_id','size')
+    ).reset_index()
+
+    studio_popular = studio_df[['studio_name', 'count']].sort_values(by="count", ascending=False).head(10)
+    # Popular season/year
+    season_year_df = df[['start_year']]
+    season_year_df = season_year_df.value_counts().reset_index(name='count')
+    season_year_df.columns = ['start_year', 'count']
+
+    response_data = {
+        "top_10_genres_count": genre_popular.to_dict(orient='records'),
+        "popular_ratings": ratings_df.to_dict(orient='records'),
+        "sources": sources_df.to_dict(orient='records'),
+        "top_10_studios_count": studio_popular.to_dict(orient='records'),
+        "season_anime": season_year_df.head(3).to_dict(orient='records')
+    }
+
+    return response_data
+
 # Get user data function
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
@@ -575,21 +654,21 @@ def userData():
 
             # TODO when guest
             if user_session_id == 'guest':
-                mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=watching&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
+                mal_get_user_data = '''
+                    https://api.myanimelist.net/v2/users/ZNEAK300/animelist?fields=id,title,main_picture,start_season,end_date,genres,mean,rank,rating,studios,source&nsfw=true&limit=1000
+                '''
                 headers = {
                     'X-MAL-CLIENT-ID': f'{client_id}'
                 }
 
-                response = requests.get(mal_get_anime, headers=headers)
-
+                response = requests.get(mal_get_user_data, headers=headers)
+                
                 if response.status_code == 200:
-                    data = filter_watching_anime(response.json())
-                    data_to_return = {'anime': data}
-                    return data_to_return
+                    data_to_return = guest_filter_user_anime_for_stats(response.json())
+                    return jsonify(data_to_return)
 
-                app.logger.error("Error weekly anime as guest in weekly_anime")
-                return 'Unable to get anime watchlist from MAL',500
+                app.logger.error("Error fetching weekly anime for authenticated user in userData")
+                return 'Unable to get user data from MAL',500
 
             find_user = find_user_function(user_session_id)
 
