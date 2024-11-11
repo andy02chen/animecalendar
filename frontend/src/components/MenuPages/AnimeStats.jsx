@@ -47,6 +47,7 @@ function AnimeStats() {
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
 
+    // Changing Slides
     const dataMax = 9;
 
     const backSlide = () => {
@@ -59,6 +60,10 @@ function AnimeStats() {
         if(dataDisplay < dataMax) {
             setDataDisplay(d => d + 1);
         }
+    }
+
+    const changeSlide = (slide) => {
+        setDataDisplay(slide);
     }
 
 
@@ -271,10 +276,10 @@ function AnimeStats() {
                                 </div>
                                 <div className='top-anime-right'>
                                     <div className='top-anime-header'>
-                                        <img className='top-20-anime-img' src={entry['img']}/>
                                         <h2 className='data-h2'>
                                             <span className='yellow-stat'>{entry['title']}</span>
                                         </h2>
+                                        <img className='top-20-anime-img' src={entry['img']}/>
                                     </div>
                                     <h2 className='data-h2'>
                                         MAL Score: {entry['mal_score']}
@@ -312,7 +317,13 @@ function AnimeStats() {
                         :
                         (APICallSuccess === null || APICallSuccess === false || data === null ?
                             <>
-                                <h1 className='stats-warning'>To prevent spamming stats are available every 5 minutes. If you're seeing this message due to a refresh or a loading error, please wait a moment and try again.</h1>
+                                <h1 className='stats-warning'>
+                                    Stats are refreshed every 5 minutes to prevent overload. 
+                                    For the most accurate data, please rate all your shows on MyAnimeList or as many as you can.
+                                    <br/>
+                                    <br/>
+                                    If you're seeing this message due to a refresh or loading error, give it a moment and try again.
+                                </h1>
                                 <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get my Stats </button>
                             </>
                             :
@@ -357,7 +368,13 @@ function AnimeStats() {
                                         ◀
                                     </button>
                                     <div className='data-slides'>
-
+                                        {
+                                            Array.from({ length: dataMax }, (_, i) => (
+                                                <div key={i} className={i === dataDisplay ? "slide active-slide" : "slide"}
+                                                onClick={() => changeSlide(i)}
+                                                />
+                                            ))
+                                        }
                                     </div>
                                     <button className='switch-data-buttons' onClick={() => forwardSlide()}>
                                         ▶
