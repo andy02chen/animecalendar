@@ -51,18 +51,67 @@ function AnimeStats() {
     const dataMax = 9;
 
     const backSlide = () => {
-        if(dataDisplay > 0) {
-            setDataDisplay(d => d - 1);
+        const back = document.getElementById('back-switch-data');
+        const front = document.getElementById('forward-switch-data');
+
+        if(front.disabled) {
+            front.removeAttribute('disabled');
         }
+
+        if(dataDisplay > 1) {
+            if(back.disabled) {
+                back.removeAttribute('disabled');
+            }
+        } else if(dataDisplay === 1) {
+            back.setAttribute('disabled', 'disabled');
+        }
+        setDataDisplay(d => d - 1);
     }
 
     const forwardSlide = () => {
-        if(dataDisplay < dataMax) {
-            setDataDisplay(d => d + 1);
+        const front = document.getElementById('forward-switch-data');
+        const back = document.getElementById('back-switch-data');
+
+        if(back.disabled) {
+            back.removeAttribute('disabled');
         }
+
+        if(dataDisplay < dataMax - 2) {
+            if(front.disabled) {
+                front.removeAttribute('disabled');
+            }
+        } else if (dataDisplay === (dataMax - 2)) {
+            front.setAttribute('disabled', 'disabled');
+        }
+        setDataDisplay(d => d + 1);
     }
 
     const changeSlide = (slide) => {
+        const front = document.getElementById('forward-switch-data');
+        const back = document.getElementById('back-switch-data');
+        
+        if(slide === 0) {
+            back.setAttribute('disabled', 'disabled');
+
+            if(front.disabled) {
+                front.removeAttribute('disabled');
+            }
+        } else if (slide === (dataMax - 1)) {
+            front.setAttribute('disabled', 'disabled');
+
+            if(back.disabled) {
+                back.removeAttribute('disabled');
+            }
+
+        } else {
+            if(front.disabled) {
+                front.removeAttribute('disabled');
+            }
+
+            if(back.disabled) {
+                back.removeAttribute('disabled');
+            }
+        }
         setDataDisplay(slide);
     }
 
@@ -364,7 +413,7 @@ function AnimeStats() {
                                 })()}
                                 </div>
                                 <div className='switch-data-screen'>
-                                    <button className='switch-data-buttons' onClick={() => backSlide()}>
+                                    <button id='back-switch-data' className='switch-data-buttons' onClick={() => backSlide()}>
                                         ◀
                                     </button>
                                     <div className='data-slides'>
@@ -376,7 +425,7 @@ function AnimeStats() {
                                             ))
                                         }
                                     </div>
-                                    <button className='switch-data-buttons' onClick={() => forwardSlide()}>
+                                    <button id='forward-switch-data' className='switch-data-buttons' onClick={() => forwardSlide()}>
                                         ▶
                                     </button>
                                 </div>

@@ -171,7 +171,6 @@ function AnimeCard({anime, type}) {
 
     const handleColorChange = (event) => {
         anime.changeColour(event.target.value);
-        console.log(event.target.value);
     };
 
     const confirmColorChange = () => {

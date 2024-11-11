@@ -30,7 +30,6 @@ export default class Anime {
     changeColour(color) {
         localStorage.setItem(this.id+"Colour", color);
         this.marker_colour = color;
-        console.log(this.marker_colour);
     }
 
     generateRandomColour() {

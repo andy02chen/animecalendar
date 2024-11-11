@@ -136,6 +136,10 @@
     background-color: var(--accent-500);
 }
 
+.switch-data-buttons:disabled {
+    background-color: var(--black-70);
+}
+
 .data-slides {
     height: 100%;
     width: 80%;
