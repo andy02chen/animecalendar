@@ -349,6 +349,14 @@ function AnimeStats() {
         );
     }
 
+    const notEnoughData = () => {
+        return(
+            <h1 className='data-h2'>
+                Data unavailable. Add more shows to your list and rate them to unlock this data. Watch and rate more shows, then check back!
+            </h1>
+        );
+    }
+
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-no-shape'>
@@ -424,31 +432,67 @@ function AnimeStats() {
                                         (() => {
                                             switch (dataDisplay) {
                                                 case 0:
-                                                    return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+                                                    if(data['average_rating'].length > 0) {
+                                                        return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 case 1:
-                                                    return RatingPieChart(data['popular_ratings']);
+                                                    if(data['popular_ratings'].length > 0) {
+                                                        return RatingPieChart(data['popular_ratings']);
+                                                    }
+                                                    
+                                                    return notEnoughData();
 
                                                 case 2:
-                                                    return animeYears(data['season_anime']);
+                                                    if(data['season_anime'].length > 0) {
+                                                        return animeYears(data['season_anime']);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 case 3:
-                                                    return animeSourcesChart(data['sources'])
+                                                    if(data['sources'].length > 0) {
+                                                        return animeSourcesChart(data['sources']);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 case 4:
-                                                    return top10GenresByAvg(data['top_10_genres_avg']);
+                                                    if(data['top_10_genres_avg'].length > 0) {
+                                                        return top10GenresByAvg(data['top_10_genres_avg']);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 case 5:
-                                                    return top10GenresByCount(data['top_10_genres_count']);
+                                                    if(data['top_10_genres_count'].length > 0) {
+                                                        return top10GenresByCount(data['top_10_genres_count']);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 case 6:
-                                                    return mostWatchedStudios(data['top_10_studios_count']);
+                                                    if(data['top_10_studios_count'].length > 0) {
+                                                        return mostWatchedStudios(data['top_10_studios_count']);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 case 7:
-                                                    return topStudiosAvg(data['top_10_studios_avg']);
+                                                    if(data['top_10_studios_avg'].length > 0) {
+                                                        return topStudiosAvg(data['top_10_studios_avg']);
+                                                    }
+
+                                                    return notEnoughData();
                                                 
                                                 case 8:
-                                                    return top20Anime(data['top_20_anime']);
+                                                    if(data['top_20_anime'].length > 0) {
+                                                        return top20Anime(data['top_20_anime']);
+                                                    }
+
+                                                    return notEnoughData();
 
                                                 default:
                                                     return <div>No data available</div>;
