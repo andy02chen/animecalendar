@@ -652,7 +652,6 @@ def userData():
 
         if user_session_id:
 
-            # TODO when guest
             if user_session_id == 'guest':
                 mal_get_user_data = '''
                     https://api.myanimelist.net/v2/users/ZNEAK300/animelist?fields=id,title,main_picture,start_season,end_date,genres,mean,rank,rating,studios,source&nsfw=true&limit=1000

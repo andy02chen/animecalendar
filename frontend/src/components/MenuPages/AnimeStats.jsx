@@ -206,7 +206,7 @@ function AnimeStats() {
         return(
             <>
                 <h1 className='data-h1'>
-                    You completed the most anime released in these years
+                    Completed the most anime released in these years
                 </h1>
                 {data.map((entry, index) => (
                     <h2 key={index} className='data-h2'>
@@ -244,7 +244,7 @@ function AnimeStats() {
         return(
             <>
                 <h1 className='data-h1'>
-                    Your Top 10 Genres by Count
+                    Top 10 Genres by Count
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
@@ -267,7 +267,7 @@ function AnimeStats() {
         return(
             <>
                 <h1 className='data-h1'>
-                    Your Most Watched Studios
+                    Most Watched Studios
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-studios-count">
@@ -370,14 +370,30 @@ function AnimeStats() {
                         :
                         (APICallSuccess === null || APICallSuccess === false || data === null ?
                             <>
-                                <h1 className='stats-warning'>
-                                    Stats are refreshed every 5 minutes to prevent overload. 
-                                    For the most accurate data, please rate all your shows on MyAnimeList or as many as you can.
-                                    <br/>
-                                    <br/>
-                                    If you're seeing this message due to a refresh or loading error, give it a moment and try again.
-                                </h1>
-                                <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get my Stats </button>
+                                {localStorage.getItem('username') === "Guest" ?
+                                    <h1 className='stats-warning'>
+                                        Stats are refreshed every 5 minutes to prevent overload.
+                                        <br/>
+                                        As you are a guest the anime stats will be taken from Andy's public data on MyAnimelist.
+                                        If you would like your anime stats, please login to your MyAnimeList account.
+                                        <br/>
+                                        <br/>
+                                        If you're seeing this message due to a refresh or loading error, give it a moment and try again.
+                                    </h1>
+                                    :
+                                    <h1 className='stats-warning'>
+                                        Stats are refreshed every 5 minutes to prevent overload. 
+                                        For the most accurate data, please rate all your shows on MyAnimeList or as many as you can.
+                                        <br/>
+                                        <br/>
+                                        If you're seeing this message due to a refresh or loading error, give it a moment and try again.
+                                    </h1>
+                                }
+                                {localStorage.getItem('username') === "Guest" ?
+                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
+                                    :
+                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get my Stats </button>
+                                }
                             </>
                             :
                             <>
