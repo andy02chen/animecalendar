@@ -458,6 +458,9 @@ def filter_user_anime_for_stats(data):
     animeList = data['data']
     completed_anime = [anime for anime in animeList if anime['node']['my_list_status']['status'] == 'completed']
 
+    if(len(completed_anime) == 0):
+        return {}
+
     # Flatten
     df = pd.json_normalize(
         completed_anime,

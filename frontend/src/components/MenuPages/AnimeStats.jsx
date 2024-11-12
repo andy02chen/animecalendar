@@ -124,7 +124,7 @@ function AnimeStats() {
     const [isYourScoreVisible, setYourScoreVisible] = useState(false);
 
     useEffect(() => {
-        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 5000);
+        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 3000);
 
         return () => {
             clearTimeout(yourScoreTimer);
@@ -225,7 +225,7 @@ function AnimeStats() {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                    <XAxis type="number" dataKey="average" domain={['auto', 10]}/>
+                    <XAxis type="number" dataKey="average"/>
                     <YAxis type="category" dataKey="genre" width={100} />
                     <Tooltip/>
                     <Bar dataKey="average" name="Average">
@@ -294,7 +294,7 @@ function AnimeStats() {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                        <XAxis type="number" dataKey="average" domain={['auto', 10]} />
+                        <XAxis type="number" dataKey="average"/>
                         <YAxis type="category" dataKey="studio_name" width={100} />
                         <Tooltip formatter={(value, name, props) => {
                             const count = props.payload.count;
@@ -432,63 +432,63 @@ function AnimeStats() {
                                         (() => {
                                             switch (dataDisplay) {
                                                 case 0:
-                                                    if(data['average_rating'].length > 0) {
+                                                    if(data["average_rating"] && data["average_rating"]["mal_score"] && data["average_rating"]["your_score"]) {
                                                         return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
                                                     }
 
                                                     return notEnoughData();
 
                                                 case 1:
-                                                    if(data['popular_ratings'].length > 0) {
+                                                    if(data['popular_ratings']) {
                                                         return RatingPieChart(data['popular_ratings']);
                                                     }
                                                     
                                                     return notEnoughData();
 
                                                 case 2:
-                                                    if(data['season_anime'].length > 0) {
+                                                    if(data['season_anime']) {
                                                         return animeYears(data['season_anime']);
                                                     }
 
                                                     return notEnoughData();
 
                                                 case 3:
-                                                    if(data['sources'].length > 0) {
+                                                    if(data['sources']) {
                                                         return animeSourcesChart(data['sources']);
                                                     }
 
                                                     return notEnoughData();
 
                                                 case 4:
-                                                    if(data['top_10_genres_avg'].length > 0) {
+                                                    if(data['top_10_genres_avg']) {
                                                         return top10GenresByAvg(data['top_10_genres_avg']);
                                                     }
 
                                                     return notEnoughData();
 
                                                 case 5:
-                                                    if(data['top_10_genres_count'].length > 0) {
+                                                    if(data['top_10_genres_count']) {
                                                         return top10GenresByCount(data['top_10_genres_count']);
                                                     }
 
                                                     return notEnoughData();
 
                                                 case 6:
-                                                    if(data['top_10_studios_count'].length > 0) {
+                                                    if(data['top_10_studios_count']) {
                                                         return mostWatchedStudios(data['top_10_studios_count']);
                                                     }
 
                                                     return notEnoughData();
 
                                                 case 7:
-                                                    if(data['top_10_studios_avg'].length > 0) {
+                                                    if(data['top_10_studios_avg']) {
                                                         return topStudiosAvg(data['top_10_studios_avg']);
                                                     }
 
                                                     return notEnoughData();
                                                 
                                                 case 8:
-                                                    if(data['top_20_anime'].length > 0) {
+                                                    if(data['top_20_anime']) {
                                                         return top20Anime(data['top_20_anime']);
                                                     }
 

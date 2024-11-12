@@ -35,8 +35,6 @@ function ExpandDate({animeDictonary, dateDisplay, markersMap}) {
 
     const today = new Date().toISOString().split("T")[0];
 
-    console.log(markers);
-
     return(
         <div id='expand-date' style={{display: 'none'}}>
             <div className='date-info'>
