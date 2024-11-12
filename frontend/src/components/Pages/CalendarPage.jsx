@@ -13,7 +13,7 @@ import AnimeStats from '../MenuPages/AnimeStats';
 export const AnimeContext = createContext([]);
 
 function CalendarPage() {
-    const version = "2.1.1";
+    const version = "2.2";
 
     const [watchingList, setWatchingList] = useState(null);
     const [planToWatchList, setPlanToWatchList] = useState(null);

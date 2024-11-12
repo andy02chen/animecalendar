@@ -67,6 +67,13 @@ function Notice({setRefresh, version}) {
                             <li>
                                 <p>Changed time to be sorted by ascending order when expanding dates</p>
                             </li>
+                            <h2>2.2</h2>
+                            <li>
+                                <p>Added Anime Stats for your viewing preferences</p>
+                            </li>
+                            <li>
+                                <p>Fixed issue with display when displaying dates on phone</p>
+                            </li>
                         </ul>
                         <br/>
 
