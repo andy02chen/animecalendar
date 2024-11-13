@@ -566,6 +566,9 @@ def guest_filter_user_anime_for_stats(data):
     animeList = data['data']
     completed_anime = [anime for anime in animeList if 'end_date' in anime['node'] and 'mean' in anime['node'] and 'start_season' in anime['node']]
 
+    if(len(completed_anime) == 0):
+        return {}
+
     # Flatten
     df = pd.json_normalize(
         completed_anime,
@@ -645,9 +648,7 @@ def guest_filter_user_anime_for_stats(data):
 def userData():
     try:
         # Check limit
-        # TODO CHANGE TO 1 PER 5MINS
-        # if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=100, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
