@@ -33,6 +33,7 @@ frontend/localhost-key.pem
 frontend/localhost.pem
 data/
 backend/app.log
+backend/app.log.1
 backend/htmlcov
 backend/.coverage
 backend/__pycache__

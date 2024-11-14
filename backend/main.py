@@ -514,7 +514,7 @@ def filter_user_anime_for_stats(data):
     sources_df = sources_df.groupby('source').agg(
         count=('source','size')
     ).reset_index()
-    ratings_df = ratings_df.rename(columns={'source': 'name', 'count': 'value'})
+    # ratings_df = ratings_df.rename(columns={'source': 'name', 'count': 'value'})
 
     sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
 
@@ -564,7 +564,17 @@ def filter_user_anime_for_stats(data):
 def guest_filter_user_anime_for_stats(data):
     # Sort for only completed anime
     animeList = data['data']
-    completed_anime = [anime for anime in animeList if 'end_date' in anime['node'] and 'mean' in anime['node'] and 'start_season' in anime['node']]
+    
+    completed_anime = [anime for anime in animeList if 
+        'end_date' in anime['node'] and 
+        'mean' in anime['node'] and 
+        'start_season' in anime['node'] and
+        'genres' in anime['node'] and
+        'source' in anime['node'] and
+        'studios' in anime['node'] and
+        'rank' in anime['node'] and
+        'rating' in anime['node']
+    ]
 
     if(len(completed_anime) == 0):
         return {}
@@ -616,7 +626,7 @@ def guest_filter_user_anime_for_stats(data):
     sources_df = sources_df.groupby('source').agg(
         count=('source','size')
     ).reset_index()
-    ratings_df = ratings_df.rename(columns={'source': 'name', 'count': 'value'})
+    # ratings_df = ratings_df.rename(columns={'source': 'name', 'count': 'value'})
 
     sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
 
