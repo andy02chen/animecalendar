@@ -110,18 +110,6 @@ function Auth()  {
         return () => clearInterval(interval);
     }, []);
 
-    useEffect(() => {
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    
-        if (isDarkMode) {
-            document.getElementById('login-page-how-to-use').classList.add('dark-mode-add');
-            document.getElementById('login-page-header').classList.add('dark-mode-add');
-        } else {
-            document.getElementById('login-page-how-to-use').classList.remove('dark-mode-add');
-            document.getElementById('login-page-header').classList.remove('dark-mode-add');
-        }
-    })
-
     return(
         <>
             {isLoggedIn ?
@@ -133,7 +121,7 @@ function Auth()  {
                 <div id='copied-discord-popup'>
                     <p>Username copied to clipboard</p>
                 </div>
-                <div className='login-page-header' id='login-page-header'>
+                <div id='login-page-header' className={localStorage.getItem('darkMode') === 'true' ? "login-page-header dark-mode-add" : "login-page-header"}>
                     <div>
                         <img className='logo' src={logo} alt='logo'></img>
                         <button className='login-page-header-login-btn' onClick={() => {
@@ -209,7 +197,7 @@ function Auth()  {
                         </div>
                     </div>
                 </section>
-                <section className="login-page-how-to-use" id='login-page-how-to-use'>
+                <section className={localStorage.getItem('darkMode') === 'true' ? "login-page-how-to-use dark-mode-add": "login-page-how-to-use"} id='login-page-how-to-use'>
                     <div className='how-to-use-div'>
                         <svg className='how-to-use-title' width="483" height="71" viewBox="0 0 483 71" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g filter="url(#filter0_d_140_260)">

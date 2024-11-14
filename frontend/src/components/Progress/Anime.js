@@ -30,7 +30,6 @@ export default class Anime {
     changeColour(color) {
         localStorage.setItem(this.id+"Colour", color);
         this.marker_colour = color;
-        console.log(this.marker_colour);
     }
 
     generateRandomColour() {
@@ -49,7 +48,7 @@ export default class Anime {
     
     // Assigns a colour to anime if necessary
     assignAnimeColour() {
-        const version = '2.1.1';
+        const version = '2.2';
         if(this.air_status === 'currently_airing') {
             if(localStorage.getItem(this.id+"Colour") === null || localStorage.getItem('seenAnnouncement') !== version) {
                 const color = this.generateRandomColour();

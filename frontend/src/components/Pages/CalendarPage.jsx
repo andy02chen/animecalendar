@@ -8,11 +8,12 @@ import './CalendarPage.css';
 import { createContext, useState, useEffect } from 'react';
 import CalendarError from '../Alert/CalendarError';
 import Notice from '../MenuPages/Notice';
+import AnimeStats from '../MenuPages/AnimeStats';
 
 export const AnimeContext = createContext([]);
 
 function CalendarPage() {
-    const version = "2.1.1";
+    const version = "2.2";
 
     const [watchingList, setWatchingList] = useState(null);
     const [planToWatchList, setPlanToWatchList] = useState(null);
@@ -54,6 +55,7 @@ function CalendarPage() {
                 </AnimeContext.Provider>
                 <NewCalendar animeList={watchingList} refresh={refresh}/>
             </div>
+            <AnimeStats/>
             <Notice setRefresh={setRefresh} version={version}/>
             <Feedback/>
             <Tutorial/>
