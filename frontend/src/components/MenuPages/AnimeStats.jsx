@@ -362,7 +362,11 @@ function AnimeStats() {
             <div className='menu-page-no-shape'>
                 <div className='menu-page-content'>
                     <div className='menu-page-header'>
-                        <h1>Your Anime Stats</h1>
+                        {localStorage.getItem('username') === "Guest" ?
+                            <h1>Demo Anime Stats</h1>
+                            :
+                            <h1>Your Anime Stats</h1>
+                        }
                         <h1 className='menu-page-close-button' onClick={() => closeStats()}>&#10006;</h1>
                     </div>
                     <div className='anime-stats-page-body'>

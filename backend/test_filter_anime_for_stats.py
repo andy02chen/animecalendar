@@ -226,3 +226,213 @@ def test_genre_split():
             {"start_year": 2020, "count": 1}
         ]
     }
+
+
+# !!!!!!!!!!! USER STATS
+
+# basic
+test_basic_user = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "http://example.com/imageA.jpg"},
+                "mean": 8.5,
+                "my_list_status": {"status": "completed", "score": 9},
+                "rank": 200,
+                "rating": "PG-13",
+                "source": "Manga",
+                "start_season": {"year": 2020},
+                "genres": [{"name": "Action"}, {"name": "Adventure"}],
+                "studios": [{"id": 101, "name": "Studio A"}]
+            }
+        },
+        {
+            "node": {
+                "id": 2,
+                "title": "Anime B",
+                "main_picture": {"medium": "http://example.com/imageB.jpg"},
+                "mean": 7.0,
+                "my_list_status": {"status": "watching", "score": 0},
+                "rank": 500,
+                "rating": "R",
+                "source": "Original",
+                "start_season": {"year": 2019},
+                "genres": [{"name": "Drama"}],
+                "studios": [{"id": 102, "name": "Studio B"}]
+            }
+        }
+    ]
+}
+
+
+def test_user_basic_data():
+    res = filter_user_anime_for_stats(test_basic_user)
+    assert res == {
+        "top_10_genres_count": [{"genre": "Action", "count": 1}, {"genre": "Adventure", "count": 1}],
+        "top_10_genres_avg": [{"genre": "Action", "average": 9.0}, {"genre": "Adventure", "average": 9.0}],
+        "popular_ratings": [{"name": "PG-13", "value": 1}],
+        "sources": [{"source": "Manga", "count": 1}],
+        "top_10_studios_count": [{"studio_name": "Studio A", "count": 1}],
+        "top_10_studios_avg": [{"studio_name": "Studio A", "average": 9.0, "count": 1}],
+        "top_20_anime": [{"title": "Anime A", "your_score": 9, "mal_score": 8.5, "img": "http://example.com/imageA.jpg"}],
+        "average_rating": {"your_score": 9.0, "mal_score": 8.5},
+        "season_anime": [{"start_year": 2020, "count": 1}]
+    }
+
+
+# all completed
+all_complete = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "http://example.com/imageA.jpg"},
+                "mean": 8.5,
+                "my_list_status": {"status": "completed", "score": 9},
+                "rank": 200,
+                "rating": "PG-13",
+                "source": "Manga",
+                "start_season": {"year": 2020},
+                "genres": [{"name": "Action"}, {"name": "Adventure"}],
+                "studios": [{"id": 101, "name": "Studio A"}]
+            }
+        },
+        {
+            "node": {
+                "id": 2,
+                "title": "Anime B",
+                "main_picture": {"medium": "http://example.com/imageB.jpg"},
+                "mean": 7.0,
+                "my_list_status": {"status": "completed", "score": 7},
+                "rank": 500,
+                "rating": "R",
+                "source": "Original",
+                "start_season": {"year": 2019},
+                "genres": [{"name": "Drama"}],
+                "studios": [{"id": 102, "name": "Studio B"}]
+            }
+        }
+    ]
+}
+def test_all_completed():
+    res = filter_user_anime_for_stats(all_complete)
+    assert res == {
+        "top_10_genres_count": [
+            {"genre": "Action", "count": 1},
+            {"genre": "Adventure", "count": 1},
+            {"genre": "Drama", "count": 1}
+        ],
+        "top_10_genres_avg": [
+            {"genre": "Action", "average": 9.0},
+            {"genre": "Adventure", "average": 9.0},
+            {"genre": "Drama", "average": 7.0}
+        ],
+        "popular_ratings": [{"name": "PG-13", "value": 1}, {"name": "R", "value": 1}],
+        "sources": [{"source": "Manga", "count": 1}, {"source": "Original", "count": 1}],
+        "top_10_studios_count": [
+            {"studio_name": "Studio A", "count": 1},
+            {"studio_name": "Studio B", "count": 1}
+        ],
+        "top_10_studios_avg": [
+            {"studio_name": "Studio A", "average": 9.0, "count": 1},
+            {"studio_name": "Studio B", "average": 7.0, "count": 1}
+        ],
+        "top_20_anime": [
+            {"title": "Anime A", "your_score": 9, "mal_score": 8.5, "img": "http://example.com/imageA.jpg"},
+            {"title": "Anime B", "your_score": 7, "mal_score": 7.0, "img": "http://example.com/imageB.jpg"}
+        ],
+        "average_rating": {"your_score": 8.0, "mal_score": 7.75},
+        "season_anime": [
+            {"start_year": 2019, "count": 1},
+            {"start_year": 2020, "count": 1}
+        ]
+    }
+
+# no compelted
+no_comp = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "http://example.com/imageA.jpg"},
+                "mean": 8.5,
+                "my_list_status": {"status": "watching", "score": 9},
+                "rank": 200,
+                "rating": "PG-13",
+                "source": "Manga",
+                "start_season": {"year": 2020},
+                "genres": [{"name": "Action"}, {"name": "Adventure"}],
+                "studios": [{"id": 101, "name": "Studio A"}]
+            }
+        }
+    ]
+}
+
+def test_no_completed():
+    res = filter_user_anime_for_stats(no_comp)
+    assert res == {}
+
+# genres and studios no score
+no_scores = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "my_list_status": {"status": "completed", "score": 0},
+                "genres": [{"name": "Action"}],
+                "studios": [{"id": 101, "name": "Studio A"}],
+                "main_picture": {"medium": "http://example.com/imageA.jpg"},
+                "mean": 8.5,
+            }
+        }
+    ]
+}
+
+def test_no_scores():
+    res = filter_user_anime_for_stats(no_scores)
+    assert res == {}
+
+# multiple studios
+multi_studios = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "http://example.com/imageA.jpg"},
+                "mean": 8.5,
+                "my_list_status": {"status": "completed", "score": 9},
+                "rank": 200,
+                "rating": "PG-13",
+                "source": "Manga",
+                "start_season": {"year": 2020},
+                "genres": [{"name": "Action"}, {"name": "Adventure"}],
+                "studios": [{"id": 101, "name": "Studio A"}, {"id": 102, "name": "Studio B"}]
+            }
+        },
+        {
+            "node": {
+                "id": 2,
+                "title": "Anime B",
+                "main_picture": {"medium": "http://example.com/imageB.jpg"},
+                "mean": 7.0,
+                "my_list_status": {"status": "watching", "score": 7},
+                "rank": 500,
+                "rating": "R",
+                "source": "Original",
+                "start_season": {"year": 2019},
+                "genres": [{"name": "Drama"}],
+                "studios": [{"id": 102, "name": "Studio B"}]
+            }
+        }
+    ]
+}
+
+def test_multi_studios():
+    res = filter_user_anime_for_stats(multi_studios)
+    assert res == {}

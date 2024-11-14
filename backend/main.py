@@ -456,7 +456,18 @@ def filter_watching_anime(data):
 def filter_user_anime_for_stats(data):
     # Sort for only completed anime
     animeList = data['data']
-    completed_anime = [anime for anime in animeList if anime['node']['my_list_status']['status'] == 'completed']
+
+    completed_anime = [anime for anime in animeList 
+        if anime['node']['my_list_status']['status'] == 'completed' and 
+        'mean' in anime['node'] and 
+        'start_season' in anime['node'] and
+        'genres' in anime['node'] and
+        'source' in anime['node'] and
+        'studios' in anime['node'] and
+        len(anime['node']['studios']) == 1 and
+        'rank' in anime['node'] and
+        'rating' in anime['node']
+    ]
 
     if(len(completed_anime) == 0):
         return {}
@@ -484,6 +495,8 @@ def filter_user_anime_for_stats(data):
     df.columns = [
         'studio_id','studio_name','anime_id','img','mal_score','your_score','rank','rating','source','start_year','title','genres'
     ]
+
+    print(df)
 
     # For finding average and most popular anime genres
     genre_df = df[['genres','your_score']].infer_objects(copy=False)
@@ -658,7 +671,7 @@ def guest_filter_user_anime_for_stats(data):
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
