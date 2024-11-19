@@ -285,6 +285,60 @@
     color: var(--primary-75);
 }
 
+.anime-stats-demo {
+    height: 60rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.anime-stats-body {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-family: "Furore", Arial, sans-serif;
+}
+
+.stats-demos {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 5rem;
+}
+
+.stats-demos > div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-demo-image {
+    width: 20%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.stats-demo-inst {
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-demo-cycle-image > img {
+    width: 40%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .how-to-use-div-buttons div:hover {
     animation: light-flicker 1.5s infinite;
 }
