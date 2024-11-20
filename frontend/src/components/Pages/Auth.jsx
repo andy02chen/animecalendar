@@ -290,7 +290,14 @@ function Auth()  {
                                 <div className='stats-demos'>
                                     <div className='stats-demo-inst'>
                                         <img className='stats-demo-image' src={stats_demo1} alt={`Demo Image Unavailable`} />
-                                        <p>Login to get your stats</p>
+                                        <h1>Login to get your stats</h1>
+                                        <div className='stat-demo-examples-text'>
+                                            <p>Discover your anime-watching habits such as:</p>
+                                            <p>- Your Highest Rated Anime</p>
+                                            <p>- Most Watched Studios </p>
+                                            <p>- Highest Rated Studios </p>
+                                            <p>- Top Genres and more...</p>
+                                        </div>
                                     </div>
                                     <div className='stats-demo-cycle-image'>
                                         <img className='stats-demo-image' src={shuffledStatsImages[statsImageIndex]} alt={`Demo Image Unavailable`} />
