@@ -2,34 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs';
 import path from 'path';
-
-// https://vitejs.dev/config/
-// export default defineConfig({
-//   server: {
-//     https: {
-//       key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
-//       cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
-//     },
-//     proxy: {
-//       '/auth':"https://localhost:5000",
-//       '/api':"https://localhost:5000",
-//       '/oauth':"https://localhost:5000",
-//       '/test':"https://localhost:5000",
-//       '/guest':"https://localhost:5000",
-//       '/':{
-//         target: "https://localhost:5000",
-//         bypass: (req) => {
-//           if (req.url !== '/') {
-//             return req.url;
-//           }
-//         }
-//       }
-//     }
-//   },
-//   plugins: [react()]
-// })
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 1000, // Increase limit to 1000 kB
+  },
   server: {
     https: {
       key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
@@ -61,19 +39,7 @@ export default defineConfig({
         target: "https://localhost:5000",
         secure: false,
         changeOrigin: true
-      }
-      // ,
-      // '/home': {
-      //   target: "https://localhost:5000",
-      //   secure: false,
-      //   changeOrigin: true
-      // },
-      // '/a': {
-      //   target: "https://localhost:5000",
-      //   secure: false,
-      //   changeOrigin: true
-      // }
-      ,
+      },
       '/': {
         target: "https://localhost:5000",
         secure: false,
@@ -86,5 +52,13 @@ export default defineConfig({
       }
     }
   },
-  plugins: [react()]
+  plugins: [
+    react(),
+    visualizer({ // Add the bundle analyzer
+      open: false, // Automatically open the stats file in your browser
+      filename: 'bundle-stats.html', // Name of the stats file
+      gzipSize: true, // Include gzipped sizes
+      brotliSize: true, // Include Brotli sizes
+    })
+  ]
 });

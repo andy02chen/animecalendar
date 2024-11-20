@@ -10,6 +10,11 @@ import demo5 from '../imgs/demo/demo-5.png';
 import demo6 from '../imgs/demo/demo-6.png';
 import demo7 from '../imgs/demo/demo-7.png';
 
+import stats_demo1 from '../imgs/demo/demo-stats-1.png';
+import stats_demo2 from '../imgs/demo/demo-stats-2.png';
+import stats_demo3 from '../imgs/demo/demo-stats-3.png';
+import stats_demo4 from '../imgs/demo/demo-stats-4.png';
+
 function authRedirect() {
     window.location.href = `/auth`;
 }
@@ -64,6 +69,7 @@ function expandInstructionDiv(value, selectedDiv) {
 
 function Auth()  {
     const [imageIndex, setImageIndex] = useState(0);
+    const [statsImageIndex, setStatsImageIndex] = useState(0);
     const [isLoggedIn, setLoggedIn] = useState(false);
 
     const selectedDiv = useRef(null);
@@ -78,6 +84,12 @@ function Auth()  {
         demo7,
     ];
 
+    const demoArr = [
+        stats_demo2,
+        stats_demo3,
+        stats_demo4
+    ]
+
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -87,6 +99,7 @@ function Auth()  {
     }
 
     const shuffledImages = shuffleArray(imgArr);
+    const shuffledStatsImages = shuffleArray(demoArr);
 
     // Calls API to check if user is logged in
     useEffect(() => {
@@ -105,6 +118,7 @@ function Auth()  {
     useEffect(() => {
         const interval = setInterval(() => {
             setImageIndex((prevIndex) => (prevIndex + 1) % shuffledImages.length);
+            setStatsImageIndex((prevIndex) => (prevIndex + 1) % shuffledStatsImages.length);
         }, 3000);
 
         return () => clearInterval(interval);
@@ -268,6 +282,27 @@ function Auth()  {
                                 your episode may be <span className='how-to-use-highlight'> delayed </span> or <span className='how-to-use-highlight'> not yet available </span> on your streaming service. 
                                 If neither is the case, please report the issue.
                                 </p>
+                            </div>
+                        </div>
+                        <div className='anime-stats-demo'>
+                            <div className='anime-stats-body'>
+                                <h1 className='stats-title'>View Anime Stats</h1>
+                                <div className='stats-demos'>
+                                    <div className='stats-demo-inst'>
+                                        <img className='stats-demo-image' src={stats_demo1} alt={`Demo Image Unavailable`} />
+                                        <h1>Login to get your stats</h1>
+                                        <div className='stat-demo-examples-text'>
+                                            <p>Discover your anime-watching habits such as:</p>
+                                            <p>- Your Highest Rated Anime</p>
+                                            <p>- Most Watched Studios </p>
+                                            <p>- Highest Rated Studios </p>
+                                            <p>- Top Genres and more...</p>
+                                        </div>
+                                    </div>
+                                    <div className='stats-demo-cycle-image'>
+                                        <img className='stats-demo-image' src={shuffledStatsImages[statsImageIndex]} alt={`Demo Image Unavailable`} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

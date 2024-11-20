@@ -285,6 +285,70 @@
     color: var(--primary-75);
 }
 
+.anime-stats-demo {
+    height: 80rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.anime-stats-body {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-family: "Furore", Arial, sans-serif;
+}
+
+.stats-demos {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 2rem;
+}
+
+.stats-demos > div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-demo-image {
+    width: 80%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 25rem;
+}
+
+.stats-demo-inst {
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-demo-inst > h1 {
+    text-align: center;
+}
+
+.stats-demo-inst > p {
+    text-align: left;
+}
+
+.stats-demo-cycle-image > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 40rem;
+}
+
 .how-to-use-div-buttons div:hover {
     animation: light-flicker 1.5s infinite;
 }
@@ -510,6 +574,14 @@
         max-height: 18.75rem;
         max-width: 28.125rem;
     }
+
+    .stats-demo-cycle-image > img {
+        max-width: 30rem;
+    }
+
+    .anime-stats-demo {
+        height: 70rem; 
+    }
 }
 
 /* Mobile View */
@@ -616,6 +688,14 @@
         height: 37.5rem;
         max-height: 37.5rem;
     }
+
+    .stats-demo-cycle-image > img {
+        max-width: 30rem;
+    }
+
+    .anime-stats-demo {
+        height: 68rem; 
+    }
 }
 
 @media (max-width: 26.563rem) {
@@ -644,6 +724,14 @@
 @media (max-width: 23.438rem) {
     .login-frame {
         transform: scale(200);
+    }
+
+    .stats-demo-cycle-image > img {
+        max-width: 30rem;
+    }
+
+    .anime-stats-demo {
+        height: 55rem; 
     }
 }
 

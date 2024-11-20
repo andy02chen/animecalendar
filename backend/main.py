@@ -496,8 +496,6 @@ def filter_user_anime_for_stats(data):
         'studio_id','studio_name','anime_id','img','mal_score','your_score','rank','rating','source','start_year','title','genres'
     ]
 
-    print(df)
-
     # For finding average and most popular anime genres
     genre_df = df[['genres','your_score']].infer_objects(copy=False)
     genre_df.loc[:, 'genres'] = genre_df['genres'].str.split(',')
