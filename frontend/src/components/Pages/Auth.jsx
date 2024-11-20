@@ -286,17 +286,23 @@ function Auth()  {
                         </div>
                         <div className='anime-stats-demo'>
                             <div className='anime-stats-body'>
-                                <h1 className='stats-title'>View Anime Stats</h1>
+                                <h1 className={localStorage.getItem('darkMode') === 'true' ? "stats-title stats-title-dark": "stats-title"}>
+                                    View Anime Stats
+                                </h1>
                                 <div className='stats-demos'>
                                     <div className='stats-demo-inst'>
                                         <img className='stats-demo-image' src={stats_demo1} alt={`Demo Image Unavailable`} />
-                                        <h1>Login to get your stats</h1>
+                                        <h1 className={localStorage.getItem('darkMode') === 'true' ? "stats-demo-login stats-demo-login-dark": "stats-demo-login"}>
+                                            Login to get your stats
+                                        </h1>
                                         <div className='stat-demo-examples-text'>
-                                            <p>Discover your anime-watching habits such as:</p>
-                                            <p>- Your Highest Rated Anime</p>
-                                            <p>- Most Watched Studios </p>
-                                            <p>- Highest Rated Studios </p>
-                                            <p>- Top Genres and more...</p>
+                                            <p className={localStorage.getItem('darkMode') === 'true' ? "stats-demo-text stats-demo-text-dark": "stats-demo-text"}>
+                                                Discover your anime-watching habits such as:
+                                            </p>
+                                            <p className={localStorage.getItem('darkMode') === 'true' ? "stats-demo-text stats-demo-text-dark": "stats-demo-text"}>- Your Highest Rated Anime</p>
+                                            <p className={localStorage.getItem('darkMode') === 'true' ? "stats-demo-text stats-demo-text-dark": "stats-demo-text"}>- Most Watched Studios </p>
+                                            <p className={localStorage.getItem('darkMode') === 'true' ? "stats-demo-text stats-demo-text-dark": "stats-demo-text"}>- Highest Rated Studios </p>
+                                            <p className={localStorage.getItem('darkMode') === 'true' ? "stats-demo-text stats-demo-text-dark": "stats-demo-text"}>- Top Genres and more...</p>
                                         </div>
                                     </div>
                                     <div className='stats-demo-cycle-image'>
