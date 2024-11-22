@@ -188,7 +188,7 @@ function ProgressContainer({refresh, version}) {
                             <div className='progress-settings-div' id='progress-settings-div'>
                                 <button id='progress-settings-user' className='progress-settings-buttons' onClick={() => expandSettings()}>
                                     <img alt="pfp" src={localStorage.getItem('pfp') === 'null' ? defaultpfp : localStorage.getItem('pfp') }></img>
-                                    {version !== localStorage.getItem('seenAnnouncement') ?
+                                    {version !== localStorage.getItem('seenAnnouncement') || localStorage.getItem('seenAnnouncement') !== animeStatsLastUpdateVersion ?
                                         <div className='notice-noti'/>
                                         :
                                         null

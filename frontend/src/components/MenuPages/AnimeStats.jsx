@@ -384,7 +384,7 @@ function AnimeStats() {
                             <>
                                 {localStorage.getItem('username') === "Guest" ?
                                     <h1 className='stats-warning'>
-                                        Stats are refreshed every 5 minutes to prevent overload.
+                                        Stats can be retrieved every 5 minutes to prevent overload.
                                         <br/>
                                         As you are a guest the anime stats will be taken from Andy's public data on MyAnimelist.
                                         If you would like your anime stats, please login to your MyAnimeList account.
@@ -394,7 +394,7 @@ function AnimeStats() {
                                     </h1>
                                     :
                                     <h1 className='stats-warning'>
-                                        Stats are refreshed every 5 minutes to prevent overload. 
+                                        Stats can be retrieved every 5 minutes to prevent overload. 
                                         For the most accurate data, please rate all your shows on MyAnimeList or as many as you can.
                                         <br/>
                                         <br/>

@@ -21,6 +21,7 @@ import pandas as pd
 from pandas import json_normalize
 import json
 import numpy as np
+from datetime import datetime
 
 load_dotenv()
 
@@ -70,15 +71,15 @@ scheduler.start()
 
 # TODO uncomment for main push/merge
 # React Router should be doing this
-@app.route('/a')
-@app.route('/home')
-def serve_react_pages():
-    try:
-        return render_template('index.html')
-        # return redirect("https://localhost:5173", code=302)
-    except Exception:
-        app.logger.error('Unable to load home page.')
-        abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
+# @app.route('/a')
+# @app.route('/home')
+# def serve_react_pages():
+#     try:
+#         return render_template('index.html')
+#         # return redirect("https://localhost:5173", code=302)
+#     except Exception:
+#         app.logger.error('Unable to load home page.')
+#         abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
 
 # Get Logo Image
 @app.route('/api/logo', methods=["GET"])
@@ -456,7 +457,6 @@ def filter_watching_anime(data):
 def filter_user_anime_for_stats(data):
     # Sort for only completed anime
     animeList = data['data']
-
     completed_anime = [anime for anime in animeList 
         if anime['node']['my_list_status']['status'] == 'completed' and 
         'mean' in anime['node'] and 
@@ -664,6 +664,67 @@ def guest_filter_user_anime_for_stats(data):
 
     return response_data
 
+def filter_scoring_data(data):
+    animeList = data['data']
+
+    completed_anime = [anime for anime in animeList 
+        if anime['node']['my_list_status']['status'] == 'completed' and 
+        'mean' in anime['node'] and 
+        'start_season' in anime['node'] and
+        'end_date' in anime['node'] and
+        anime['node']['my_list_status']['score'] > 0
+    ]
+
+    if(len(completed_anime) == 0):
+        return {}
+
+    rows = []
+    for entry in completed_anime:
+        node = entry["node"]
+        id_ = node['id']
+        title = node['title']
+        img = node['main_picture']['medium']
+        mal_score = node['mean']
+        your_score = node['my_list_status']['score']
+        year = node['start_season']['year']
+
+        rows.append({
+            'id': id_,
+            'title': title,
+            'image': img,
+            'mal_score': mal_score,
+            'your_score': your_score,
+            'year': year
+        })
+
+    df = pd.DataFrame(rows)
+
+    # You vs MAL Average Rating
+    you_vs_mal_df = df[df['your_score'] > 0][['your_score','mal_score']]
+    you_vs_mal_df = you_vs_mal_df.astype('float64')
+    average_scores = you_vs_mal_df.mean().round(2)
+
+    # Rated 8 or higher
+    very_good_ratings = len(df[df['your_score'] >= 8])
+    percentage = (very_good_ratings / len(df)) * 100
+
+    # Lowest Rated
+    min_score = df['your_score'].min()
+    lowest_rated_anime = df[df['your_score'] == min_score][['title', 'image', 'your_score']]
+
+    # Get Average Rating
+    last_year = datetime.now().year - 1
+    average_rating = df[(df['your_score'] > 0) & (df['year'] >= last_year)][['your_score']]
+    avg_rating = average_rating['your_score'].mean()
+
+    response_data = {
+        'you_vs_mal': average_scores.to_dict(),
+        'very_good_ratings' : round(percentage,2),
+        'lowest_rated': lowest_rated_anime.head(3).to_dict(orient='records'),
+        'average_rating': round(avg_rating,2)
+    }
+    return response_data
+
 # Get user data function
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
@@ -703,9 +764,11 @@ def userData():
                 if code == 401 or code == 403:
                     return msg, code
 
-                mal_get_user_data = '''
-                    https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
-                '''
+                # TODO change for different categories
+                # mal_get_user_data = '''
+                #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
+                # '''
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,mean,my_list_status,end_date&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
@@ -715,9 +778,13 @@ def userData():
 
                 response = requests.get(mal_get_user_data, headers=headers)
                 
+                # TODO new function to get categories for stats
                 if response.status_code == 200:
-                    data_to_return = filter_user_anime_for_stats(response.json())
-                    return jsonify(data_to_return)
+                    # data_to_return = filter_user_anime_for_stats(response.json())
+                    # return jsonify(data_to_return)
+
+                    score_data = filter_scoring_data(response.json())
+                    return jsonify(score_data)
 
                 app.logger.error("Error fetching weekly anime for authenticated user in userData")
                 return 'Unable to get user data from MAL',500
