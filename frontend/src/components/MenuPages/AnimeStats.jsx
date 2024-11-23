@@ -121,6 +121,20 @@ function scoringStats(whichDisplay, data) {
         )
     }
 
+    // Average Rating last 2 Years
+    const averageRatingLastYear = (rating) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    The average score you have given for anime over the past year, as of this date last year, is:<br/>
+                </h1>
+                <h2 className='data-h2'>
+                    <span className='yellow-stat'>{rating}</span>
+                </h2>
+            </>
+        );
+    }
+
     switch(whichDisplay) {
         case 0:
             if(data["you_vs_mal"] && data["you_vs_mal"]["mal_score"] && data["you_vs_mal"]["your_score"]) {
@@ -130,13 +144,20 @@ function scoringStats(whichDisplay, data) {
             return notEnoughData();
 
         case 1:
+            if(data['average_rating_last_year']) {
+                return averageRatingLastYear(data['average_rating_last_year']);
+            }
+
+            return notEnoughData();
+
+        case 2:
             if(data["very_good_ratings"]) {
                 return veryGood(data['very_good_ratings']);
             }
 
             return notEnoughData();
 
-        case 2:
+        case 3:
             if(data["lowest_rated"] && data['lowest_rated']['0']) {
                 return lowestRatedAnime(data['lowest_rated']);
             }
@@ -162,7 +183,7 @@ function AnimeStats() {
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
     const [category, setCategory] = useState(0);
-    const [dataMax, setDataMax] = useState(3);
+    const [dataMax, setDataMax] = useState(4);
 
     if(localStorage.getItem('username') === "Guest") {
         setDataMax(5);

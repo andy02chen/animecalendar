@@ -22,6 +22,7 @@ from pandas import json_normalize
 import json
 import numpy as np
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 load_dotenv()
 
@@ -672,7 +673,8 @@ def filter_scoring_data(data):
         'mean' in anime['node'] and 
         'start_season' in anime['node'] and
         'end_date' in anime['node'] and
-        anime['node']['my_list_status']['score'] > 0
+        anime['node']['my_list_status']['score'] > 0 and
+        'finish_date' in anime['node']['my_list_status']
     ]
 
     if(len(completed_anime) == 0):
@@ -687,6 +689,7 @@ def filter_scoring_data(data):
         mal_score = node['mean']
         your_score = node['my_list_status']['score']
         year = node['start_season']['year']
+        finish_date = node['my_list_status']['finish_date']
 
         rows.append({
             'id': id_,
@@ -694,7 +697,8 @@ def filter_scoring_data(data):
             'image': img,
             'mal_score': mal_score,
             'your_score': your_score,
-            'year': year
+            'year': year,
+            'finish_date': finish_date
         })
 
     df = pd.DataFrame(rows)
@@ -712,10 +716,19 @@ def filter_scoring_data(data):
     min_score = df['your_score'].min()
     lowest_rated_anime = df[df['your_score'] == min_score][['title', 'image', 'your_score']]
 
+    # Get Average Rating last 2 years
+    current_date = datetime.now()
+    date_last_year = current_date - relativedelta(years=1)
+    formatted_date = date_last_year.strftime('%Y-%m-%d')
+
+    average_rating = df[(df['your_score'] > 0) & (df['finish_date'] >= formatted_date)][['your_score']]
+    avg_rating = average_rating['your_score'].mean()
+
     response_data = {
         'you_vs_mal': average_scores.to_dict(),
         'very_good_ratings' : round(percentage,2),
-        'lowest_rated': lowest_rated_anime.head(3).to_dict(orient='records')
+        'lowest_rated': lowest_rated_anime.head(3).to_dict(orient='records'),
+        'average_rating_last_year': round(avg_rating,2)
     }
     return response_data
 
