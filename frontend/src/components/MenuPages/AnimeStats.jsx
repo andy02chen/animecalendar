@@ -27,6 +27,14 @@ function getUserStats(setLoading, setAPICallSuccess, setData) {
     })
 }
 
+function notEnoughData() {
+    return(
+        <h1 className='data-h2'>
+            Data unavailable. Add more shows to your list and rate them to unlock this data. Watch and rate more shows, then check back!
+        </h1>
+    );
+}
+
 // Generate random color for the graph
 function graphGetColor() {
     const minBrightness = 60;
@@ -40,18 +48,124 @@ function graphGetColor() {
     return hex;
 }
 
+// Display stats related to score data
+function scoringStats(whichDisplay, data) {
+    // User vs Mal Average Rating HTML
+    const userVsMal = (mal_score, your_score) => {
+        return(
+        <>
+            <h1 className='data-h1'>
+                Are you a harsh critic?<br/>
+                Your Average Rating vs MAL Average
+            </h1>
+            <h2 className='data-h2'>
+                The average score for the animes you have rated is: <br/>
+                {mal_score}
+            </h2>
+            <h2 className={`data-h2`}>
+                Your Average Rating is: <br/>
+                {your_score}
+            </h2>
+        </>
+        );
+    }
+
+    // Very Good Rating HTML
+    const veryGood = (percentage) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    A Rating of 8 is considered "Very Good" on Mal<br/>
+                </h1>
+                <h2 className='data-h2'>
+                    Around <span className='yellow-stat'>{percentage}%</span> of your anime are rated an 8 or higher
+                </h2>
+            </>
+        )
+    }
+
+    // Lowest Rated anime HTML
+    const lowestRatedAnime = (anime) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Here are 3 of your lowest rated anime
+                </h1>
+                <div className='stats-div-of-anime'>
+                    {
+                        anime.map((entry, index) => (
+                            <React.Fragment key={index}>
+                                <div>
+                                    <div className='top-anime-left'>
+                                        <h2 className='data-h2'>
+                                            {index+1}.
+                                        </h2>
+                                    </div>
+                                    <div className='top-anime-right'>
+                                        <div className='top-anime-header'>
+                                            <h2 className='data-h2'>
+                                                <span className='yellow-stat'>{entry['title']}</span>
+                                            </h2>
+                                            <img className='top-20-anime-img' src={entry['image']}/>
+                                        </div>
+                                        <h2 className='data-h2'>
+                                            Your Score: {entry['your_score']}
+                                        </h2>
+                                    </div>
+                                </div>
+                            </React.Fragment>
+                        ))
+                    }
+                </div>
+            </>
+        )
+    }
+
+    switch(whichDisplay) {
+        case 0:
+            if(data["you_vs_mal"] && data["you_vs_mal"]["mal_score"] && data["you_vs_mal"]["your_score"]) {
+                return userVsMal(data["you_vs_mal"]["mal_score"], data["you_vs_mal"]["your_score"]);
+            }
+
+            return notEnoughData();
+
+        case 1:
+            if(data["very_good_ratings"]) {
+                return veryGood(data['very_good_ratings']);
+            }
+
+            return notEnoughData();
+
+        case 2:
+            if(data["lowest_rated"] && data['lowest_rated']['0']) {
+                return lowestRatedAnime(data['lowest_rated']);
+            }
+
+            return notEnoughData();
+    }
+}
+
+// Displays the stats
+function statsDisplayFunction(whichCategory, whichDisplay, data) {
+
+    switch(whichCategory) {
+        // Stats related to Scoring
+        case 0:
+            return scoringStats(whichDisplay, data);
+    }
+}
+
 function AnimeStats() {
     const [APICallSuccess, setAPICallSuccess] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
-
-    // Changing Slides
-    let dataMax = 9;
+    const [category, setCategory] = useState(0);
+    const [dataMax, setDataMax] = useState(3);
 
     if(localStorage.getItem('username') === "Guest") {
-        dataMax = 5;
+        setDataMax(5);
     }
 
     const backSlide = () => {
@@ -119,38 +233,7 @@ function AnimeStats() {
         setDataDisplay(slide);
     }
 
-
-    // Effects For revealing information
-    const [isYourScoreVisible, setYourScoreVisible] = useState(false);
-
-    useEffect(() => {
-        const yourScoreTimer = setTimeout(() => setYourScoreVisible(true), 3000);
-
-        return () => {
-            clearTimeout(yourScoreTimer);
-        };
-    }, []);
-
     // Structure for data
-    const userVsMal = (mal_score, your_score) => {
-        return(
-        <>
-            <h1 className='data-h1'>
-                Are you a harsh critic?<br/>
-                Your Average Rating vs MAL Average
-            </h1>
-            <h2 className='data-h2'>
-                The average score for the animes you have rated is: <br/>
-                {mal_score}
-            </h2>
-            <h2 className={`data-h2 ${isYourScoreVisible ? 'show-data' : 'hide-data'}`}>
-                Your Average Rating is: <br/>
-                {your_score}
-            </h2>
-        </>
-        );
-    }
-
     const RatingPieChart = (data) => {
         return(
             <>
@@ -349,14 +432,6 @@ function AnimeStats() {
         );
     }
 
-    const notEnoughData = () => {
-        return(
-            <h1 className='data-h2'>
-                Data unavailable. Add more shows to your list and rate them to unlock this data. Watch and rate more shows, then check back!
-            </h1>
-        );
-    }
-
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-no-shape'>
@@ -395,7 +470,8 @@ function AnimeStats() {
                                     :
                                     <h1 className='stats-warning'>
                                         Stats can be retrieved every 5 minutes to prevent overload. 
-                                        For the most accurate data, please rate all your shows on MyAnimeList or as many as you can.
+                                        For the most accurate data, please rate as many shows on MyAnimelist as you can.
+                                        This includes score, start date and finish dates.
                                         <br/>
                                         <br/>
                                         If you're seeing this message due to a refresh or loading error, give it a moment and try again.
@@ -434,73 +510,74 @@ function AnimeStats() {
                                         })()
                                         :
                                         (() => {
-                                            switch (dataDisplay) {
-                                                case 0:
-                                                    if(data["average_rating"] && data["average_rating"]["mal_score"] && data["average_rating"]["your_score"]) {
-                                                        return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
-                                                    }
+                                            return statsDisplayFunction(category, dataDisplay, data);
+                                            // switch (dataDisplay) {
+                                            //     case 0:
+                                            //         if(data["average_rating"] && data["average_rating"]["mal_score"] && data["average_rating"]["your_score"]) {
+                                            //             return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 1:
-                                                    if(data['popular_ratings']) {
-                                                        return RatingPieChart(data['popular_ratings']);
-                                                    }
+                                            //     case 1:
+                                            //         if(data['popular_ratings']) {
+                                            //             return RatingPieChart(data['popular_ratings']);
+                                            //         }
                                                     
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 2:
-                                                    if(data['season_anime']) {
-                                                        return animeYears(data['season_anime']);
-                                                    }
+                                            //     case 2:
+                                            //         if(data['season_anime']) {
+                                            //             return animeYears(data['season_anime']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 3:
-                                                    if(data['sources']) {
-                                                        return animeSourcesChart(data['sources']);
-                                                    }
+                                            //     case 3:
+                                            //         if(data['sources']) {
+                                            //             return animeSourcesChart(data['sources']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 4:
-                                                    if(data['top_10_genres_avg']) {
-                                                        return top10GenresByAvg(data['top_10_genres_avg']);
-                                                    }
+                                            //     case 4:
+                                            //         if(data['top_10_genres_avg']) {
+                                            //             return top10GenresByAvg(data['top_10_genres_avg']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 5:
-                                                    if(data['top_10_genres_count']) {
-                                                        return top10GenresByCount(data['top_10_genres_count']);
-                                                    }
+                                            //     case 5:
+                                            //         if(data['top_10_genres_count']) {
+                                            //             return top10GenresByCount(data['top_10_genres_count']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 6:
-                                                    if(data['top_10_studios_count']) {
-                                                        return mostWatchedStudios(data['top_10_studios_count']);
-                                                    }
+                                            //     case 6:
+                                            //         if(data['top_10_studios_count']) {
+                                            //             return mostWatchedStudios(data['top_10_studios_count']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                case 7:
-                                                    if(data['top_10_studios_avg']) {
-                                                        return topStudiosAvg(data['top_10_studios_avg']);
-                                                    }
+                                            //     case 7:
+                                            //         if(data['top_10_studios_avg']) {
+                                            //             return topStudiosAvg(data['top_10_studios_avg']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
                                                 
-                                                case 8:
-                                                    if(data['top_20_anime']) {
-                                                        return top20Anime(data['top_20_anime']);
-                                                    }
+                                            //     case 8:
+                                            //         if(data['top_20_anime']) {
+                                            //             return top20Anime(data['top_20_anime']);
+                                            //         }
 
-                                                    return notEnoughData();
+                                            //         return notEnoughData();
 
-                                                default:
-                                                    return <div>No data available</div>;
-                                            }
+                                            //     default:
+                                            //         return <div>No data available</div>;
+                                            // }
                                         })()
                                     }
                                     

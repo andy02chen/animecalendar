@@ -712,20 +712,15 @@ def filter_scoring_data(data):
     min_score = df['your_score'].min()
     lowest_rated_anime = df[df['your_score'] == min_score][['title', 'image', 'your_score']]
 
-    # Get Average Rating
-    last_year = datetime.now().year - 1
-    average_rating = df[(df['your_score'] > 0) & (df['year'] >= last_year)][['your_score']]
-    avg_rating = average_rating['your_score'].mean()
-
     response_data = {
         'you_vs_mal': average_scores.to_dict(),
         'very_good_ratings' : round(percentage,2),
-        'lowest_rated': lowest_rated_anime.head(3).to_dict(orient='records'),
-        'average_rating': round(avg_rating,2)
+        'lowest_rated': lowest_rated_anime.head(3).to_dict(orient='records')
     }
     return response_data
 
 # Get user data function
+# TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
