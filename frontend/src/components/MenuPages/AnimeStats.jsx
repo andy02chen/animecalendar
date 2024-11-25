@@ -12,8 +12,22 @@ function closeStats() {
     }
 }
 
+function getGuestStats(setLoading, setAPICallSuccess, setData) {
+    setLoading(true);
+    axios.get("/api/user-stats").
+    then(response => {
+        setData(response.data);
+        setAPICallSuccess(true);
+        setLoading(false);
+    }).catch(error => {
+        setData(null);
+        setAPICallSuccess(false);
+        setLoading(false);
+    })
+}
+
 // Calls api
-function getUserStats(setLoading, setAPICallSuccess, setData) {
+function getUserStats(setLoading, setAPICallSuccess, setData, category) {
     setLoading(true);
     axios.get("/api/user-stats").
     then(response => {
@@ -182,8 +196,12 @@ function AnimeStats() {
 
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
-    const [category, setCategory] = useState(0);
     const [dataMax, setDataMax] = useState(4);
+    const [category, setCategory] = useState("0");
+
+    const changeCategory = (event) => {
+        setCategory(event.target.value);
+    }
 
     if(localStorage.getItem('username') === "Guest") {
         setDataMax(5);
@@ -453,17 +471,34 @@ function AnimeStats() {
         );
     }
 
+    console.log(category);
+
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-no-shape'>
                 <div className='menu-page-content'>
-                    <div className='menu-page-header'>
-                        {localStorage.getItem('username') === "Guest" ?
-                            <h1>Demo Anime Stats</h1>
-                            :
-                            <h1>Your Anime Stats</h1>
-                        }
-                        <h1 className='menu-page-close-button' onClick={() => closeStats()}>&#10006;</h1>
+                    <div className='anime-stats-header'>
+                        <div className='anime-stats-close'>
+                            {localStorage.getItem('username') === "Guest" ?
+                                <h1>Demo Anime Stats</h1>
+                                :
+                                <h1>Your Anime Stats</h1>
+                            }
+                            <h1 className='menu-page-close-button' onClick={() => closeStats()}>&#10006;</h1>
+                        </div>
+                        <div className='anime-stats-choose-category'>
+                            <label htmlFor="anime-stats-category-dropdown" className='category-text'>Select a category: </label>
+                            <select id="anime-stats-category-dropdown" style={{ fontSize: "20px", padding: "5px" }} value={category} onChange={changeCategory}>
+                                <option value="0" disabled>
+                                    Not chosen
+                                </option>
+                                <option value="1">Scoring</option>
+                                <option value="2">Genre</option>
+                                <option value="3">Preferences</option>
+                                <option value="4">Viewing Habits</option>
+                                <option value="5">Studios</option>
+                            </select>
+                        </div>
                     </div>
                     <div className='anime-stats-page-body'>
                         {loading ?
@@ -486,7 +521,7 @@ function AnimeStats() {
                                         If you would like your anime stats, please login to your MyAnimeList account.
                                         <br/>
                                         <br/>
-                                        If you're seeing this message due to a refresh or loading error, give it a moment and try again.
+                                        If you're seeing this message due to a refresh or loading error, come back and try again later.
                                     </h1>
                                     :
                                     <h1 className='stats-warning'>
@@ -495,13 +530,13 @@ function AnimeStats() {
                                         This includes score, start date and finish dates.
                                         <br/>
                                         <br/>
-                                        If you're seeing this message due to a refresh or loading error, give it a moment and try again.
+                                        If you're seeing this message due to a refresh or loading error, come back and try again later.
                                     </h1>
                                 }
                                 {localStorage.getItem('username') === "Guest" ?
-                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
+                                    <button className='get-stats-button' onClick={() => getGuestStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
                                     :
-                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData)}> Get my Stats </button>
+                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData, category)} disabled={category === '0'}> Get my Stats </button>
                                 }
                             </>
                             :
