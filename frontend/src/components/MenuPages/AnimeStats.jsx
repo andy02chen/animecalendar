@@ -27,11 +27,16 @@ function getGuestStats(setLoading, setAPICallSuccess, setData) {
 }
 
 // Calls api
-function getUserStats(setLoading, setAPICallSuccess, setData, category, setAPICallSuccesses) {
+function getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setAPICallSuccesses) {
     setLoading(true);
     axios.get("/api/user-stats").
     then(response => {
-        setData(response.data);
+        // setData(response.data);
+        setDataUser((d) => {
+            const newArr = [...d];
+            newArr[category] = response.data;
+            return newArr;
+        })
         setAPICallSuccess(true);
         setLoading(false);
         setAPICallSuccesses((c) => {
@@ -40,7 +45,12 @@ function getUserStats(setLoading, setAPICallSuccess, setData, category, setAPICa
             return newArray;
         })
     }).catch(error => {
-        setData(null);
+        // setData(null);
+        setDataUser((d) => {
+            const newArr = [...d];
+            newArr[category] = null;
+            return newArr;
+        })
         setAPICallSuccess(false);
         setLoading(false);
     })
@@ -182,12 +192,14 @@ function scoringStats(whichDisplay, data) {
             }
 
             return notEnoughData();
+
+        default:
+            return notEnoughData();
     }
 }
 
 // Displays the stats
 function statsDisplayFunction(whichCategory, whichDisplay, data) {
-
     switch(whichCategory) {
         // Stats related to Scoring
         case 0:
@@ -202,11 +214,13 @@ function AnimeStats() {
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
     const [dataMax, setDataMax] = useState(4);
+    const [dataUser, setDataUser] = useState([{},{},{},{},{}]);
+
     const [category, setCategory] = useState(-1);
     const [APICallSuccesses, setAPICallSuccesses] = useState([false,false,false,false,false]);
 
     const changeCategory = (event) => {
-        setCategory(event.target.value);
+        setCategory(Number(event.target.value));
     }
 
     if(localStorage.getItem('username') === "Guest") {
@@ -515,7 +529,7 @@ function AnimeStats() {
                             </div>
                         </>
                         :
-                        (APICallSuccess === null || APICallSuccess === false || data === null || APICallSuccesses[category] === false ?
+                        (APICallSuccess === null || APICallSuccess === false || APICallSuccesses[category] === false ?
                             <>
                                 {localStorage.getItem('username') === "Guest" ?
                                     <h1 className='stats-warning'>
@@ -540,7 +554,7 @@ function AnimeStats() {
                                 {localStorage.getItem('username') === "Guest" ?
                                     <button className='get-stats-button' onClick={() => getGuestStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
                                     :
-                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData, category, setAPICallSuccesses)} disabled={category === -1}> Get my Stats </button>
+                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setAPICallSuccesses)} disabled={category === -1}> Get my Stats </button>
                                 }
                             </>
                             :
@@ -570,7 +584,7 @@ function AnimeStats() {
                                         })()
                                         :
                                         (() => {
-                                            return statsDisplayFunction(category, dataDisplay, data);
+                                            return statsDisplayFunction(category, dataDisplay, dataUser[category]);
                                             // switch (dataDisplay) {
                                             //     case 0:
                                             //         if(data["average_rating"] && data["average_rating"]["mal_score"] && data["average_rating"]["your_score"]) {
