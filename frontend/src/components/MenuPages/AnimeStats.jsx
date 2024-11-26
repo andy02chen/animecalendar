@@ -27,13 +27,18 @@ function getGuestStats(setLoading, setAPICallSuccess, setData) {
 }
 
 // Calls api
-function getUserStats(setLoading, setAPICallSuccess, setData, category) {
+function getUserStats(setLoading, setAPICallSuccess, setData, category, setAPICallSuccesses) {
     setLoading(true);
     axios.get("/api/user-stats").
     then(response => {
         setData(response.data);
         setAPICallSuccess(true);
         setLoading(false);
+        setAPICallSuccesses((c) => {
+            const newArray = [...c];
+            newArray[category] = true;
+            return newArray;
+        })
     }).catch(error => {
         setData(null);
         setAPICallSuccess(false);
@@ -197,7 +202,8 @@ function AnimeStats() {
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
     const [dataMax, setDataMax] = useState(4);
-    const [category, setCategory] = useState("0");
+    const [category, setCategory] = useState(-1);
+    const [APICallSuccesses, setAPICallSuccesses] = useState([false,false,false,false,false]);
 
     const changeCategory = (event) => {
         setCategory(event.target.value);
@@ -471,8 +477,6 @@ function AnimeStats() {
         );
     }
 
-    console.log(category);
-
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-no-shape'>
@@ -489,14 +493,14 @@ function AnimeStats() {
                         <div className='anime-stats-choose-category'>
                             <label htmlFor="anime-stats-category-dropdown" className='category-text'>Select a category: </label>
                             <select id="anime-stats-category-dropdown" style={{ fontSize: "20px", padding: "5px" }} value={category} onChange={changeCategory}>
-                                <option value="0" disabled>
+                                <option value={-1} disabled>
                                     Not chosen
                                 </option>
-                                <option value="1">Scoring</option>
-                                <option value="2">Genre</option>
-                                <option value="3">Preferences</option>
-                                <option value="4">Viewing Habits</option>
-                                <option value="5">Studios</option>
+                                <option value={0}>Scoring</option>
+                                <option value={1}>Genre</option>
+                                <option value={2}>Preferences</option>
+                                <option value={3}>Viewing Habits</option>
+                                <option value={4}>Studios</option>
                             </select>
                         </div>
                     </div>
@@ -511,7 +515,7 @@ function AnimeStats() {
                             </div>
                         </>
                         :
-                        (APICallSuccess === null || APICallSuccess === false || data === null ?
+                        (APICallSuccess === null || APICallSuccess === false || data === null || APICallSuccesses[category] === false ?
                             <>
                                 {localStorage.getItem('username') === "Guest" ?
                                     <h1 className='stats-warning'>
@@ -536,7 +540,7 @@ function AnimeStats() {
                                 {localStorage.getItem('username') === "Guest" ?
                                     <button className='get-stats-button' onClick={() => getGuestStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
                                     :
-                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData, category)} disabled={category === '0'}> Get my Stats </button>
+                                    <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setData, category, setAPICallSuccesses)} disabled={category === -1}> Get my Stats </button>
                                 }
                             </>
                             :
