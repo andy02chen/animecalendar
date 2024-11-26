@@ -455,6 +455,7 @@ def filter_watching_anime(data):
     return data_to_return
 
 # Filter user data and return JSON
+# TODO remove after completing new stats
 def filter_user_anime_for_stats(data):
     # Sort for only completed anime
     animeList = data['data']
@@ -722,7 +723,7 @@ def filter_scoring_data(data):
     formatted_date = date_last_year.strftime('%Y-%m-%d')
 
     average_rating = df[(df['your_score'] > 0) & (df['finish_date'] >= formatted_date)][['your_score']]
-    avg_rating = average_rating['your_score'].mean()
+    avg_rating = average_rating['your_score'].mean() if not average_rating.empty else 0
 
     response_data = {
         'you_vs_mal': average_scores.to_dict(),
@@ -788,9 +789,6 @@ def userData():
                 
                 # TODO new function to get categories for stats
                 if response.status_code == 200:
-                    # data_to_return = filter_user_anime_for_stats(response.json())
-                    # return jsonify(data_to_return)
-
                     score_data = filter_scoring_data(response.json())
                     return jsonify(score_data)
 
