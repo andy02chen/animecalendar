@@ -748,8 +748,7 @@ def userGenreData():
         if user_session_id:
 
             if user_session_id == 'guest':
-                
-                return 'Unable to get user data from MAL',500
+                return 'You must be logged in to get this data',500
 
             find_user = find_user_function(user_session_id)
 
@@ -764,7 +763,7 @@ def userGenreData():
                 # mal_get_user_data = '''
                 #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
                 # '''
-                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,mean,my_list_status,end_date&nsfw=true&limit=1000'
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,genres,my_list_status&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
