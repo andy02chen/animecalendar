@@ -733,6 +733,64 @@ def filter_scoring_data(data):
     }
     return response_data
 
+def filter_genre_data(data):
+    animeList = data['data']
+
+    completed_anime = [anime for anime in animeList 
+        if anime['node']['my_list_status']['status'] == 'completed' and 
+        anime['node']['my_list_status']['score'] > 0 and
+        'finish_date' in anime['node']['my_list_status']
+    ]
+
+    if(len(completed_anime) == 0):
+        return {}
+
+    rows = []
+    for entry in completed_anime:
+        node = entry["node"]
+        id_ = node['id']
+        title = node['title']
+        img = node['main_picture']['medium']
+        your_score = node['my_list_status']['score']
+        finish_date = node['my_list_status']['finish_date']
+        genres = ','.join([genre['name'] for genre in node['genres']])
+
+        rows.append({
+            'id': id_,
+            'title': title,
+            'image': img,
+            'your_score': your_score,
+            'finish_date': finish_date,
+            'genres': genres
+        })
+
+    df = pd.DataFrame(rows)
+
+    # Top 10 genres average score
+    # Top 10 geners by count
+    genre_df = df[['genres','your_score']].infer_objects(copy=False)
+    genre_df.loc[:, 'genres'] = genre_df['genres'].str.split(',')
+    genre_df = genre_df.explode('genres')
+
+    genre_df = genre_df.groupby('genres').agg(
+        total_score=('your_score', lambda x: x[x > 0].sum()),
+        count=('your_score', 'size'),
+        non_zero_count=('your_score', lambda x: (x > 0).sum())
+    ).reset_index()
+
+    genre_df['average'] = (genre_df['total_score'] / genre_df['non_zero_count'].replace({0: np.nan})).round(2)
+    genre_df.columns = ['genre', 'total_score', 'count', 'non_zero_count', 'average']
+
+    genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
+    genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
+
+    response_data = {
+        "top_10_genres_count": genre_popular.to_dict(orient='records'),
+        "top_10_genres_avg": genre_top_average.to_dict(orient='records'),
+    }
+
+    return response_data
+
 # Get user data function for user genre data
 # TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats-genres', methods=["GET"])
