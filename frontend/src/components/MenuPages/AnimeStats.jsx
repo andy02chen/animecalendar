@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './AnimeStats.css';
 import axios from 'axios';
 import React from 'react';
@@ -26,34 +26,71 @@ function getGuestStats(setLoading, setAPICallSuccess, setData) {
     })
 }
 
-// Calls api
+// Calls api for stats
 function getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setAPICallSuccesses) {
     setLoading(true);
-    axios.get("/api/user-stats").
-    then(response => {
-        // setData(response.data);
-        setDataUser((d) => {
-            const newArr = [...d];
-            newArr[category] = response.data;
-            return newArr;
-        })
-        setAPICallSuccess(true);
-        setLoading(false);
-        setAPICallSuccesses((c) => {
-            const newArray = [...c];
-            newArray[category] = true;
-            return newArray;
-        })
-    }).catch(error => {
-        // setData(null);
-        setDataUser((d) => {
-            const newArr = [...d];
-            newArr[category] = null;
-            return newArr;
-        })
-        setAPICallSuccess(false);
-        setLoading(false);
-    })
+
+    switch(category) {
+        // Get Scoring Data
+        case 0:
+            axios.get("/api/user-stats").
+            then(response => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = response.data;
+                    return newArr;
+                })
+                setAPICallSuccess(true);
+                setLoading(false);
+                setAPICallSuccesses((c) => {
+                    const newArray = [...c];
+                    newArray[category] = true;
+                    return newArray;
+                })
+            }).catch(error => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = null;
+                    return newArr;
+                })
+                setAPICallSuccess(false);
+                setLoading(false);
+            });
+            break;
+
+        // Get Genre Data
+        case 1:
+            axios.get("/api/user-stats-genres").
+            then(response => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = response.data;
+                    return newArr;
+                })
+                setAPICallSuccess(true);
+                setLoading(false);
+                setAPICallSuccesses((c) => {
+                    const newArray = [...c];
+                    newArray[category] = true;
+                    return newArray;
+                })
+            }).catch(error => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = null;
+                    return newArr;
+                })
+                setAPICallSuccess(false);
+                setLoading(false);
+            });
+            break;
+
+        default: 
+            setLoading(false);
+            setAPICallSuccess(false);
+    }
+
+    
 }
 
 function notEnoughData() {
@@ -213,7 +250,9 @@ function AnimeStats() {
 
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
-    const [dataMax, setDataMax] = useState(4);
+    // const [dataMax, setDataMax] = useState(4);
+    const dataMax = useRef(4);
+
     const [dataUser, setDataUser] = useState([{},{},{},{},{}]);
 
     const [category, setCategory] = useState(-1);
@@ -224,7 +263,7 @@ function AnimeStats() {
     }
 
     if(localStorage.getItem('username') === "Guest") {
-        setDataMax(5);
+        dataMax.current = 5;
     }
 
     const backSlide = () => {
@@ -253,11 +292,11 @@ function AnimeStats() {
             back.removeAttribute('disabled');
         }
 
-        if(dataDisplay < dataMax - 2) {
+        if(dataDisplay < dataMax.current - 2) {
             if(front.disabled) {
                 front.removeAttribute('disabled');
             }
-        } else if (dataDisplay === (dataMax - 2)) {
+        } else if (dataDisplay === (dataMax.current - 2)) {
             front.setAttribute('disabled', 'disabled');
         }
         setDataDisplay(d => d + 1);
@@ -273,7 +312,7 @@ function AnimeStats() {
             if(front.disabled) {
                 front.removeAttribute('disabled');
             }
-        } else if (slide === (dataMax - 1)) {
+        } else if (slide === (dataMax.current - 1)) {
             front.setAttribute('disabled', 'disabled');
 
             if(back.disabled) {
@@ -504,19 +543,23 @@ function AnimeStats() {
                             }
                             <h1 className='menu-page-close-button' onClick={() => closeStats()}>&#10006;</h1>
                         </div>
-                        <div className='anime-stats-choose-category'>
-                            <label htmlFor="anime-stats-category-dropdown" className='category-text'>Select a category: </label>
-                            <select id="anime-stats-category-dropdown" style={{ fontSize: "20px", padding: "5px" }} value={category} onChange={changeCategory}>
-                                <option value={-1} disabled>
-                                    Not chosen
-                                </option>
-                                <option value={0}>Scoring</option>
-                                <option value={1}>Genre</option>
-                                <option value={2}>Preferences</option>
-                                <option value={3}>Viewing Habits</option>
-                                <option value={4}>Studios</option>
-                            </select>
-                        </div>
+                        {localStorage.getItem('username') === "Guest" ? 
+                            null
+                            :
+                            <div className='anime-stats-choose-category'>
+                                <label htmlFor="anime-stats-category-dropdown" className='category-text'>Select a category: </label>
+                                <select id="anime-stats-category-dropdown" style={{ fontSize: "20px", padding: "5px" }} value={category} onChange={changeCategory}>
+                                    <option value={-1} disabled>
+                                        Not chosen
+                                    </option>
+                                    <option value={0}>Scoring</option>
+                                    <option value={1}>Genre</option>
+                                    <option value={2}>Preferences</option>
+                                    <option value={3}>Viewing Habits</option>
+                                    <option value={4}>Studios</option>
+                                </select>
+                            </div>
+                        }
                     </div>
                     <div className='anime-stats-page-body'>
                         {loading ?
@@ -662,7 +705,7 @@ function AnimeStats() {
                                     </button>
                                     <div className='data-slides'>
                                         {
-                                            Array.from({ length: dataMax }, (_, i) => (
+                                            Array.from({ length: dataMax.current }, (_, i) => (
                                                 <div key={i} className={i === dataDisplay ? "slide active-slide" : "slide"}
                                                 onClick={() => changeSlide(i)}
                                                 />

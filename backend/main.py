@@ -733,13 +733,73 @@ def filter_scoring_data(data):
     }
     return response_data
 
-# Get user data function
+# Get user data function for user genre data
 # TODO limit to 1 per 5 minutes
+@app.route('/api/user-stats-genres', methods=["GET"])
+def userGenreData():
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
+            return jsonify({"error": "rate limit exceeded"}), 429
+
+        # Find user using session id
+        user_session_id = get_session_id()
+
+        if user_session_id:
+
+            if user_session_id == 'guest':
+                
+                return 'Unable to get user data from MAL',500
+
+            find_user = find_user_function(user_session_id)
+
+            if find_user:
+                msg, code = check_expiry()
+
+                # Login again
+                if code == 401 or code == 403:
+                    return msg, code
+
+                # TODO change for different categories
+                # mal_get_user_data = '''
+                #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
+                # '''
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,mean,my_list_status,end_date&nsfw=true&limit=1000'
+
+                user_token = cipher_suite.decrypt(find_user.access_token)
+                mal_access_token = user_token.decode()
+                headers = {
+                    'Authorization': f'Bearer {mal_access_token}'
+                }
+
+                response = requests.get(mal_get_user_data, headers=headers)
+                
+                # TODO new function to get categories for stats
+                if response.status_code == 200:
+                    score_data = filter_genre_data(response.json())
+                    return jsonify(score_data)
+
+                app.logger.error("Error fetching weekly anime for authenticated user in userGenreData")
+                return 'Unable to get user data from MAL',500
+
+            # User not found
+            response = redirect("/")
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response
+
+        # User not logged in
+        return redirect('/')
+
+    except Exception as e:
+        app.logger.error(f"Unexpected error in userGenreData function: {e}")
+        return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
+
+# Get user data function for guest/user scoring data
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
@@ -773,10 +833,6 @@ def userData():
                 if code == 401 or code == 403:
                     return msg, code
 
-                # TODO change for different categories
-                # mal_get_user_data = '''
-                #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
-                # '''
                 mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,mean,my_list_status,end_date&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
@@ -787,7 +843,6 @@ def userData():
 
                 response = requests.get(mal_get_user_data, headers=headers)
                 
-                # TODO new function to get categories for stats
                 if response.status_code == 200:
                     score_data = filter_scoring_data(response.json())
                     return jsonify(score_data)
