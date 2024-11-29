@@ -717,7 +717,7 @@ def filter_scoring_data(data):
     min_score = df['your_score'].min()
     lowest_rated_anime = df[df['your_score'] == min_score][['title', 'image', 'your_score']]
 
-    # Get Average Rating last 2 years
+    # Get Average Rating
     current_date = datetime.now()
     date_last_year = current_date - relativedelta(years=1)
     formatted_date = date_last_year.strftime('%Y-%m-%d')
@@ -783,10 +783,31 @@ def filter_genre_data(data):
 
     genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
     genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
+    genre_least_watched = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).tail(10)
+
+    # Get current date last year time
+    current_date = datetime.now()
+    date_last_year = current_date - relativedelta(years=1)
+    formatted_date = date_last_year.strftime('%Y-%m-%d')
+
+    # Most watched genres this year
+    most_watched_genres = df[df['finish_date'] >= formatted_date][['genres']]
+    most_watched_genres = most_watched_genres['genres'].str.split(',').explode().value_counts().head(10)
+
+    # Get earliest date genre was watched
+    df['finish_date'] = pd.to_datetime(df['finish_date'])
+    expanded_df = df.assign(genres=df['genres'].str.split(',')).explode('genres')
+    result_df = expanded_df.groupby('genres', as_index=False).agg({'finish_date': 'min'})
+
+    # Get genres watched this year
+    genres_this_year = result_df[result_df['finish_date'] >= formatted_date][['genres']]
 
     response_data = {
         "top_10_genres_count": genre_popular.to_dict(orient='records'),
         "top_10_genres_avg": genre_top_average.to_dict(orient='records'),
+        "top_10_least_watched": genre_least_watched.to_dict(orient='records'),
+        "top_10_most_watched_this_year": most_watched_genres.to_dict(),
+        'genres_this_year': list(genres_this_year['genres'])
     }
 
     return response_data
