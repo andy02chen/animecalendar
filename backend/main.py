@@ -873,11 +873,12 @@ def userGenreData():
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Get user data function for guest/user scoring data
+# TODO set limit to 1
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id

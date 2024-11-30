@@ -530,6 +530,10 @@ function AnimeStats() {
         );
     }
 
+    console.log(APICallSuccesses);
+    console.log(dataUser);
+    console.log(dataDisplay);
+
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
             <div className='menu-page-no-shape'>
@@ -572,19 +576,68 @@ function AnimeStats() {
                             </div>
                         </>
                         :
-                        (APICallSuccess === null || APICallSuccess === false || APICallSuccesses[category] === false ?
-                            <>
-                                {localStorage.getItem('username') === "Guest" ?
-                                    <h1 className='stats-warning'>
-                                        Stats can be retrieved every 5 minutes to prevent overload.
-                                        <br/>
-                                        As you are a guest the anime stats will be taken from Andy's public data on MyAnimelist.
-                                        If you would like your anime stats, please login to your MyAnimeList account.
-                                        <br/>
-                                        <br/>
-                                        If you're seeing this message due to a refresh or loading error, come back and try again later.
-                                    </h1>
+                        (
+                            localStorage.getItem('username') === "Guest" ?
+                                (APICallSuccess === null || APICallSuccess === false?
+                                    <>
+                                        <h1 className='stats-warning'>
+                                            Stats can be retrieved every 5 minutes to prevent overload.
+                                            <br/>
+                                            As you are a guest the anime stats will be taken from Andy's public data on MyAnimelist.
+                                            If you would like your anime stats, please login to your MyAnimeList account.
+                                            <br/>
+                                            <br/>
+                                            If you're seeing this message due to a refresh or loading error, come back and try again later.
+                                        </h1>
+                                        <button className='get-stats-button' onClick={() => getGuestStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
+                                    </>
                                     :
+                                    <>
+                                        <div className='display-data-div'>
+                                            {(() => {
+                                                switch (dataDisplay) {
+                                                    case 0:
+                                                        return top10GenresByCount(data['top_10_genres_count']);
+
+                                                    case 1:
+                                                        return RatingPieChart(data['popular_ratings']);
+
+                                                    case 2:
+                                                        return animeYears(data['season_anime']);
+
+                                                    case 3:
+                                                        return animeSourcesChart(data['sources']);
+
+                                                    case 4:
+                                                        return mostWatchedStudios(data['top_10_studios_count']);
+
+                                                    default:
+                                                        return <div>No data available</div>;
+                                                }
+                                            })()}
+                                        </div>
+                                        <div className='switch-data-screen'>
+                                            <button id='back-switch-data' className='switch-data-buttons' onClick={() => backSlide()}>
+                                                ◀
+                                            </button>
+                                            <div className='data-slides'>
+                                                {
+                                                    Array.from({ length: dataMax.current }, (_, i) => (
+                                                        <div key={i} className={i === dataDisplay ? "slide active-slide" : "slide"}
+                                                        onClick={() => changeSlide(i)}
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                            <button id='forward-switch-data' className='switch-data-buttons' onClick={() => forwardSlide()}>
+                                                ▶
+                                            </button>
+                                        </div>
+                                    </>
+                                )
+                            :
+                            (APICallSuccesses[category] === false || category === -1 ?
+                                <>
                                     <h1 className='stats-warning'>
                                         Stats can be retrieved every 5 minutes to prevent overload. 
                                         For the most accurate data, please rate as many shows on MyAnimelist as you can.
@@ -593,131 +646,182 @@ function AnimeStats() {
                                         <br/>
                                         If you're seeing this message due to a refresh or loading error, come back and try again later.
                                     </h1>
-                                }
-                                {localStorage.getItem('username') === "Guest" ?
-                                    <button className='get-stats-button' onClick={() => getGuestStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
-                                    :
                                     <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setAPICallSuccesses)} disabled={category === -1}> Get my Stats </button>
-                                }
-                            </>
-                            :
-                            <>
-                                <div className='display-data-div'>
-                                    {localStorage.getItem('username') === "Guest" ?
-                                        (() => {
-                                            switch (dataDisplay) {
-                                                case 0:
-                                                    return top10GenresByCount(data['top_10_genres_count']);
-
-                                                case 1:
-                                                    return RatingPieChart(data['popular_ratings']);
-
-                                                case 2:
-                                                    return animeYears(data['season_anime']);
-
-                                                case 3:
-                                                    return animeSourcesChart(data['sources'])
-
-                                                case 4:
-                                                    return mostWatchedStudios(data['top_10_studios_count']);
-
-                                                default:
-                                                    return <div>No data available</div>;
-                                            }
-                                        })()
-                                        :
-                                        (() => {
+                                </>
+                                :
+                                <>
+                                    <div className='display-data-div'>
+                                        {(() => {
                                             return statsDisplayFunction(category, dataDisplay, dataUser[category]);
-                                            // switch (dataDisplay) {
-                                            //     case 0:
-                                            //         if(data["average_rating"] && data["average_rating"]["mal_score"] && data["average_rating"]["your_score"]) {
-                                            //             return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     case 1:
-                                            //         if(data['popular_ratings']) {
-                                            //             return RatingPieChart(data['popular_ratings']);
-                                            //         }
-                                                    
-                                            //         return notEnoughData();
-
-                                            //     case 2:
-                                            //         if(data['season_anime']) {
-                                            //             return animeYears(data['season_anime']);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     case 3:
-                                            //         if(data['sources']) {
-                                            //             return animeSourcesChart(data['sources']);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     case 4:
-                                            //         if(data['top_10_genres_avg']) {
-                                            //             return top10GenresByAvg(data['top_10_genres_avg']);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     case 5:
-                                            //         if(data['top_10_genres_count']) {
-                                            //             return top10GenresByCount(data['top_10_genres_count']);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     case 6:
-                                            //         if(data['top_10_studios_count']) {
-                                            //             return mostWatchedStudios(data['top_10_studios_count']);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     case 7:
-                                            //         if(data['top_10_studios_avg']) {
-                                            //             return topStudiosAvg(data['top_10_studios_avg']);
-                                            //         }
-
-                                            //         return notEnoughData();
-                                                
-                                            //     case 8:
-                                            //         if(data['top_20_anime']) {
-                                            //             return top20Anime(data['top_20_anime']);
-                                            //         }
-
-                                            //         return notEnoughData();
-
-                                            //     default:
-                                            //         return <div>No data available</div>;
-                                            // }
-                                        })()
-                                    }
-                                    
-                                </div>
-                                <div className='switch-data-screen'>
-                                    <button id='back-switch-data' className='switch-data-buttons' onClick={() => backSlide()}>
-                                        ◀
-                                    </button>
-                                    <div className='data-slides'>
-                                        {
-                                            Array.from({ length: dataMax.current }, (_, i) => (
-                                                <div key={i} className={i === dataDisplay ? "slide active-slide" : "slide"}
-                                                onClick={() => changeSlide(i)}
-                                                />
-                                            ))
-                                        }
+                                        })()}
+                                        <div className='switch-data-screen'>
+                                            <button id='back-switch-data' className='switch-data-buttons' onClick={() => backSlide()}>
+                                                ◀
+                                            </button>
+                                            <div className='data-slides'>
+                                                {
+                                                    Array.from({ length: dataMax.current }, (_, i) => (
+                                                        <div key={i} className={i === dataDisplay ? "slide active-slide" : "slide"}
+                                                        onClick={() => changeSlide(i)}
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                            <button id='forward-switch-data' className='switch-data-buttons' onClick={() => forwardSlide()}>
+                                                ▶
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button id='forward-switch-data' className='switch-data-buttons' onClick={() => forwardSlide()}>
-                                        ▶
-                                    </button>
-                                </div>
-                            </>
+                                </>
+                            )
+                            
                         )
+                        // (APICallSuccess === null || APICallSuccess === false || APICallSuccesses[category] === false ?
+                        //     <>
+                        //         {localStorage.getItem('username') === "Guest" ?
+                        //             <h1 className='stats-warning'>
+                        //                 Stats can be retrieved every 5 minutes to prevent overload.
+                        //                 <br/>
+                        //                 As you are a guest the anime stats will be taken from Andy's public data on MyAnimelist.
+                        //                 If you would like your anime stats, please login to your MyAnimeList account.
+                        //                 <br/>
+                        //                 <br/>
+                        //                 If you're seeing this message due to a refresh or loading error, come back and try again later.
+                        //             </h1>
+                        //             :
+                        //             <h1 className='stats-warning'>
+                        //                 Stats can be retrieved every 5 minutes to prevent overload. 
+                        //                 For the most accurate data, please rate as many shows on MyAnimelist as you can.
+                        //                 This includes score, start date and finish dates.
+                        //                 <br/>
+                        //                 <br/>
+                        //                 If you're seeing this message due to a refresh or loading error, come back and try again later.
+                        //             </h1>
+                        //         }
+                        //         {localStorage.getItem('username') === "Guest" ?
+                        //             <button className='get-stats-button' onClick={() => getGuestStats(setLoading, setAPICallSuccess, setData)}> Get Stats </button>
+                        //             :
+                        //             <button className='get-stats-button' onClick={() => getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setAPICallSuccesses)} disabled={category === -1}> Get my Stats </button>
+                        //         }
+                        //     </>
+                        //     :
+                        //     <>
+                        //         <div className='display-data-div'>
+                        //             {localStorage.getItem('username') === "Guest" ?
+                        //                 (() => {
+                        //                     switch (dataDisplay) {
+                        //                         case 0:
+                        //                             return top10GenresByCount(data['top_10_genres_count']);
+
+                        //                         case 1:
+                        //                             return RatingPieChart(data['popular_ratings']);
+
+                        //                         case 2:
+                        //                             return animeYears(data['season_anime']);
+
+                        //                         case 3:
+                        //                             return animeSourcesChart(data['sources'])
+
+                        //                         case 4:
+                        //                             return mostWatchedStudios(data['top_10_studios_count']);
+
+                        //                         default:
+                        //                             return <div>No data available</div>;
+                        //                     }
+                        //                 })()
+                        //                 :
+                        //                 (() => {
+                        //                     return statsDisplayFunction(category, dataDisplay, dataUser[category]);
+                        //                     // switch (dataDisplay) {
+                        //                     //     case 0:
+                        //                     //         if(data["average_rating"] && data["average_rating"]["mal_score"] && data["average_rating"]["your_score"]) {
+                        //                     //             return userVsMal(data["average_rating"]["mal_score"], data["average_rating"]["your_score"]);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 1:
+                        //                     //         if(data['popular_ratings']) {
+                        //                     //             return RatingPieChart(data['popular_ratings']);
+                        //                     //         }
+                                                    
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 2:
+                        //                     //         if(data['season_anime']) {
+                        //                     //             return animeYears(data['season_anime']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 3:
+                        //                     //         if(data['sources']) {
+                        //                     //             return animeSourcesChart(data['sources']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 4:
+                        //                     //         if(data['top_10_genres_avg']) {
+                        //                     //             return top10GenresByAvg(data['top_10_genres_avg']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 5:
+                        //                     //         if(data['top_10_genres_count']) {
+                        //                     //             return top10GenresByCount(data['top_10_genres_count']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 6:
+                        //                     //         if(data['top_10_studios_count']) {
+                        //                     //             return mostWatchedStudios(data['top_10_studios_count']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     case 7:
+                        //                     //         if(data['top_10_studios_avg']) {
+                        //                     //             return topStudiosAvg(data['top_10_studios_avg']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+                                                
+                        //                     //     case 8:
+                        //                     //         if(data['top_20_anime']) {
+                        //                     //             return top20Anime(data['top_20_anime']);
+                        //                     //         }
+
+                        //                     //         return notEnoughData();
+
+                        //                     //     default:
+                        //                     //         return <div>No data available</div>;
+                        //                     // }
+                        //                 })()
+                        //             }
+                                    
+                        //         </div>
+                        //         <div className='switch-data-screen'>
+                        //             <button id='back-switch-data' className='switch-data-buttons' onClick={() => backSlide()}>
+                        //                 ◀
+                        //             </button>
+                        //             <div className='data-slides'>
+                        //                 {
+                        //                     Array.from({ length: dataMax.current }, (_, i) => (
+                        //                         <div key={i} className={i === dataDisplay ? "slide active-slide" : "slide"}
+                        //                         onClick={() => changeSlide(i)}
+                        //                         />
+                        //                     ))
+                        //                 }
+                        //             </div>
+                        //             <button id='forward-switch-data' className='switch-data-buttons' onClick={() => forwardSlide()}>
+                        //                 ▶
+                        //             </button>
+                        //         </div>
+                        //     </>
+                        // )
                         }
                     </div>
                 </div>
