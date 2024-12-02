@@ -1,5 +1,5 @@
 import pytest
-from main import guest_filter_user_anime_for_stats, filter_scoring_data
+from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data
 
 # !!!! GUEST FUNCTION !!!!!!
 
@@ -425,4 +425,169 @@ def test_no_finish_date():
             'mal_score': 6.8,
             'your_score': 6.0,
         },
+    }
+
+
+# !!!!!!!!!!!!!!! FILTER GENRE DATA
+# basic
+genre_test_1 = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "url_to_image_a"},
+                "my_list_status": {
+                    "status": "completed",
+                    "score": 8,
+                    "finish_date": "2024-01-15",
+                },
+                "genres": [{"name": "Action"}, {"name": "Adventure"}],
+            }
+        },
+        {
+            "node": {
+                "id": 2,
+                "title": "Anime B",
+                "main_picture": {"medium": "url_to_image_b"},
+                "my_list_status": {
+                    "status": "completed",
+                    "score": 9,
+                    "finish_date": "2023-12-25",
+                },
+                "genres": [{"name": "Drama"}, {"name": "Romance"}],
+            }
+        },
+        {
+            "node": {
+                "id": 3,
+                "title": "Anime C",
+                "main_picture": {"medium": "url_to_image_c"},
+                "my_list_status": {
+                    "status": "completed",
+                    "score": 7,
+                    "finish_date": "2023-11-05",
+                },
+                "genres": [{"name": "Action"}, {"name": "Drama"}],
+            }
+        },
+        {
+            "node": {
+                "id": 4,
+                "title": "Anime D",
+                "main_picture": {"medium": "url_to_image_d"},
+                "my_list_status": {
+                    "status": "dropped",  # Not "completed"
+                    "score": 5,
+                    "finish_date": "2024-02-01",
+                },
+                "genres": [{"name": "Comedy"}],
+            }
+        },
+    ]
+}
+
+def test_genre_basic():
+    res = filter_genre_data(genre_test_1)
+    assert res == {
+        "top_10_genres_count": [
+            {"genre": "Action", "count": 2},
+            {"genre": "Drama", "count": 2},
+            {"genre": "Adventure", "count": 1},
+            {"genre": "Romance", "count": 1},
+        ],
+        "top_10_genres_avg": [
+            {"genre": "Romance", "average": 9.0, "count": 1},
+            {"genre": "Adventure", "average": 8.0, "count": 1},
+            {"genre": "Drama", "average": 8.0, "count": 2},
+            {"genre": "Action", "average": 7.5, "count": 2},
+        ],
+        "top_10_least_watched": [
+            {"genre": "Action", "count": 2},
+            {"genre": "Drama", "count": 2},
+            {"genre": "Adventure", "count": 1},
+            {"genre": "Romance", "count": 1},
+        ],
+        "top_10_most_watched_this_year": [
+            {"genres": "Action", "count": 1},
+            {"genres": "Adventure", "count": 1},
+            {"genres": "Drama", "count": 1},
+            {"genres": "Romance", "count": 1},
+        ],
+        "genres_this_year": ["Adventure", "Romance"],
+    }
+
+# Empty
+genre_test_2 = {"data": []}
+
+def test_genre_empty():
+    res = filter_genre_data(genre_test_2)
+    assert res == {}
+
+# Not Completed
+genre_test_3 = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "url_to_image_a"},
+                "my_list_status": {
+                    "status": "watching",
+                    "score": 0,
+                    "finish_date": "2024-01-15",
+                },
+                "genres": [{"name": "Action"}],
+            }
+        }
+    ]
+}
+
+def test_genre_not_completed():
+    res = filter_genre_data(genre_test_3)
+    assert res == {}
+
+# Multiple genres
+genre_test_4 = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "url_to_image_a"},
+                "my_list_status": {
+                    "status": "completed",
+                    "score": 10,
+                    "finish_date": "2024-03-01",
+                },
+                "genres": [{"name": "Action"}, {"name": "Fantasy"}, {"name": "Adventure"}],
+            }
+        }
+    ]
+}
+
+def test_genre_multi_genre():
+    res = filter_genre_data(genre_test_4)
+    assert res == {
+        "top_10_genres_count": [
+            {"genre": "Action", "count": 1},
+            {"genre": "Adventure", "count": 1},
+            {"genre": "Fantasy", "count": 1},
+        ],
+        "top_10_genres_avg": [
+            {"genre": "Action", "average": 10.0, "count": 1},
+            {"genre": "Adventure", "average": 10.0, "count": 1},
+            {"genre": "Fantasy", "average": 10.0, "count": 1},
+        ],
+        "top_10_least_watched": [
+            {"genre": "Action", "count": 1},
+            {"genre": "Adventure", "count": 1},
+            {"genre": "Fantasy", "count": 1},
+        ],
+        "top_10_most_watched_this_year": [
+            {"genres": "Action", "count": 1},
+            {"genres": "Fantasy", "count": 1},
+            {"genres": "Adventure", "count": 1},
+        ],
+        "genres_this_year": ["Action", "Adventure", "Fantasy"],
     }
