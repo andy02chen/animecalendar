@@ -273,9 +273,36 @@ function genreStats(whichDisplay, data) {
                 <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
                     <XAxis type="number" dataKey="average"/>
                     <YAxis type="category" dataKey="genre" width={100} />
-                    <Tooltip/>
+                    <Tooltip formatter={(value, name, props) => {
+                            const count = props.payload.count;
+                            return `${value}, Count: ${count}`;
+                    }}/>
                     <Bar dataKey="average" name="Average">
                         <LabelList dataKey="average" position="right" />
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                    </Bar>
+                </BarChart>
+                </ResponsiveContainer>
+            </>
+        );
+    }
+
+    // Most watched genres this year
+    const mostWatchedGenres = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Most watched genres in past <span className='yellow-stat'>12 Months</span>
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
+                <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
+                    <XAxis type="number" dataKey="count"/>
+                    <YAxis type="category" dataKey="genres" width={100} />
+                    <Tooltip/>
+                    <Bar dataKey="count" name="Count">
+                        <LabelList dataKey="count" position="right" />
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={graphGetColor()} />
                             ))}
@@ -305,6 +332,10 @@ function genreStats(whichDisplay, data) {
             return notEnoughData();
 
         case 2:
+            if(data['top_10_most_watched_this_year'].length > 0) {
+                return mostWatchedGenres(data['top_10_most_watched_this_year']);
+            }
+
             return notEnoughData();
 
         case 3:

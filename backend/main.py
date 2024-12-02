@@ -782,7 +782,7 @@ def filter_genre_data(data):
     genre_df.columns = ['genre', 'total_score', 'count', 'non_zero_count', 'average']
 
     genre_popular = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).head(10)
-    genre_top_average = genre_df[['genre', 'average']].sort_values(by='average', ascending=False).head(10)
+    genre_top_average = genre_df[['genre', 'average', 'count']].sort_values(by='average', ascending=False).head(10)
     genre_least_watched = genre_df[['genre', 'count']].sort_values(by='count', ascending=False).tail(10)
 
     # Get current date last year time
@@ -793,6 +793,7 @@ def filter_genre_data(data):
     # Most watched genres this year
     most_watched_genres = df[df['finish_date'] >= formatted_date][['genres']]
     most_watched_genres = most_watched_genres['genres'].str.split(',').explode().value_counts().head(10)
+    most_watched_genres = most_watched_genres.reset_index().rename(columns={'index': 'genre', 0: 'count'})
 
     # Get earliest date genre was watched
     df['finish_date'] = pd.to_datetime(df['finish_date'])
@@ -806,7 +807,7 @@ def filter_genre_data(data):
         "top_10_genres_count": genre_popular.to_dict(orient='records'),
         "top_10_genres_avg": genre_top_average.to_dict(orient='records'),
         "top_10_least_watched": genre_least_watched.to_dict(orient='records'),
-        "top_10_most_watched_this_year": most_watched_genres.to_dict(),
+        "top_10_most_watched_this_year": most_watched_genres.to_dict(orient='records'),
         'genres_this_year': list(genres_this_year['genres'])
     }
 
