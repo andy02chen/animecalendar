@@ -313,8 +313,21 @@ function genreStats(whichDisplay, data) {
         );
     }
 
-    console.log(data);
-
+    // New genres explored this year
+    const newGenres = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    New Genres you explored in past <span className='yellow-stat'>12 Months</span>
+                </h1>
+                {data.map((entry, index) => (
+                    <h2 key={index} className='data-h2'>
+                        {entry}
+                    </h2>
+                ))}
+            </>
+        )
+    }
 
     switch(whichDisplay) {
         case 0:
@@ -339,6 +352,10 @@ function genreStats(whichDisplay, data) {
             return notEnoughData();
 
         case 3:
+            if(data['genres_this_year'].length > 0) {
+                return newGenres(data['genres_this_year']);
+            }
+
             return notEnoughData();
 
         case 4:
