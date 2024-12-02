@@ -237,11 +237,71 @@ function scoringStats(whichDisplay, data) {
 
 // Genre stats
 function genreStats(whichDisplay, data) {
+
+    // top genres by count
+    const top10GenresByCount = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Top 10 Genres by <span className='yellow-stat'>Count</span>
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
+                <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
+                    <XAxis type="number" dataKey="count"/>
+                    <YAxis type="category" dataKey="genre" width={100} />
+                    <Tooltip/>
+                    <Bar dataKey="count" name="Count">
+                        <LabelList dataKey="count" position="right" />
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                    </Bar>
+                </BarChart>
+                </ResponsiveContainer>
+            </>
+        );
+    }
+
+    // top genres avg rating
+    const top10GenresByAvg = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Your Top 10 Genres by <span className='yellow-stat'>Average Rating</span>
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
+                <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
+                    <XAxis type="number" dataKey="average"/>
+                    <YAxis type="category" dataKey="genre" width={100} />
+                    <Tooltip/>
+                    <Bar dataKey="average" name="Average">
+                        <LabelList dataKey="average" position="right" />
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                    </Bar>
+                </BarChart>
+                </ResponsiveContainer>
+            </>
+        );
+    }
+
+    console.log(data);
+
+
     switch(whichDisplay) {
         case 0:
+            if(data['top_10_genres_count'].length > 0) {
+                return top10GenresByCount(data['top_10_genres_count']);
+            }
+
             return notEnoughData();
 
         case 1:
+            if(data['top_10_genres_avg'].length > 0) {
+                return top10GenresByAvg(data['top_10_genres_avg']);
+            }
+
             return notEnoughData();
 
         case 2:
@@ -435,29 +495,6 @@ function AnimeStats() {
         );
     }
 
-    const top10GenresByAvg = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Your Top 10 Genres by Average Rating
-                </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
-                <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                    <XAxis type="number" dataKey="average"/>
-                    <YAxis type="category" dataKey="genre" width={100} />
-                    <Tooltip/>
-                    <Bar dataKey="average" name="Average">
-                        <LabelList dataKey="average" position="right" />
-                            {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
-                            ))}
-                    </Bar>
-                </BarChart>
-                </ResponsiveContainer>
-            </>
-        );
-    }
-
     const top10GenresByCount = (data) => {
         return(
             <>
@@ -566,10 +603,6 @@ function AnimeStats() {
             </>
         );
     }
-
-    console.log(APICallSuccesses);
-    console.log(dataUser);
-    console.log(dataDisplay);
 
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>
