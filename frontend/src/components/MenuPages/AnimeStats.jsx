@@ -329,6 +329,22 @@ function genreStats(whichDisplay, data) {
         )
     }
 
+    // Least Watched genres
+    const leastWatched = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Least watched genres
+                </h1>
+                {data.map((entry, index) => (
+                    <h2 key={index} className='data-h2'>
+                        {entry.genre} - <span className='yellow-stat'>{entry.count}</span>
+                    </h2>
+                ))}
+            </>
+        )
+    }
+
     switch(whichDisplay) {
         case 0:
             if(data['top_10_genres_count'].length > 0) {
@@ -356,9 +372,17 @@ function genreStats(whichDisplay, data) {
                 return newGenres(data['genres_this_year']);
             }
 
-            return notEnoughData();
+            return (
+                <h1 className='data-h2'>
+                    You've either explored all the genres listed on MyAnimeList or haven't discovered any new ones this year.
+                </h1>
+            );
 
         case 4:
+            if(data['top_10_least_watched'].length > 0) {
+                return leastWatched(data['top_10_least_watched']);
+            }
+
             return notEnoughData();
 
         default:
@@ -386,7 +410,6 @@ function AnimeStats() {
 
     const [data, setData] = useState(null);
     const [dataDisplay, setDataDisplay] = useState(0);
-    // const [dataMax, setDataMax] = useState(4);
     const dataMax = useRef(4);
 
     const [dataUser, setDataUser] = useState([{},{},{},{},{}]);
