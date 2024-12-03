@@ -896,12 +896,21 @@ def filter_preference_data(data):
     category_totals = series_length.groupby('Category')['count'].sum().reset_index()
     category_totals.columns = ['Category', 'Total Count']
 
+    # Popularity Anime
+    popular_df = df[['popularity']]
+    average_popularity = popular_df['popularity'].mean()
+    less_than_200_count = popular_df[popular_df['popularity'] < 200].shape[0]
+
     response_data = {
         'sources': sources_df.to_dict(orient='records'),
         'media_types': media_df.to_dict(orient='records'),
         'ratings': ratings_df.to_dict(orient='records'),
         'popular_years': season_year_df.to_dict(orient='records'),
         'season_length': category_totals.to_dict(orient='records'),
+        'popularity' : {
+            'avg_pop': average_popularity,
+            'top_200_pop': less_than_200_count,
+        }
     }
 
     return response_data
