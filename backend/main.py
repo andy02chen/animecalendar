@@ -818,6 +818,7 @@ def filter_genre_data(data):
 
     return response_data
 
+# TODO
 def filter_preference_data(data):
     animeList = data['data']
 
@@ -858,7 +859,37 @@ def filter_preference_data(data):
         })
 
     df = pd.DataFrame(rows)
-    print(df)
+
+    # Find most watched sources
+    sources_df = df[['source']].fillna('Unknown')
+    sources_df = sources_df.groupby('source').agg(
+        count=('source','size')
+    ).reset_index()
+
+    sources_df = sources_df.sort_values(by='count', ascending=False).head(5)
+    
+    # Media types
+    media_df = df[['media_type']].fillna('Unknown')
+    media_df = media_df.groupby('media_type').agg(
+        count=('media_type','size')
+    ).reset_index()
+
+    media_df = media_df.sort_values(by='count', ascending=False)
+
+    # Find most watched ratings
+    ratings_df = df[['rating']].dropna()
+    ratings_df = ratings_df.groupby('rating').agg(
+        count=('rating','size')
+    ).reset_index()
+    ratings_df = ratings_df.rename(columns={'rating': 'name', 'count': 'value'})
+
+    # Popular year top 5
+    season_year_df = df[['year']]
+    season_year_df = season_year_df.value_counts().reset_index(name='count').head(5)
+    season_year_df.columns = ['year', 'count']
+
+    
+
 
     response_data = {
 
