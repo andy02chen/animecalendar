@@ -275,9 +275,23 @@ def test_score_basic():
                 'image': 'https://example.com/image_b.jpg',
                 'title': 'Anime B',
                 'your_score': 8,
-                },
+            },
             ],
-        'average_rating_last_year': 0
+        'average_rating_last_year': 0,
+        'top_20_anime' :[
+            {
+                'title': 'Anime A',
+                'your_score': 9,
+                'mal_score': 8.5,
+                'image': 'https://example.com/image_a.jpg',
+            },
+            {
+                'title': 'Anime B',
+                'your_score': 8,
+                'mal_score': 7.2,
+                'image': 'https://example.com/image_b.jpg',
+            },
+        ]
     }
 
 # not compelted
@@ -350,7 +364,21 @@ def test_scores_less_eight():
         'lowest_rated': [
             {'title': 'Anime D', 'image': 'https://example.com/image_d.jpg', 'your_score': 6}
         ],
-        'average_rating_last_year': 0
+        'average_rating_last_year': 0,
+        'top_20_anime' :[
+            {
+                'title': 'Anime E',
+                'your_score': 7,
+                'mal_score': 7.5,
+                'image': 'https://example.com/image_e.jpg',
+            },
+            {
+                'title': 'Anime D',
+                'your_score': 6,
+                'mal_score': 6.5,
+                'image': 'https://example.com/image_d.jpg',
+            },
+        ]
     }
 
 # last year
@@ -385,7 +413,15 @@ def test_last_year_scores():
             'title': 'Anime F',
             'your_score': 10,
         },],
-        'average_rating_last_year': 10.0
+        'average_rating_last_year': 10.0,
+        'top_20_anime' :[
+            {
+                'title': 'Anime F',
+                'your_score': 10,
+                'mal_score': 9.0,
+                'image': 'https://example.com/image_f.jpg',
+            },
+        ]
     }
 
 # missing finish date
@@ -425,6 +461,14 @@ def test_no_finish_date():
             'mal_score': 6.8,
             'your_score': 6.0,
         },
+        'top_20_anime' :[
+            {
+                'title': 'Anime G',
+                'your_score': 6,
+                'mal_score': 6.8,
+                'image': 'https://example.com/image_g.jpg',
+            },
+        ]
     }
 
 

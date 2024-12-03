@@ -725,11 +725,16 @@ def filter_scoring_data(data):
     average_rating = df[(df['your_score'] > 0) & (df['finish_date'] >= formatted_date)][['your_score']]
     avg_rating = average_rating['your_score'].mean() if not average_rating.empty else 0
 
+    # top20-anime
+    anime_df= df[['id','title','your_score','mal_score','image']]
+    top_20_anime = anime_df[['title','your_score','mal_score','image']].sort_values(by='your_score', ascending=False).head(20)
+
     response_data = {
         'you_vs_mal': average_scores.to_dict(),
         'very_good_ratings' : round(percentage,2),
         'lowest_rated': lowest_rated_anime.head(3).to_dict(orient='records'),
-        'average_rating_last_year': round(avg_rating,2)
+        'average_rating_last_year': round(avg_rating,2),
+        "top_20_anime": top_20_anime.to_dict(orient='records')
     }
     return response_data
 
@@ -921,11 +926,12 @@ def userPrefData():
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Get user data function for user genre data
+# TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats-genres', methods=["GET"])
 def userGenreData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
@@ -975,11 +981,12 @@ def userGenreData():
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Get user data function for guest/user scoring data
+# TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id

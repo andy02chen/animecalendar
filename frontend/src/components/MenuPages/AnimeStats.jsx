@@ -201,6 +201,44 @@ function scoringStats(whichDisplay, data) {
         );
     }
 
+    // Top 20 anime
+    const top20Anime = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Your Top 20 Highest Rated Anime
+                </h1>
+                <div className='top-20-anime'>
+                    {data.map((entry, index) => (
+                        <React.Fragment key={index}>
+                            <div>
+                                <div className='top-anime-left'>
+                                    <h2 className='data-h2'>
+                                        {index+1}.
+                                    </h2>
+                                </div>
+                                <div className='top-anime-right'>
+                                    <div className='top-anime-header'>
+                                        <h2 className='data-h2'>
+                                            <span className='yellow-stat'>{entry['title']}</span>
+                                        </h2>
+                                        <img className='top-20-anime-img' src={entry['image']}/>
+                                    </div>
+                                    <h2 className='data-h2'>
+                                        MAL Score: {entry['mal_score']}
+                                    </h2>
+                                    <h2 className='data-h2'>
+                                        Your Score: {entry['your_score']}
+                                    </h2>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    ))}
+                </div>
+            </>
+        );
+    }
+
     switch(whichDisplay) {
         case 0:
             if(data["you_vs_mal"] && data["you_vs_mal"]["mal_score"] && data["you_vs_mal"]["your_score"]) {
@@ -229,6 +267,11 @@ function scoringStats(whichDisplay, data) {
             }
 
             return notEnoughData();
+
+        case 4:
+            if(data['top_20_anime'].length > 0) {
+                return top20Anime(data['top_20_anime']);
+            }
 
         default:
             return notEnoughData();
@@ -395,7 +438,7 @@ function statsDisplayFunction(whichCategory, whichDisplay, data, dataMax) {
     switch(whichCategory) {
         // Stats related to Scoring
         case 0:
-            dataMax.current = 4
+            dataMax.current = 5
             return scoringStats(whichDisplay, data);
 
         case 1:
@@ -634,43 +677,6 @@ function AnimeStats() {
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
-            </>
-        );
-    }
-
-    const top20Anime = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Your Top 20 Highest Rated Anime
-                </h1>
-                <div className='top-20-anime'>
-                    {data.map((entry, index) => (
-                        <React.Fragment key={index}>
-                            <div>
-                                <div className='top-anime-left'>
-                                    <h2 className='data-h2'>
-                                        {index+1}.
-                                    </h2>
-                                </div>
-                                <div className='top-anime-right'>
-                                    <div className='top-anime-header'>
-                                        <h2 className='data-h2'>
-                                            <span className='yellow-stat'>{entry['title']}</span>
-                                        </h2>
-                                        <img className='top-20-anime-img' src={entry['img']}/>
-                                    </div>
-                                    <h2 className='data-h2'>
-                                        MAL Score: {entry['mal_score']}
-                                    </h2>
-                                    <h2 className='data-h2'>
-                                        Your Score: {entry['your_score']}
-                                    </h2>
-                                </div>
-                            </div>
-                        </React.Fragment>
-                    ))}
-                </div>
             </>
         );
     }
