@@ -813,10 +813,57 @@ def filter_genre_data(data):
 
     return response_data
 
-# Get user data function for user genre data
+def filter_preference_data(data):
+    animeList = data['data']
+
+    completed_anime = [anime for anime in animeList 
+        if anime['node']['my_list_status']['status'] == 'completed' and 
+        anime['node']['my_list_status']['score'] > 0 and
+        anime['node']['num_episodes'] > 0 and
+        'start_season' in anime['node']
+    ]
+
+    if(len(completed_anime) == 0):
+        return {}
+
+    rows = []
+    for entry in completed_anime:
+        node = entry["node"]
+        id_ = node['id']
+        title = node['title']
+        img = node['main_picture']['medium']
+
+        source = node['source']
+        eps = node['num_episodes']
+        media_type = node['media_type']
+        rating = node['rating']
+        popularity = node['popularity']
+        year = node['start_season']['year']
+
+        rows.append({
+            'id': id_,
+            'title': title,
+            'image': img,
+            'source': source,
+            'eps': eps,
+            'media_type': media_type,
+            'rating': rating,
+            'popularity': popularity,
+            'year': year
+        })
+
+    df = pd.DataFrame(rows)
+    print(df)
+
+    response_data = {
+
+    }
+
+    return response_data
+
 # TODO limit to 1 per 5 minutes
-@app.route('/api/user-stats-genres', methods=["GET"])
-def userGenreData():
+@app.route('/api/user-stats-pref', methods=["GET"])
+def userPrefData():
     try:
         # Check limit
         if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
@@ -843,7 +890,7 @@ def userGenreData():
                 # mal_get_user_data = '''
                 #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
                 # '''
-                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,genres,my_list_status&nsfw=true&limit=1000'
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,popularity,rating,source,my_list_status,num_episodes,media_type&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
@@ -854,6 +901,60 @@ def userGenreData():
                 response = requests.get(mal_get_user_data, headers=headers)
                 
                 # TODO new function to get categories for stats
+                if response.status_code == 200:
+                    score_data = filter_preference_data(response.json())
+                    return jsonify(score_data)
+
+                app.logger.error("Error fetching weekly anime for authenticated user in userPrefData")
+                return 'Unable to get user data from MAL',500
+
+            # User not found
+            response = redirect("/")
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response
+
+        # User not logged in
+        return redirect('/')
+
+    except Exception as e:
+        app.logger.error(f"Unexpected error in userPrefData function: {e}")
+        return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
+
+# Get user data function for user genre data
+@app.route('/api/user-stats-genres', methods=["GET"])
+def userGenreData():
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+            return jsonify({"error": "rate limit exceeded"}), 429
+
+        # Find user using session id
+        user_session_id = get_session_id()
+
+        if user_session_id:
+
+            if user_session_id == 'guest':
+                return 'You must be logged in to get this data',500
+
+            find_user = find_user_function(user_session_id)
+
+            if find_user:
+                msg, code = check_expiry()
+
+                # Login again
+                if code == 401 or code == 403:
+                    return msg, code
+
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,genres,my_list_status&nsfw=true&limit=1000'
+
+                user_token = cipher_suite.decrypt(find_user.access_token)
+                mal_access_token = user_token.decode()
+                headers = {
+                    'Authorization': f'Bearer {mal_access_token}'
+                }
+
+                response = requests.get(mal_get_user_data, headers=headers)
+
                 if response.status_code == 200:
                     score_data = filter_genre_data(response.json())
                     return jsonify(score_data)
@@ -874,12 +975,11 @@ def userGenreData():
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Get user data function for guest/user scoring data
-# TODO set limit to 1
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
