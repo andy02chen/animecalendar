@@ -4,6 +4,8 @@ import axios from 'axios';
 import React from 'react';
 
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList} from 'recharts';
+import AnimeStatsScores from './AnimeStatsScores';
+import AnimeStatsGenres from './AnimeStatsGenres';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -89,348 +91,6 @@ function getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setA
             setLoading(false);
             setAPICallSuccess(false);
     }
-
-    
-}
-
-function notEnoughData() {
-    return(
-        <h1 className='data-h2'>
-            Data unavailable. Add more shows to your list and rate them to unlock this data. Watch and rate more shows, then check back!
-        </h1>
-    );
-}
-
-// Generate random color for the graph
-function graphGetColor() {
-    const minBrightness = 60;
-    
-    const r = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
-    const g = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
-    const b = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
-
-    const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
-    
-    return hex;
-}
-
-// Display stats related to score data
-function scoringStats(whichDisplay, data) {
-    // User vs Mal Average Rating HTML
-    const userVsMal = (mal_score, your_score) => {
-        return(
-        <>
-            <h1 className='data-h1'>
-                Are you a harsh critic?<br/>
-                Your Average Rating vs MAL Average
-            </h1>
-            <h2 className='data-h2'>
-                The average score for the animes you have rated is: <br/>
-                {mal_score}
-            </h2>
-            <h2 className={`data-h2`}>
-                Your Average Rating is: <br/>
-                {your_score}
-            </h2>
-        </>
-        );
-    }
-
-    // Very Good Rating HTML
-    const veryGood = (percentage) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    A Rating of 8 is considered "Very Good" on Mal<br/>
-                </h1>
-                <h2 className='data-h2'>
-                    Around <span className='yellow-stat'>{percentage}%</span> of your anime are rated an 8 or higher
-                </h2>
-            </>
-        )
-    }
-
-    // Lowest Rated anime HTML
-    const lowestRatedAnime = (anime) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Here are 3 of your lowest rated anime
-                </h1>
-                <div className='stats-div-of-anime'>
-                    {
-                        anime.map((entry, index) => (
-                            <React.Fragment key={index}>
-                                <div>
-                                    <div className='top-anime-left'>
-                                        <h2 className='data-h2'>
-                                            {index+1}.
-                                        </h2>
-                                    </div>
-                                    <div className='top-anime-right'>
-                                        <div className='top-anime-header'>
-                                            <h2 className='data-h2'>
-                                                <span className='yellow-stat'>{entry['title']}</span>
-                                            </h2>
-                                            <img className='top-20-anime-img' src={entry['image']}/>
-                                        </div>
-                                        <h2 className='data-h2'>
-                                            Your Score: {entry['your_score']}
-                                        </h2>
-                                    </div>
-                                </div>
-                            </React.Fragment>
-                        ))
-                    }
-                </div>
-            </>
-        )
-    }
-
-    // Average Rating last 2 Years
-    const averageRatingLastYear = (rating) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    The average score you have given for anime over the past year, as of this date last year, is:<br/>
-                </h1>
-                <h2 className='data-h2'>
-                    <span className='yellow-stat'>{rating}</span>
-                </h2>
-            </>
-        );
-    }
-
-    // Top 20 anime
-    const top20Anime = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Your Top 20 Highest Rated Anime
-                </h1>
-                <div className='top-20-anime'>
-                    {data.map((entry, index) => (
-                        <React.Fragment key={index}>
-                            <div>
-                                <div className='top-anime-left'>
-                                    <h2 className='data-h2'>
-                                        {index+1}.
-                                    </h2>
-                                </div>
-                                <div className='top-anime-right'>
-                                    <div className='top-anime-header'>
-                                        <h2 className='data-h2'>
-                                            <span className='yellow-stat'>{entry['title']}</span>
-                                        </h2>
-                                        <img className='top-20-anime-img' src={entry['image']}/>
-                                    </div>
-                                    <h2 className='data-h2'>
-                                        MAL Score: {entry['mal_score']}
-                                    </h2>
-                                    <h2 className='data-h2'>
-                                        Your Score: {entry['your_score']}
-                                    </h2>
-                                </div>
-                            </div>
-                        </React.Fragment>
-                    ))}
-                </div>
-            </>
-        );
-    }
-
-    switch(whichDisplay) {
-        case 0:
-            if(data["you_vs_mal"] && data["you_vs_mal"]["mal_score"] && data["you_vs_mal"]["your_score"]) {
-                return userVsMal(data["you_vs_mal"]["mal_score"], data["you_vs_mal"]["your_score"]);
-            }
-
-            return notEnoughData();
-
-        case 1:
-            if(data['average_rating_last_year']) {
-                return averageRatingLastYear(data['average_rating_last_year']);
-            }
-
-            return notEnoughData();
-
-        case 2:
-            if(data["very_good_ratings"]) {
-                return veryGood(data['very_good_ratings']);
-            }
-
-            return notEnoughData();
-
-        case 3:
-            if(data["lowest_rated"] && data['lowest_rated']['0']) {
-                return lowestRatedAnime(data['lowest_rated']);
-            }
-
-            return notEnoughData();
-
-        case 4:
-            if(data['top_20_anime'].length > 0) {
-                return top20Anime(data['top_20_anime']);
-            }
-
-        default:
-            return notEnoughData();
-    }
-}
-
-// Genre stats
-function genreStats(whichDisplay, data) {
-
-    // top genres by count
-    const top10GenresByCount = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Top 10 Genres by <span className='yellow-stat'>Count</span>
-                </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
-                <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
-                    <XAxis type="number" dataKey="count"/>
-                    <YAxis type="category" dataKey="genre" width={100} />
-                    <Tooltip/>
-                    <Bar dataKey="count" name="Count">
-                        <LabelList dataKey="count" position="right" />
-                            {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
-                            ))}
-                    </Bar>
-                </BarChart>
-                </ResponsiveContainer>
-            </>
-        );
-    }
-
-    // top genres avg rating
-    const top10GenresByAvg = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Your Top 10 Genres by <span className='yellow-stat'>Average Rating</span>
-                </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
-                <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                    <XAxis type="number" dataKey="average"/>
-                    <YAxis type="category" dataKey="genre" width={100} />
-                    <Tooltip formatter={(value, name, props) => {
-                            const count = props.payload.count;
-                            return `${value}, Count: ${count}`;
-                    }}/>
-                    <Bar dataKey="average" name="Average">
-                        <LabelList dataKey="average" position="right" />
-                            {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
-                            ))}
-                    </Bar>
-                </BarChart>
-                </ResponsiveContainer>
-            </>
-        );
-    }
-
-    // Most watched genres this year
-    const mostWatchedGenres = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Most watched genres in past <span className='yellow-stat'>12 Months</span>
-                </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
-                <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
-                    <XAxis type="number" dataKey="count"/>
-                    <YAxis type="category" dataKey="genres" width={100} />
-                    <Tooltip/>
-                    <Bar dataKey="count" name="Count">
-                        <LabelList dataKey="count" position="right" />
-                            {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
-                            ))}
-                    </Bar>
-                </BarChart>
-                </ResponsiveContainer>
-            </>
-        );
-    }
-
-    // New genres explored this year
-    const newGenres = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    New Genres you explored in past <span className='yellow-stat'>12 Months</span>
-                </h1>
-                {data.map((entry, index) => (
-                    <h2 key={index} className='data-h2'>
-                        {entry}
-                    </h2>
-                ))}
-            </>
-        )
-    }
-
-    // Least Watched genres
-    const leastWatched = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Least watched genres
-                </h1>
-                {data.map((entry, index) => (
-                    <h2 key={index} className='data-h2'>
-                        {entry.genre} - <span className='yellow-stat'>{entry.count}</span>
-                    </h2>
-                ))}
-            </>
-        )
-    }
-
-    switch(whichDisplay) {
-        case 0:
-            if(data['top_10_genres_count'].length > 0) {
-                return top10GenresByCount(data['top_10_genres_count']);
-            }
-
-            return notEnoughData();
-
-        case 1:
-            if(data['top_10_genres_avg'].length > 0) {
-                return top10GenresByAvg(data['top_10_genres_avg']);
-            }
-
-            return notEnoughData();
-
-        case 2:
-            if(data['top_10_most_watched_this_year'].length > 0) {
-                return mostWatchedGenres(data['top_10_most_watched_this_year']);
-            }
-
-            return notEnoughData();
-
-        case 3:
-            if(data['genres_this_year'].length > 0) {
-                return newGenres(data['genres_this_year']);
-            }
-
-            return (
-                <h1 className='data-h2'>
-                    You've either explored all the genres listed on MyAnimeList or haven't discovered any new ones this year.
-                </h1>
-            );
-
-        case 4:
-            if(data['top_10_least_watched'].length > 0) {
-                return leastWatched(data['top_10_least_watched']);
-            }
-
-            return notEnoughData();
-
-        default:
-            return notEnoughData();
-    }
 }
 
 // Displays the stats
@@ -439,11 +99,12 @@ function statsDisplayFunction(whichCategory, whichDisplay, data, dataMax) {
         // Stats related to Scoring
         case 0:
             dataMax.current = 5
-            return scoringStats(whichDisplay, data);
+            return <AnimeStatsScores whichDisplay={whichDisplay} data={data}/>
 
+        // Stats related to Genres
         case 1:
             dataMax.current = 5;
-            return genreStats(whichDisplay, data);
+            return <AnimeStatsGenres whichDisplay={whichDisplay} data={data}/>
     }
 }
 
@@ -831,3 +492,23 @@ function AnimeStats() {
 }
 
 export default AnimeStats;
+export function notEnoughData() {
+    return(
+        <h1 className='data-h2'>
+            Data unavailable. Add more shows to your list and rate them to unlock this data. Watch and rate more shows, then check back!
+        </h1>
+    );
+}
+
+// Generate random color for the graph
+export function graphGetColor() {
+    const minBrightness = 60;
+    
+    const r = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+    const g = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+    const b = Math.floor(Math.random() * (256 - minBrightness)) + minBrightness;
+
+    const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    
+    return hex;
+}
