@@ -888,11 +888,20 @@ def filter_preference_data(data):
     season_year_df = season_year_df.value_counts().reset_index(name='count').head(5)
     season_year_df.columns = ['year', 'count']
 
-    
+    #shorter vs longer series
+    series_length = df[df['media_type'] == 'tv'][['eps']]
+    series_length = series_length.value_counts().reset_index(name='count')
+    series_length['Category'] = series_length['eps'].apply(lambda x: 'Shorter' if x <= 14 else 'Longer')
 
+    category_totals = series_length.groupby('Category')['count'].sum().reset_index()
+    category_totals.columns = ['Category', 'Total Count']
 
     response_data = {
-
+        'sources': sources_df.to_dict(orient='records'),
+        'media_types': media_df.to_dict(orient='records'),
+        'ratings': ratings_df.to_dict(orient='records'),
+        'popular_years': season_year_df.to_dict(orient='records'),
+        'season_length': category_totals.to_dict(orient='records'),
     }
 
     return response_data
