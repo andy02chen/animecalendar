@@ -149,14 +149,14 @@ function AnimeStatsScores({whichDisplay, data}) {
             return notEnoughData();
 
         case 3:
-            if(data["lowest_rated"] && data['lowest_rated']['0']) {
+            if(data["lowest_rated"] && data['lowest_rated'].length > 0) {
                 return lowestRatedAnime(data['lowest_rated']);
             }
 
             return notEnoughData();
 
         case 4:
-            if(data['top_20_anime'].length > 0) {
+            if(data['top_20_anime'] && data['top_20_anime'].length > 0) {
                 return top20Anime(data['top_20_anime']);
             }
 

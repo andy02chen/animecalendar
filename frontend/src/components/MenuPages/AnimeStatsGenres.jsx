@@ -114,28 +114,28 @@ function AnimeStatsGenres({whichDisplay, data}) {
 
     switch(whichDisplay) {
         case 0:
-            if(data['top_10_genres_count'].length > 0) {
+            if(data['top_10_genres_count'] && data['top_10_genres_count'].length > 0) {
                 return top10GenresByCount(data['top_10_genres_count']);
             }
 
             return notEnoughData();
 
         case 1:
-            if(data['top_10_genres_avg'].length > 0) {
+            if(data['top_10_genres_avg'] && data['top_10_genres_avg'].length > 0) {
                 return top10GenresByAvg(data['top_10_genres_avg']);
             }
 
             return notEnoughData();
 
         case 2:
-            if(data['top_10_most_watched_this_year'].length > 0) {
+            if(data['top_10_most_watched_this_year'] && data['top_10_most_watched_this_year'].length > 0) {
                 return mostWatchedGenres(data['top_10_most_watched_this_year']);
             }
 
             return notEnoughData();
 
         case 3:
-            if(data['genres_this_year'].length > 0) {
+            if(data['genres_this_year'] && data['genres_this_year'].length > 0) {
                 return newGenres(data['genres_this_year']);
             }
 
@@ -146,7 +146,7 @@ function AnimeStatsGenres({whichDisplay, data}) {
             );
 
         case 4:
-            if(data['top_10_least_watched'].length > 0) {
+            if(data['top_10_least_watched'] && data['top_10_least_watched'].length > 0) {
                 return leastWatched(data['top_10_least_watched']);
             }
 

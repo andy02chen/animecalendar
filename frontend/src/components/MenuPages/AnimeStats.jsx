@@ -7,6 +7,7 @@ import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend, BarChart, Ba
 import AnimeStatsScores from './AnimeStatsScores';
 import AnimeStatsGenres from './AnimeStatsGenres';
 import AnimeStatsGuest from './AnimeStatsGuest';
+import AnimeStatsPref from './AnimeStatsPref';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -88,6 +89,33 @@ function getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setA
             });
             break;
 
+        // Get Pref Data
+        case 2:
+            axios.get("/api/user-stats-pref").
+            then(response => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = response.data;
+                    return newArr;
+                })
+                setAPICallSuccess(true);
+                setLoading(false);
+                setAPICallSuccesses((c) => {
+                    const newArray = [...c];
+                    newArray[category] = true;
+                    return newArray;
+                })
+            }).catch(error => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = null;
+                    return newArr;
+                })
+                setAPICallSuccess(false);
+                setLoading(false);
+            });
+            break;
+
         default: 
             setLoading(false);
             setAPICallSuccess(false);
@@ -106,6 +134,11 @@ function statsDisplayFunction(whichCategory, whichDisplay, data, dataMax) {
         case 1:
             dataMax.current = 5;
             return <AnimeStatsGenres whichDisplay={whichDisplay} data={data}/>
+
+        // Stats related to Preferences
+        case 2:
+            dataMax.current = 6;
+            return <AnimeStatsPref whichDisplay={whichDisplay} data={data}/>
     }
 }
 
@@ -130,8 +163,10 @@ function AnimeStats() {
         setDataDisplay(0);
         const front = document.getElementById('forward-switch-data');
 
-        if(front.disabled) {
-            front.removeAttribute('disabled');
+        if(front) {
+            if(front.disabled) {
+                front.removeAttribute('disabled');
+            }
         }
     }
 
