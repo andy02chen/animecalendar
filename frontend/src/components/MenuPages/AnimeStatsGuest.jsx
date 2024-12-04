@@ -116,21 +116,47 @@ function AnimeStatsGuest({dataDisplay, data}) {
         );
     }
 
+    const errorDisplay = () => {
+        return(<h1 className='data-h2'>
+            There was an issue with retrieving data. Please try again later.
+        </h1>)
+    }
+    
     switch (dataDisplay) {
         case 0:
-            return top10GenresByCount(data['top_10_genres_count']);
+            if(data['top_10_genres_count'] && data['top_10_genres_count'].length > 0) {
+                return top10GenresByCount(data['top_10_genres_count']);
+            }
+
+            return errorDisplay();
 
         case 1:
-            return RatingPieChart(data['popular_ratings']);
+            if(data['popular_ratings'] && data['popular_ratings'].length > 0) {
+                return RatingPieChart(data['popular_ratings']);
+            }
+
+            return errorDisplay();
 
         case 2:
-            return animeYears(data['season_anime']);
+            if(data['season_anime'] && data['season_anime'].length > 0) {
+                return animeYears(data['season_anime']);
+            }
+
+            return errorDisplay();
 
         case 3:
-            return animeSourcesChart(data['sources']);
+            if(data['sources'] && data['sources'].length > 0) {
+                return animeSourcesChart(data['sources']);
+            }
+
+            return errorDisplay();
 
         case 4:
-            return mostWatchedStudios(data['top_10_studios_count']);
+            if(data['top_10_studios_count'] && data['top_10_studios_count'].length > 0) {
+                return mostWatchedStudios(data['top_10_studios_count']);
+            }
+
+            return errorDisplay();
 
         default:
             return <div>No data available</div>;
