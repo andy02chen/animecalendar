@@ -106,7 +106,7 @@ function AnimeStatsPref({whichDisplay, data}) {
         return(
             <>
                 <h1 className='data-h1'>
-                    Length of Anime
+                    Do you prefer shorter or longer anime?
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart data={data} className='source-bar-chart'>
@@ -130,8 +130,22 @@ function AnimeStatsPref({whichDisplay, data}) {
             </>
         )
     }
-    
-    console.log(data);
+
+    const popularity = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Do you prefer popular anime?
+                </h1>
+                <h2 className='data-h2'>
+                    The average popularity rank of your completed shows is <span className='yellow-stat'>{data['avg_pop']}</span>.
+                </h2>
+                <h2 className='data-h2'>
+                    You have watched <span className='yellow-stat'>{data['top_200_pop']} out of top 200</span> most popular shows on MyAnimeList!
+                </h2>
+            </>
+        );
+    }
 
     switch(whichDisplay) {
         case 0:
@@ -158,6 +172,13 @@ function AnimeStatsPref({whichDisplay, data}) {
         case 3:
             if(data['ratings'] && data['ratings'].length > 0) {
                 return RatingPieChart(data['ratings']);
+            }
+
+            return notEnoughData();
+
+        case 4:
+            if(data['popularity'] && data['popularity']['avg_pop'] && data['popularity']['top_200_pop']) {
+                return popularity(data['popularity']);
             }
 
             return notEnoughData();

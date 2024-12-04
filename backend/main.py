@@ -891,9 +891,10 @@ def filter_preference_data(data):
     #shorter vs longer series
     series_length = df[df['media_type'] == 'tv'][['eps']]
     series_length = series_length.value_counts().reset_index(name='count')
-    series_length['Category'] = series_length['eps'].apply(lambda x: 'Shorter' if x <= 14 else 'Longer')
+    series_length['Category'] = series_length['eps'].apply(lambda x: 'Longer' if x > 14 else 'Shorter')
 
     category_totals = series_length.groupby('Category')['count'].sum().reset_index()
+    category_totals = category_totals.sort_values(by='Category', ascending=False)
     category_totals.columns = ['Category', 'Total Count']
 
     # Popularity Anime
