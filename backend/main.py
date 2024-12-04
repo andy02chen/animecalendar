@@ -818,7 +818,6 @@ def filter_genre_data(data):
 
     return response_data
 
-# TODO
 def filter_preference_data(data):
     animeList = data['data']
 
@@ -875,6 +874,7 @@ def filter_preference_data(data):
     ).reset_index()
 
     media_df = media_df.sort_values(by='count', ascending=False)
+    media_df = media_df.rename(columns={'media_type': 'name', 'count': 'value'})
 
     # Find most watched ratings
     ratings_df = df[['rating']].dropna()

@@ -248,8 +248,8 @@ function AnimeStats() {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                        <XAxis type="number" dataKey="average"/>
-                        <YAxis type="category" dataKey="studio_name" width={100} />
+                        <XAxis type="number" dataKey="average" style={{ fill: '#FFFFFF'}}/>
+                        <YAxis type="category" dataKey="studio_name" width={100} style={{ fill: '#FFFFFF'}}/>
                         <Tooltip formatter={(value, name, props) => {
                             const count = props.payload.count;
                             return `${value}, Count: ${count}`;

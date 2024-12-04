@@ -14,8 +14,8 @@ function AnimeStatsGenres({whichDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
-                    <XAxis type="number" dataKey="count"/>
-                    <YAxis type="category" dataKey="genre" width={100} />
+                    <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
+                    <YAxis type="category" dataKey="genre" width={100} style={{ fill: '#FFFFFF'}}/>
                     <Tooltip/>
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
@@ -38,8 +38,8 @@ function AnimeStatsGenres({whichDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                    <XAxis type="number" dataKey="average"/>
-                    <YAxis type="category" dataKey="genre" width={100} />
+                    <XAxis type="number" dataKey="average" style={{ fill: '#FFFFFF'}}/>
+                    <YAxis type="category" dataKey="genre" width={100} style={{ fill: '#FFFFFF'}}/>
                     <Tooltip formatter={(value, name, props) => {
                             const count = props.payload.count;
                             return `${value}, Count: ${count}`;
@@ -65,8 +65,8 @@ function AnimeStatsGenres({whichDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
-                    <XAxis type="number" dataKey="count"/>
-                    <YAxis type="category" dataKey="genres" width={100} />
+                    <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
+                    <YAxis type="category" dataKey="genres" width={100} style={{ fill: '#FFFFFF'}}/>
                     <Tooltip/>
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />

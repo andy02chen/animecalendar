@@ -12,8 +12,8 @@ function AnimeStatsGuest({dataDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
-                    <XAxis type="number" dataKey="count"/>
-                    <YAxis type="category" dataKey="genre" width={100} />
+                    <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
+                    <YAxis type="category" dataKey="genre" width={100} style={{ fill: '#FFFFFF'}}/>
                     <Tooltip/>
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
@@ -79,8 +79,8 @@ function AnimeStatsGuest({dataDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart data={data} className='source-bar-chart'>
-                        <XAxis dataKey="source" />
-                        <YAxis />
+                        <XAxis dataKey="source" style={{ fill: '#FFFFFF'}}/>
+                        <YAxis style={{ fill: '#FFFFFF'}}/>
                         <Tooltip />
                         <Bar dataKey="count" name="Count">
                             {data.map((entry, index) => (
@@ -101,8 +101,8 @@ function AnimeStatsGuest({dataDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                 <BarChart layout="vertical" data={data} className="top-studios-count">
-                    <XAxis type="number" dataKey="count"/>
-                    <YAxis type="category" dataKey="studio_name" width={100} />
+                    <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
+                    <YAxis type="category" dataKey="studio_name" width={100} style={{ fill: '#FFFFFF'}}/>
                     <Tooltip/>
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
@@ -121,7 +121,7 @@ function AnimeStatsGuest({dataDisplay, data}) {
             There was an issue with retrieving data. Please try again later.
         </h1>)
     }
-    
+
     switch (dataDisplay) {
         case 0:
             if(data['top_10_genres_count'] && data['top_10_genres_count'].length > 0) {

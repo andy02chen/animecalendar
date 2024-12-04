@@ -15,8 +15,8 @@ function AnimeStatsPref({whichDisplay, data}) {
                 </h1>
                 <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
                     <BarChart data={data} className='source-bar-chart'>
-                        <XAxis dataKey="source" />
-                        <YAxis />
+                        <XAxis dataKey="source" style={{ fill: '#FFFFFF'}}/>
+                        <YAxis style={{ fill: '#FFFFFF'}}/>
                         <Tooltip />
                         <Bar dataKey="count" name="Count">
                             {data.map((entry, index) => (
@@ -72,6 +72,64 @@ function AnimeStatsPref({whichDisplay, data}) {
             </>
         );
     }
+
+    const mediaTypes = (data) => {
+        return(
+            <>
+            <h1 className='data-h1'>
+                Media Types
+            </h1>
+            <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
+                <PieChart className='rating-pie-chart'>
+                    <Pie
+                        data={data}
+                        cx="50%"
+                        cy="50%"
+                        label
+                        outerRadius={150}
+                        fill="#8884d8"
+                        dataKey="value"
+                    >
+                        {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={graphGetColor()}/>
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" height={50}/>
+                </PieChart>
+            </ResponsiveContainer>
+            </>
+        );
+    }
+
+    const seasonDuration = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Length of Anime
+                </h1>
+                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
+                    <BarChart data={data} className='source-bar-chart'>
+                        <XAxis style={{ fill: '#FFFFFF'}}
+                            dataKey="Category" 
+                            tickFormatter={(name) => {
+                                if (name === 'Longer') return '15eps +';
+                                if (name === 'Shorter') return '<= 14eps';
+                                return name;
+                            }} 
+                        />
+                        <YAxis style={{ fill: '#FFFFFF'}} />
+                        <Tooltip />
+                        <Bar dataKey="Total Count" name="Count">
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={graphGetColor()} />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </>
+        )
+    }
     
     console.log(data);
 
@@ -81,10 +139,35 @@ function AnimeStatsPref({whichDisplay, data}) {
                 return animeSourcesChart(data['sources']);
             }
 
+            return notEnoughData();
+
+        case 1:
+            if(data['media_types'] && data['media_types'].length > 0) {
+                return mediaTypes(data['media_types']);
+            }
+
+            return notEnoughData();
+
+        case 2:
+            if(data['season_length'] && data['season_length'].length > 0) {
+                return seasonDuration(data['season_length']);
+            }
+
+            return notEnoughData();
+
+        case 3:
+            if(data['ratings'] && data['ratings'].length > 0) {
+                return RatingPieChart(data['ratings']);
+            }
+
+            return notEnoughData();
+
         case 5:
             if(data['popular_years'] && data['popular_years'].length > 0) {
                 return animeYears(data['popular_years']);
             }
+
+            return notEnoughData();
 
         default:
             return notEnoughData();
