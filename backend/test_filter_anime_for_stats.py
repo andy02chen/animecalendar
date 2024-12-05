@@ -1,5 +1,5 @@
 import pytest
-from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data
+from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data, filter_preference_data
 
 # !!!! GUEST FUNCTION !!!!!!
 
@@ -635,3 +635,103 @@ def test_genre_multi_genre():
         ],
         "genres_this_year": ["Action", "Adventure", "Fantasy"],
     }
+
+# !!!!!!!!!!!!!!! FILTER PREFERENCE DATA
+# basic
+pref_test_1 = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "main_picture": {"medium": "https://example.com/imageA.jpg"},
+                "my_list_status": {"status": "completed", "score": 8},
+                "num_episodes": 24,
+                "source": "Manga",
+                "media_type": "tv",
+                "rating": "PG-13",
+                "popularity": 150,
+                "start_season": {"year": 2020}
+            }
+        },
+        {
+            "node": {
+                "id": 2,
+                "title": "Anime B",
+                "main_picture": {"medium": "https://example.com/imageB.jpg"},
+                "my_list_status": {"status": "completed", "score": 9},
+                "num_episodes": 12,
+                "source": "Light Novel",
+                "media_type": "tv",
+                "rating": "R",
+                "popularity": 300,
+                "start_season": {"year": 2019}
+            }
+        },
+        {
+            "node": {
+                "id": 3,
+                "title": "Anime C",
+                "main_picture": {"medium": "https://example.com/imageC.jpg"},
+                "my_list_status": {"status": "completed", "score": 10},
+                "num_episodes": 50,
+                "source": "Original",
+                "media_type": "tv",
+                "rating": "PG",
+                "popularity": 100,
+                "start_season": {"year": 2018}
+            }
+        }
+    ]
+}
+
+def test_pref_basic():
+    res = filter_preference_data(pref_test_1)
+    assert res == {
+        "sources": [
+            {"source": "Light Novel", "count": 1},
+            {"source": "Manga", "count": 1},
+            {"source": "Original", "count": 1}
+        ],
+        "media_types": [
+            {"name": "tv", "value": 3}
+        ],
+        "ratings": [
+            {"name": "PG", "value": 1},
+            {"name": "PG-13", "value": 1},
+            {"name": "R", "value": 1}
+        ],
+        "popular_years": [
+            {"year": 2018, "count": 1},
+            {"year": 2019, "count": 1},
+            {"year": 2020, "count": 1}
+        ],
+        "season_length": [
+            {"Category": "Shorter", "Total Count": 1},
+            {"Category": "Longer", "Total Count": 2}
+        ],
+        "popularity": {
+            "avg_pop": 183.33,
+            "top_200_pop": 2
+        }
+    }
+
+# No valid
+pref_test_2 = {
+    "data": [
+        {
+            "node": {
+                "id": 4,
+                "title": "Anime D",
+                "main_picture": {"medium": "https://example.com/imageD.jpg"},
+                "my_list_status": {"status": "watching", "score": 0},
+                "num_episodes": 24,
+                "source": "Manga",
+                "media_type": "tv",
+                "rating": "PG-13",
+                "popularity": 100,
+                "start_season": {"year": 2019}
+            }
+        }
+    ]
+}

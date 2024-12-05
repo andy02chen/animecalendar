@@ -825,7 +825,9 @@ def filter_preference_data(data):
         if anime['node']['my_list_status']['status'] == 'completed' and 
         anime['node']['my_list_status']['score'] > 0 and
         anime['node']['num_episodes'] > 0 and
-        'start_season' in anime['node']
+        'start_season' in anime['node'] and
+        'source' in anime['node'] and
+        'rating' in anime['node']
     ]
 
     if(len(completed_anime) == 0):
@@ -909,7 +911,7 @@ def filter_preference_data(data):
         'popular_years': season_year_df.to_dict(orient='records'),
         'season_length': category_totals.to_dict(orient='records'),
         'popularity' : {
-            'avg_pop': average_popularity,
+            'avg_pop': round(average_popularity,2),
             'top_200_pop': less_than_200_count,
         }
     }
