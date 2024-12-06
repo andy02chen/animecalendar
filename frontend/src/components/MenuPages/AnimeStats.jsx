@@ -116,6 +116,33 @@ function getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setA
             });
             break;
 
+        // Get Viewing Data
+        case 3:
+            axios.get("/api/user-stats-view").
+            then(response => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = response.data;
+                    return newArr;
+                })
+                setAPICallSuccess(true);
+                setLoading(false);
+                setAPICallSuccesses((c) => {
+                    const newArray = [...c];
+                    newArray[category] = true;
+                    return newArray;
+                })
+            }).catch(error => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = null;
+                    return newArr;
+                })
+                setAPICallSuccess(false);
+                setLoading(false);
+            });
+            break;
+
         default: 
             setLoading(false);
             setAPICallSuccess(false);
