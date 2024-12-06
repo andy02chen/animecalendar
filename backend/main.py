@@ -936,6 +936,7 @@ def filter_viewing_data(data):
     for entry in animeList:
         node = entry["node"]
         id_ = node['id']
+        image = node['main_picture']['medium']
         title = node['title']
         status = node['my_list_status']['status']
         eps = node['my_list_status']['num_episodes_watched']
@@ -946,6 +947,7 @@ def filter_viewing_data(data):
         rows.append({
             'id': id_,
             'title': title,
+            'img': image,
             'eps': eps,
             'status': status,
             'start_date': start_date,
@@ -954,6 +956,8 @@ def filter_viewing_data(data):
         })
 
     df = pd.DataFrame(rows)
+    df['start_date'] = pd.to_datetime(df['start_date'])
+    df['finish_date'] = pd.to_datetime(df['finish_date'])
 
     # Get current date last year time
     current_date = datetime.now()
@@ -969,14 +973,26 @@ def filter_viewing_data(data):
     eps_this_year = int(watched_this_year["eps"].sum())
 
     # average complete time
-    
+    df['completion_time'] = (df['finish_date'] - df['start_date']).dt.days
+    average_completion_time = round(df['completion_time'].mean(),2)
+
+    # Shortest Completion Time
+    shows_only = df[(df['media_type'] != 'movie') & (df['media_type'] != 'tv_special')][['title','img','completion_time']]
+    min_completion_time = shows_only['completion_time'].min()
+    shortest_completion_rows = shows_only[shows_only['completion_time'] == min_completion_time]
+
+    # Longest Completion Time
+    max_completion_time = shows_only['completion_time'].max()
+    longest_completion_rows = shows_only[shows_only['completion_time'] == max_completion_time]
 
     response_data = {
         'this_year' : {
             'shows': shows_this_year,
             "eps": eps_this_year
         },
-
+        'avg_completion': average_completion_time,
+        'shortest_completion' : shortest_completion_rows.to_dict(orient='records'),
+        'longest_completion' : longest_completion_rows.to_dict(orient='records'),
     }
 
     return response_data
@@ -1010,7 +1026,7 @@ def userViewData():
                 # mal_get_user_data = '''
                 #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
                 # '''
-                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,my_list_status,num_episodes,media_type&nsfw=true&limit=1000'
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,my_list_status,num_episodes,media_type&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
