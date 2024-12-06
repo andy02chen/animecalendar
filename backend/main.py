@@ -918,16 +918,15 @@ def filter_preference_data(data):
 
     return response_data
 
+# TODO
 def filter_viewing_data(data):
     animes = data['data']
 
     animeList = [anime for anime in animes 
-        if (anime['node']['my_list_status']['status'] == 'completed' and
+        if anime['node']['my_list_status']['status'] == 'completed' and
         'start_date' in anime['node']['my_list_status'] and 
         'finish_date' in anime['node']['my_list_status'] and 
-        anime['node']['my_list_status']['num_episodes_watched'] > 0) or 
-        anime['node']['my_list_status']['status'] == 'on_hold' or
-        anime['node']['my_list_status']['status'] == 'dropped'
+        anime['node']['my_list_status']['num_episodes_watched'] > 0
     ]
 
     if(len(animeList) == 0):
@@ -955,9 +954,28 @@ def filter_viewing_data(data):
         })
 
     df = pd.DataFrame(rows)
-    print(df)
+
+    # Get current date last year time
+    current_date = datetime.now()
+    date_last_year = current_date - relativedelta(years=1)
+    formatted_date = date_last_year.strftime('%Y-%m-%d')
+    
+    # How many shows + eps watched this year?
+    watched_this_year = df[
+        (df['finish_date'] >= formatted_date) & (df['media_type'] != 'movie')
+    ][['eps']]
+
+    shows_this_year = len(watched_this_year)
+    eps_this_year = int(watched_this_year["eps"].sum())
+
+    # average complete time
+    
 
     response_data = {
+        'this_year' : {
+            'shows': shows_this_year,
+            "eps": eps_this_year
+        },
 
     }
 
