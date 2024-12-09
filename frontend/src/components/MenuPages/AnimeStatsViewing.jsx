@@ -36,6 +36,76 @@ function AnimeStatsViewing({whichDisplay, data}) {
         )
     }
 
+    // Shortest Completion time
+    const shortest = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Shortest Completion Time
+                </h1>
+                <div className='top-20-anime'>
+                    {data.map((entry, index) => (
+                        <React.Fragment key={index}>
+                            <div>
+                                <div className='top-anime-left'>
+                                    <h2 className='data-h2'>
+                                        {index+1}.
+                                    </h2>
+                                </div>
+                                <div className='top-anime-right'>
+                                    <div className='top-anime-header'>
+                                        <h2 className='data-h2'>
+                                            <span className='yellow-stat'>{entry['title']}</span>
+                                        </h2>
+                                        <img className='top-20-anime-img' src={entry['img']}/>
+                                    </div>
+                                    <h2 className='data-h2'>
+                                        Completed in {entry['completion_time']} day(s)
+                                    </h2>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    ))}
+                </div>
+            </>
+        )
+    }
+
+    // longest Completion time
+    const longest = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Longest Completion Time
+                </h1>
+                <div className='top-20-anime'>
+                    {data.map((entry, index) => (
+                        <React.Fragment key={index}>
+                            <div>
+                                <div className='top-anime-left'>
+                                    <h2 className='data-h2'>
+                                        {index+1}.
+                                    </h2>
+                                </div>
+                                <div className='top-anime-right'>
+                                    <div className='top-anime-header'>
+                                        <h2 className='data-h2'>
+                                            <span className='yellow-stat'>{entry['title']}</span>
+                                        </h2>
+                                        <img className='top-20-anime-img' src={entry['img']}/>
+                                    </div>
+                                    <h2 className='data-h2'>
+                                        Completed in {entry['completion_time']} day(s)
+                                    </h2>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    ))}
+                </div>
+            </>
+        )
+    }
+
     switch(whichDisplay) {
         case 0:
             if(data['this_year'] && data['this_year']['duration'] && data['this_year']['eps'] && data['this_year']['shows']) {
@@ -47,6 +117,20 @@ function AnimeStatsViewing({whichDisplay, data}) {
         case 1:
             if(data['avg_completion']) {
                 return averageCompletion(data['avg_completion']);
+            }
+
+            return notEnoughData();
+
+        case 2:
+            if(data['shortest_completion'] && data['shortest_completion'].length > 0) {
+                return shortest(data['shortest_completion'])
+            }
+
+            return notEnoughData();
+        
+        case 3:
+            if(data['longest_completion'] && data['longest_completion'].length > 0) {
+                return longest(data['longest_completion'])
             }
 
             return notEnoughData();

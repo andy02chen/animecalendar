@@ -918,7 +918,6 @@ def filter_preference_data(data):
 
     return response_data
 
-# TODO
 def filter_viewing_data(data):
     animes = data['data']
 
@@ -986,12 +985,14 @@ def filter_viewing_data(data):
 
     # Shortest Completion Time
     shows_only = df[(df['media_type'] != 'movie') & (df['media_type'] != 'tv_special')][['title','img','completion_time']]
+    shows_only = shows_only.sort_values(by='completion_time', ascending=False)
+
     min_completion_time = shows_only['completion_time'].min()
-    shortest_completion_rows = shows_only[shows_only['completion_time'] == min_completion_time]
+    shortest_completion_rows = shows_only.tail(5).sort_values(by='completion_time', ascending=True)
 
     # Longest Completion Time
     max_completion_time = shows_only['completion_time'].max()
-    longest_completion_rows = shows_only[shows_only['completion_time'] == max_completion_time]
+    longest_completion_rows = shows_only.head(5)
 
     response_data = {
         'this_year' : {
