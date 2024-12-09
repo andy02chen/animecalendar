@@ -179,6 +179,9 @@ def updateStatus():
                 if data['started_watching'] is not None:
                     body['start_date'] = data['started_watching']
 
+                if eps_watched == 0 and data['started_watching'] == None:
+                    body['start_date'] = datetime.now().strftime('%Y-%m-%d')
+
                 response = requests.patch(mal_update_anime, headers=headers, data=body)
 
                 if response.status_code == 200:
