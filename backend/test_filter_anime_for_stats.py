@@ -1,5 +1,5 @@
 import pytest
-from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data, filter_preference_data
+from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data, filter_preference_data, filter_viewing_data
 
 # !!!! GUEST FUNCTION !!!!!!
 
@@ -735,3 +735,122 @@ pref_test_2 = {
         }
     ]
 }
+
+
+########################## VIEWING STATS
+# Basic
+view_test_1 = {
+    'data': [
+        {
+            'node': {
+                'id': 1,
+                'main_picture': {'medium': 'image1.jpg'},
+                'title': 'Anime 1',
+                'my_list_status': {
+                    'status': 'completed',
+                    'start_date': '2024-01-01',
+                    'finish_date': '2024-02-01',
+                    'num_episodes_watched': 12
+                },
+                'media_type': 'tv',
+                'average_episode_duration': 1440
+            }
+        },
+        {
+            'node': {
+                'id': 2,
+                'main_picture': {'medium': 'image2.jpg'},
+                'title': 'Anime 2',
+                'my_list_status': {
+                    'status': 'completed',
+                    'start_date': '2024-05-01',
+                    'finish_date': '2024-05-15',
+                    'num_episodes_watched': 10
+                },
+                'media_type': 'movie',
+                'average_episode_duration': 7200
+            }
+        }
+    ]
+}
+
+def test_view_1():
+    res = filter_viewing_data(view_test_1)
+    assert res == {
+        'this_year' : {
+            'shows': 1,
+            "eps": 12,
+            'duration': 288
+        },
+        'avg_completion': 22.5,
+        'shortest_completion' : [
+                {
+                'completion_time': 31,
+                'img': 'image1.jpg',
+                'title': 'Anime 1',
+                },
+            ],
+        'longest_completion' : [
+                {
+                'completion_time': 31,
+                'img': 'image1.jpg',
+                'title': 'Anime 1',
+                },
+            ],
+    }
+
+# empty
+view_test_2 = {'data': []}
+
+
+def test_view_2():
+    res = filter_viewing_data(view_test_2)
+    assert res == {}
+
+# not met condition
+view_test_3 = {
+    'data': [
+        {
+            'node': {
+                'id': 3,
+                'main_picture': {'medium': 'image3.jpg'},
+                'title': 'Anime 3',
+                'my_list_status': {
+                    'status': 'watching',
+                    'num_episodes_watched': 5
+                },
+                'media_type': 'tv',
+                'average_episode_duration': 25 * 60
+            }
+        }
+    ]
+}
+
+def test_view_3():
+    res = filter_viewing_data(view_test_3)
+    assert res == {}
+
+# missing fields
+view_test_4 = {
+    'data': [
+        {
+            'node': {
+                'id': 4,
+                'main_picture': {'medium': 'image4.jpg'},
+                'title': 'Anime 4',
+                'my_list_status': {
+                    'status': 'completed',
+                    'start_date': '2023-01-01'
+                    # Missing 'finish_date' and 'num_episodes_watched'
+                },
+                'media_type': 'tv',
+                'average_episode_duration': 20 * 60
+            }
+        }
+    ]
+}
+
+def test_view_4():
+    res = filter_viewing_data(view_test_4)
+    assert res == {}
+

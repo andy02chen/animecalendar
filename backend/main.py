@@ -970,18 +970,18 @@ def filter_viewing_data(data):
     # How many shows + eps watched this year?
     watched_this_year = df[
         (df['finish_date'] >= formatted_date) & (df['media_type'] != 'movie')
-    ][['eps']]
+    ][['eps','duration']]
 
     shows_this_year = len(watched_this_year)
     eps_this_year = int(watched_this_year["eps"].sum())
 
     # Total duration
-    df['total_duration'] = df['eps'] * df['duration']
-    total_duration = int(df["total_duration"].sum())
+    watched_this_year['total_duration'] = watched_this_year['eps'] * watched_this_year['duration']
+    total_duration = int(watched_this_year["total_duration"].sum())
 
     # average complete time
     df['completion_time'] = (df['finish_date'] - df['start_date']).dt.days
-    average_completion_time = round(df['completion_time'].mean(),2)
+    average_completion_time = float(round(df['completion_time'].mean(),2))
 
     # Shortest Completion Time
     shows_only = df[(df['media_type'] != 'movie') & (df['media_type'] != 'tv_special')][['title','img','completion_time']]
@@ -1066,12 +1066,11 @@ def userViewData():
         app.logger.error(f"Unexpected error in userViewData function: {e}")
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
-# TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats-pref', methods=["GET"])
 def userPrefData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
@@ -1121,12 +1120,11 @@ def userPrefData():
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Get user data function for user genre data
-# TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats-genres', methods=["GET"])
 def userGenreData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
@@ -1176,12 +1174,11 @@ def userGenreData():
         return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
 
 # Get user data function for guest/user scoring data
-# TODO limit to 1 per 5 minutes
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
         # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
             return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
