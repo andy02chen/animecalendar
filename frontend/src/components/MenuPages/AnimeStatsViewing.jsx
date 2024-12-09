@@ -22,10 +22,31 @@ function AnimeStatsViewing({whichDisplay, data}) {
         )
     }
 
+    // Average completion time
+    const averageCompletion = (data) => {
+        return(
+            <>
+                <h1 className='data-h1'>
+                    Are You a Binge-Watcher or a Weekly Viewer? (Average Completion Time)
+                </h1>
+                <h2 className='data-h2'>
+                    On average, it takes you <span className='yellow-stat'>{data}</span> days to complete an anime series. Movies and TV specials are excluded from this calculation.
+                </h2>
+            </>
+        )
+    }
+
     switch(whichDisplay) {
         case 0:
             if(data['this_year'] && data['this_year']['duration'] && data['this_year']['eps'] && data['this_year']['shows']) {
                 return this_year(data['this_year']);
+            }
+
+            return notEnoughData();
+
+        case 1:
+            if(data['avg_completion']) {
+                return averageCompletion(data['avg_completion']);
             }
 
             return notEnoughData();
