@@ -8,6 +8,7 @@ import AnimeStatsScores from './AnimeStatsScores';
 import AnimeStatsGenres from './AnimeStatsGenres';
 import AnimeStatsGuest from './AnimeStatsGuest';
 import AnimeStatsPref from './AnimeStatsPref';
+import AnimeStatsViewing from './AnimeStatsViewing';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -166,6 +167,11 @@ function statsDisplayFunction(whichCategory, whichDisplay, data, dataMax) {
         case 2:
             dataMax.current = 6;
             return <AnimeStatsPref whichDisplay={whichDisplay} data={data}/>
+
+        // Stats related to Viewing Habits
+        case 3:
+            dataMax.current = 4;
+            return <AnimeStatsViewing whichDisplay={whichDisplay} data={data}/>
     }
 }
 
