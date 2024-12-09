@@ -72,7 +72,7 @@ def test_update_anime_sucess(mock_requests_patch, mock_access_token, mock_expiry
     mock_response.status_code = 200
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10, 'started_watching' : '2024-12-09'})
     assert response.status_code == 200
     mock_requests_patch.assert_called_once()
 
@@ -94,7 +94,7 @@ def test_update_anime_unsuccessful(mock_requests_patch, mock_access_token, mock_
     mock_response.status_code = 400
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10, 'started_watching' : '2024-12-09'})
     assert response.status_code == 502
     mock_requests_patch.assert_called_once()
 
@@ -150,7 +150,7 @@ def test_update_anime_no_score(mock_requests_patch, mock_access_token, mock_expi
     mock_response.status_code = 200
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'started_watching' : '2024-12-09'})
     assert response.status_code == 200
     mock_requests_patch.assert_called_once()
 
@@ -214,7 +214,7 @@ def test_update_anime_sucess_not_completed(mock_requests_patch, mock_access_toke
     mock_response.status_code = 200
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': False, 'score': 10})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': False, 'score': 10, 'started_watching' : '2024-12-09'})
     assert response.status_code == 200
     mock_requests_patch.assert_called_once()
 

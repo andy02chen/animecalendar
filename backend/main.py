@@ -158,13 +158,15 @@ def updateStatus():
                         body = {
                             'score': data['score'],
                             "num_watched_episodes": eps_watched,
-                            "status" : "completed"
+                            "status" : "completed",
+                            "finish_date": datetime.now().strftime('%Y-%m-%d'),
                         }
 
                     else:
                         body = {
                             "num_watched_episodes": eps_watched,
-                            "status" : "completed"
+                            "status" : "completed",
+                            "finish_date": datetime.now().strftime('%Y-%m-%d')
                         }
 
                 # Update progress
@@ -173,6 +175,9 @@ def updateStatus():
                         "num_watched_episodes": eps_watched,
                         "status" : "watching"
                     }
+
+                if data['started_watching'] is not None:
+                    body['start_date'] = data['started_watching']
 
                 response = requests.patch(mal_update_anime, headers=headers, data=body)
 
@@ -345,7 +350,7 @@ def plan_to_watch():
         if user_session_id:
             if user_session_id == "guest":
                 mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=plan_to_watch&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast,start_season&nsfw=true
+                sort=anime_title&fields=start_date,end_date,status,num_episodes,broadcast,start_season&nsfw=true
                 &limit=1000'''
                 headers = {
                     'X-MAL-CLIENT-ID': f'{client_id}'
@@ -370,7 +375,7 @@ def plan_to_watch():
                     return msg, code
                 
                 mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=plan_to_watch&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast,start_season&nsfw=true
+                sort=anime_title&fields=start_date,end_date,status,my_list_status,num_episodes,broadcast,start_season&nsfw=true
                 &limit=1000'''
 
                 get_user_access_token = cipher_suite.decrypt(find_user.access_token)
@@ -430,15 +435,16 @@ def filter_watching_anime(data):
         # Extract image
         details['img'] = node.get('main_picture', {}).get('medium', None)
 
-        if 'list_status' not in anime:
+        if 'my_list_status' not in node:
             continue
-        if 'num_episodes_watched' not in anime['list_status']:
+        if 'num_episodes_watched' not in node['my_list_status']:
             continue
 
         # Extract list status
-        list_status = anime.get('list_status')
-        details['eps_watched'] = list_status.get('num_episodes_watched', 0)
+        my_list_status = node.get('my_list_status')
+        details['eps_watched'] = my_list_status.get('num_episodes_watched', 0)
         details['eps'] = node.get('num_episodes', 0)
+        details['started_watching'] = my_list_status.get('start_date', None)
 
         # Extract broadcast time
         details['broadcast_time'] = node.get('broadcast', {}).get('start_time', None)
@@ -1255,7 +1261,7 @@ def weekly_anime():
         if user_session_id:
             if user_session_id == 'guest':
                 mal_get_anime = '''https://api.myanimelist.net/v2/users/ZNEAK300/animelist?status=watching&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
+                sort=anime_title&fields=start_date,end_date,status,num_episodes,broadcast&nsfw=true&limit=1000'''
                 headers = {
                     'X-MAL-CLIENT-ID': f'{client_id}'
                 }
@@ -1280,7 +1286,7 @@ def weekly_anime():
                     return msg, code
                 
                 mal_get_anime = '''https://api.myanimelist.net/v2/users/@me/animelist?status=watching&
-                sort=anime_title&fields=start_date,end_date,status,list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
+                sort=anime_title&fields=start_date,end_date,status,my_list_status,num_episodes,broadcast&nsfw=true&limit=1000'''
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
                 headers = {

@@ -20,16 +20,16 @@ def test_all():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -46,7 +46,8 @@ def test_all():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -72,7 +73,7 @@ def test_list_status():
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
                     }
-                }
+                },
             }
         ]
     }
@@ -100,16 +101,16 @@ def test_miss_title():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -137,16 +138,16 @@ def test_miss_id():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -177,7 +178,7 @@ def test_miss_node():
                         "start_time": "00:00"
                     }
                 },
-                "list_status": {
+                "my_list_status": {
                     "status": "watching",
                     "score": 0,
                     "num_episodes_watched": 11,
@@ -212,16 +213,16 @@ def test_miss_start_date():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -238,7 +239,8 @@ def test_miss_start_date():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -262,16 +264,16 @@ def test_miss_pic():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -288,7 +290,8 @@ def test_miss_pic():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -309,16 +312,16 @@ def test_miss_pic2():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -335,7 +338,8 @@ def test_miss_pic2():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -359,16 +363,16 @@ def test_miss_num_eps():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -385,7 +389,8 @@ def test_miss_num_eps():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -410,15 +415,15 @@ def test_eps_watched():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -444,15 +449,15 @@ def test_miss_broadcast():
                     "end_date": "2022-09-30",
                     "status": "finished_airing",
                     "num_episodes": 25,
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
+                    }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -469,7 +474,8 @@ def test_miss_broadcast():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -492,17 +498,17 @@ def test_miss_start():
                     "status": "finished_airing",
                     "num_episodes": 25,
                     "broadcast": {
-                        "day_of_the_week": "friday",
+                        "day_of_the_week": "friday"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -519,7 +525,8 @@ def test_miss_start():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -539,20 +546,13 @@ def test_miss_status():
                     },
                     "start_date": "2022-04-15",
                     "end_date": "2022-09-30",
+                    "status": "finished_airing",
                     "num_episodes": 25,
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             }
         ]
     }
@@ -575,20 +575,21 @@ def test_miss_end_date():
                         "large": "https://cdn.myanimelist.net/images/anime/1120/120796l.jpg"
                     },
                     "start_date": "2022-04-15",
+                    "end_date": None,
                     "status": "finished_airing",
                     "num_episodes": 25,
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
-                },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
                 }
             }
         ]
@@ -606,7 +607,8 @@ def test_miss_end_date():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": None,
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         }
     ]
 
@@ -652,16 +654,16 @@ def test_multiple():
                     "broadcast": {
                         "day_of_the_week": "friday",
                         "start_time": "00:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 11,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-24T08:38:33+00:00",
+                        "start_date": "2024-06-29"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 11,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-24T08:38:33+00:00",
-                    "start_date": "2024-06-29"
-                }
             },
             {
                 "node": {
@@ -677,16 +679,16 @@ def test_multiple():
                     "broadcast": {
                         "day_of_the_week": "wednesday",
                         "start_time": "23:00"
+                    },
+                    "my_list_status": {
+                        "status": "watching",
+                        "score": 0,
+                        "num_episodes_watched": 8,
+                        "is_rewatching": False,
+                        "updated_at": "2024-08-22T10:52:06+00:00",
+                        "start_date": "2024-07-04"
                     }
                 },
-                "list_status": {
-                    "status": "watching",
-                    "score": 0,
-                    "num_episodes_watched": 8,
-                    "is_rewatching": False,
-                    "updated_at": "2024-08-22T10:52:06+00:00",
-                    "start_date": "2024-07-04"
-                }
             }
         ]
     }
@@ -703,7 +705,8 @@ def test_multiple():
             'delayed_eps': 0,
             'air_status': "finished_airing",
             "end_date": "2022-09-30",
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-06-29"
         },
         {
             'title': "\"Oshi no Ko\" 2nd Season",
@@ -716,7 +719,8 @@ def test_multiple():
             'delayed_eps': 0,
             'air_status': "currently_airing",
             "end_date": None,
-            'eps_array': []
+            'eps_array': [],
+            'started_watching': "2024-07-04"
         }
     ]
 

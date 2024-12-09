@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default class Anime {
-    constructor(id, title, totalEpisodes, currentProgress, air_status, broadcast_time, delayed_eps, end_date, image, start_date, season) {
+    constructor(id, title, totalEpisodes, currentProgress, air_status, broadcast_time, delayed_eps, end_date, image, start_date, season, started_watching) {
         this.id = id;
         this.title = title;
         this.currentProgress = currentProgress;
@@ -20,7 +20,7 @@ export default class Anime {
         this.epsArray = this.getEpsArray();
         this.season = season;
         this.marker_colour = this.assignAnimeColour();
-        
+        this.started_watching = started_watching;
 
         if(this.air_status === 'finished_airing') {
             this.removeOutdatedLocalStorageData();
@@ -208,14 +208,16 @@ export default class Anime {
                     data = {
                         'anime-id': this.id,
                         'eps-watched': this.currentProgress,
-                        'completed': true
+                        'completed': true,
+                        'started_watching': this.started_watching
                     }
                 } else {
                     data = {
                         'anime-id': this.id,
                         'eps-watched': this.currentProgress,
                         'score': this.rating,
-                        'completed': true
+                        'completed': true,
+                        'started_watching': this.started_watching
                     }
                 }
 
@@ -226,7 +228,8 @@ export default class Anime {
                         'anime-id': this.id,
                         'eps-watched': this.currentProgress,
                         'completed': false,
-                        'status': 'watching'
+                        'status': 'watching',
+                        'started_watching': this.started_watching
                     });
             }
             
