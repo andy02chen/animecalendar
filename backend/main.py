@@ -926,7 +926,8 @@ def filter_viewing_data(data):
         if anime['node']['my_list_status']['status'] == 'completed' and
         'start_date' in anime['node']['my_list_status'] and 
         'finish_date' in anime['node']['my_list_status'] and 
-        anime['node']['my_list_status']['num_episodes_watched'] > 0
+        anime['node']['my_list_status']['num_episodes_watched'] > 0 and
+        'average_episode_duration' in anime['node']
     ]
 
     if(len(animeList) == 0):
@@ -943,6 +944,7 @@ def filter_viewing_data(data):
         start_date = node['my_list_status'].get('start_date', None)
         finish_date = node['my_list_status'].get('finish_date', None)
         media_type = node['media_type']
+        duration = node['average_episode_duration']
 
         rows.append({
             'id': id_,
@@ -952,12 +954,14 @@ def filter_viewing_data(data):
             'status': status,
             'start_date': start_date,
             'finish_date': finish_date,
-            'media_type': media_type
+            'media_type': media_type,
+            'duration': duration
         })
 
     df = pd.DataFrame(rows)
     df['start_date'] = pd.to_datetime(df['start_date'])
     df['finish_date'] = pd.to_datetime(df['finish_date'])
+
 
     # Get current date last year time
     current_date = datetime.now()
@@ -971,6 +975,10 @@ def filter_viewing_data(data):
 
     shows_this_year = len(watched_this_year)
     eps_this_year = int(watched_this_year["eps"].sum())
+
+    # Total duration
+    df['total_duration'] = df['eps'] * df['duration']
+    total_duration = int(df["total_duration"].sum())
 
     # average complete time
     df['completion_time'] = (df['finish_date'] - df['start_date']).dt.days
@@ -988,7 +996,8 @@ def filter_viewing_data(data):
     response_data = {
         'this_year' : {
             'shows': shows_this_year,
-            "eps": eps_this_year
+            "eps": eps_this_year,
+            'duration': round(total_duration/60,2)
         },
         'avg_completion': average_completion_time,
         'shortest_completion' : shortest_completion_rows.to_dict(orient='records'),
@@ -1026,7 +1035,7 @@ def userViewData():
                 # mal_get_user_data = '''
                 #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
                 # '''
-                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,my_list_status,num_episodes,media_type&nsfw=true&limit=1000'
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,my_list_status,num_episodes,media_type,average_episode_duration&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
                 mal_access_token = user_token.decode()
