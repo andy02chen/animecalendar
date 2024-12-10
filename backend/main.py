@@ -1016,9 +1016,67 @@ def filter_viewing_data(data):
 
     return response_data
 
+def filter_studio_data(data):
+
+
+    # Sort for only completed anime
+    animeList = data['data']
+    completed_anime = [anime for anime in animeList 
+        if anime['node']['my_list_status']['status'] == 'completed' and 
+        'studios' in anime['node'] and
+        len(anime['node']['studios']) == 1
+    ]
+
+    if(len(completed_anime) == 0):
+        return {}
+
+    rows = []
+    for entry in completed_anime:
+        node = entry["node"]
+        id_ = node['id']
+        title = node['title']
+        score = node['my_list_status']['score']
+        studios = node['studios']
+
+        rows.append({
+            'id': id_,
+            'title': title,
+            'studio': studios,
+            'score': score
+        })
+
+    df = pd.DataFrame(rows)
+    df_expanded = df.explode('studio')
+
+    df_expanded['studio_id'] = df_expanded['studio'].apply(lambda x: x['id'] if pd.notnull(x) else None)
+    df_expanded['studio_name'] = df_expanded['studio'].apply(lambda x: x['name'] if pd.notnull(x) else None)
+    df_expanded = df_expanded.drop(columns=['studio'])
+
+    # Get popular and highest avg rated studio
+    studio_df = df_expanded[['studio_id','studio_name', 'score']]
+    studio_df = studio_df.groupby('studio_id').agg(
+        studio_name=('studio_name', 'first'),
+        total_score=('score',lambda x: x[x > 0].sum()),
+        count=('studio_id','size'),
+        non_zero_count=('score', lambda x: (x > 0).sum()) 
+    ).reset_index()
+
+    studio_df['average'] = (studio_df['total_score'] / studio_df['non_zero_count']).round(2)
+    studio_df['average'] = studio_df['average'].fillna(0)
+
+    studio_popular = studio_df[['studio_name', 'count']].sort_values(by="count", ascending=False).head(10)
+    studio_top_average = studio_df[['studio_name', 'average', 'count']].sort_values(by="average", ascending=False).head(10)
+
+    response_data = {
+        "top_10_studios_count": studio_popular.to_dict(orient='records'),
+        "top_10_studios_avg": studio_top_average.to_dict(orient='records'),
+    }
+
+    return response_data
+
 # TODO limit to 1 per 5 minutes
-@app.route('/api/user-stats-view', methods=["GET"])
-def userViewData():
+@app.route('/api/user-stats-studio', methods=["GET"])
+def userStudioData():
     try:
         # Check limit
         if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=300):
@@ -1045,6 +1103,59 @@ def userViewData():
                 # mal_get_user_data = '''
                 #     https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,start_season,genres,mean,rank,rating,studios,source,my_list_status&nsfw=true&limit=1000
                 # '''
+                mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,my_list_status,studios&nsfw=true&limit=1000'
+
+                user_token = cipher_suite.decrypt(find_user.access_token)
+                mal_access_token = user_token.decode()
+                headers = {
+                    'Authorization': f'Bearer {mal_access_token}'
+                }
+
+                response = requests.get(mal_get_user_data, headers=headers)
+                
+                if response.status_code == 200:
+                    score_data = filter_studio_data(response.json())
+                    return jsonify(score_data)
+
+                app.logger.error("Error fetching weekly anime for authenticated user in userStudioData")
+                return 'Unable to get user data from MAL',500
+
+            # User not found
+            response = redirect("/")
+            response.set_cookie('session', '', expires=0, secure=True, httponly=True, samesite='Lax', path='/')
+            return response
+
+        # User not logged in
+        return redirect('/')
+
+    except Exception as e:
+        app.logger.error(f"Unexpected error in userStudioData function: {e}")
+        return 'Unable to get your data from MAL. Please report issue if it continues happening.', 500
+
+@app.route('/api/user-stats-view', methods=["GET"])
+def userViewData():
+    try:
+        # Check limit
+        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
+            return jsonify({"error": "rate limit exceeded"}), 429
+
+        # Find user using session id
+        user_session_id = get_session_id()
+
+        if user_session_id:
+
+            if user_session_id == 'guest':
+                return 'You must be logged in to get this data',500
+
+            find_user = find_user_function(user_session_id)
+
+            if find_user:
+                msg, code = check_expiry()
+
+                # Login again
+                if code == 401 or code == 403:
+                    return msg, code
+
                 mal_get_user_data = 'https://api.myanimelist.net/v2/users/@me/animelist?fields=id,title,main_picture,my_list_status,num_episodes,media_type,average_episode_duration&nsfw=true&limit=1000'
 
                 user_token = cipher_suite.decrypt(find_user.access_token)
@@ -1055,7 +1166,6 @@ def userViewData():
 
                 response = requests.get(mal_get_user_data, headers=headers)
                 
-                # TODO new function to get categories for stats
                 if response.status_code == 200:
                     score_data = filter_viewing_data(response.json())
                     return jsonify(score_data)

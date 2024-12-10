@@ -17,7 +17,12 @@ function AnimeStatsPref({whichDisplay, data}) {
                     <BarChart data={data} className='source-bar-chart'>
                         <XAxis dataKey="source" style={{ fill: '#FFFFFF'}}/>
                         <YAxis style={{ fill: '#FFFFFF'}}/>
-                        <Tooltip />
+                        <Tooltip 
+                        contentStyle={{
+                            backgroundColor: '#3FA4FF',
+                            border: '1px solid #3FA4FF'
+                        }}
+                        />
                         <Bar dataKey="count" name="Count">
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={graphGetColor()} />
@@ -50,7 +55,12 @@ function AnimeStatsPref({whichDisplay, data}) {
                             <Cell key={`cell-${index}`} fill={graphGetColor()}/>
                         ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip 
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Legend verticalAlign="bottom" height={50}/>
                 </PieChart>
             </ResponsiveContainer>
@@ -94,7 +104,12 @@ function AnimeStatsPref({whichDisplay, data}) {
                             <Cell key={`cell-${index}`} fill={graphGetColor()}/>
                         ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Legend verticalAlign="bottom" height={50}/>
                 </PieChart>
             </ResponsiveContainer>
@@ -119,7 +134,12 @@ function AnimeStatsPref({whichDisplay, data}) {
                             }} 
                         />
                         <YAxis style={{ fill: '#FFFFFF'}} />
-                        <Tooltip />
+                        <Tooltip 
+                        contentStyle={{
+                            backgroundColor: '#3FA4FF',
+                            border: '1px solid #3FA4FF'
+                        }}
+                        />
                         <Bar dataKey="Total Count" name="Count">
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={graphGetColor()} />

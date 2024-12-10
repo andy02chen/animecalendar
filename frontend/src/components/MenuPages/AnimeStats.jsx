@@ -9,6 +9,7 @@ import AnimeStatsGenres from './AnimeStatsGenres';
 import AnimeStatsGuest from './AnimeStatsGuest';
 import AnimeStatsPref from './AnimeStatsPref';
 import AnimeStatsViewing from './AnimeStatsViewing';
+import AnimeStatsStudio from './AnimeStatsStudio';
 
 function closeStats() {
     const div = document.getElementById('anime-stats-page');
@@ -144,6 +145,33 @@ function getUserStats(setLoading, setAPICallSuccess, setDataUser, category, setA
             });
             break;
 
+        // Get Studio Data
+        case 4:
+            axios.get("/api/user-stats-studio").
+            then(response => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = response.data;
+                    return newArr;
+                })
+                setAPICallSuccess(true);
+                setLoading(false);
+                setAPICallSuccesses((c) => {
+                    const newArray = [...c];
+                    newArray[category] = true;
+                    return newArray;
+                })
+            }).catch(error => {
+                setDataUser((d) => {
+                    const newArr = [...d];
+                    newArr[category] = null;
+                    return newArr;
+                })
+                setAPICallSuccess(false);
+                setLoading(false);
+            });
+            break;
+
         default: 
             setLoading(false);
             setAPICallSuccess(false);
@@ -172,6 +200,11 @@ function statsDisplayFunction(whichCategory, whichDisplay, data, dataMax) {
         case 3:
             dataMax.current = 4;
             return <AnimeStatsViewing whichDisplay={whichDisplay} data={data}/>
+
+        // Stats related to Studios
+        case 4:
+            dataMax.current = 2;
+            return <AnimeStatsStudio whichDisplay={whichDisplay} data={data}/>
     }
 }
 
@@ -271,33 +304,6 @@ function AnimeStats() {
         }
         setDataDisplay(slide);
     }    
-
-    // TODO (re)move
-    const topStudiosAvg = (data) => {
-        return(
-            <>
-                <h1 className='data-h1'>
-                    Top 10 Studios by Average Rating
-                </h1>
-                <ResponsiveContainer width="90%" height="80%" minWidth="18.75rem">
-                    <BarChart layout="vertical" data={data} className="top-10-average-bar-chart">
-                        <XAxis type="number" dataKey="average" style={{ fill: '#FFFFFF'}}/>
-                        <YAxis type="category" dataKey="studio_name" width={100} style={{ fill: '#FFFFFF'}}/>
-                        <Tooltip formatter={(value, name, props) => {
-                            const count = props.payload.count;
-                            return `${value}, Count: ${count}`;
-                        }}/>
-                        <Bar dataKey="average" name="Average">
-                            <LabelList dataKey="average" position="right" />
-                            {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={graphGetColor()} />
-                            ))}
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
-            </>
-        );
-    }
 
     return(
         <div id='anime-stats-page' className='menu-page-hold' style={{display: 'none'}}>

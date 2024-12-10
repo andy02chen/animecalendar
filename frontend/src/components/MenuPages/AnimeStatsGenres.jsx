@@ -16,7 +16,12 @@ function AnimeStatsGenres({whichDisplay, data}) {
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
                     <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
                     <YAxis type="category" dataKey="genre" width={100} style={{ fill: '#FFFFFF'}}/>
-                    <Tooltip/>
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
                             {data.map((entry, index) => (
@@ -43,7 +48,12 @@ function AnimeStatsGenres({whichDisplay, data}) {
                     <Tooltip formatter={(value, name, props) => {
                             const count = props.payload.count;
                             return `${value}, Count: ${count}`;
-                    }}/>
+                    }}
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Bar dataKey="average" name="Average">
                         <LabelList dataKey="average" position="right" />
                             {data.map((entry, index) => (
@@ -67,7 +77,12 @@ function AnimeStatsGenres({whichDisplay, data}) {
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
                     <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
                     <YAxis type="category" dataKey="genres" width={100} style={{ fill: '#FFFFFF'}}/>
-                    <Tooltip/>
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
                             {data.map((entry, index) => (

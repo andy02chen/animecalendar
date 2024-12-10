@@ -14,7 +14,12 @@ function AnimeStatsGuest({dataDisplay, data}) {
                 <BarChart layout="vertical" data={data} className="top-10-count-bar-chart">
                     <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
                     <YAxis type="category" dataKey="genre" width={100} style={{ fill: '#FFFFFF'}}/>
-                    <Tooltip/>
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
                             {data.map((entry, index) => (
@@ -48,7 +53,12 @@ function AnimeStatsGuest({dataDisplay, data}) {
                             <Cell key={`cell-${index}`} fill={graphGetColor()}/>
                         ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Legend verticalAlign="bottom" height={50}/>
                 </PieChart>
             </ResponsiveContainer>
@@ -81,7 +91,12 @@ function AnimeStatsGuest({dataDisplay, data}) {
                     <BarChart data={data} className='source-bar-chart'>
                         <XAxis dataKey="source" style={{ fill: '#FFFFFF'}}/>
                         <YAxis style={{ fill: '#FFFFFF'}}/>
-                        <Tooltip />
+                        <Tooltip 
+                        contentStyle={{
+                            backgroundColor: '#3FA4FF',
+                            border: '1px solid #3FA4FF'
+                        }}
+                        />
                         <Bar dataKey="count" name="Count">
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={graphGetColor()} />
@@ -103,7 +118,12 @@ function AnimeStatsGuest({dataDisplay, data}) {
                 <BarChart layout="vertical" data={data} className="top-studios-count">
                     <XAxis type="number" dataKey="count" style={{ fill: '#FFFFFF'}}/>
                     <YAxis type="category" dataKey="studio_name" width={100} style={{ fill: '#FFFFFF'}}/>
-                    <Tooltip/>
+                    <Tooltip
+                    contentStyle={{
+                        backgroundColor: '#3FA4FF',
+                        border: '1px solid #3FA4FF'
+                    }}
+                    />
                     <Bar dataKey="count" name="Count">
                         <LabelList dataKey="count" position="right" />
                             {data.map((entry, index) => (
