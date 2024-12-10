@@ -29,66 +29,20 @@ function Notice({setRefresh, version}) {
                         <h2 className='smaller-title'>Changes:</h2>
                         <ul className='list'>
                             <br/>
-                            <h2>2.0</h2>
                             <li>
-                                <p>UI Redesigned</p>
+                                <p>Added More Anime stats</p>
                             </li>
                             <li>
-                                <p>Buttons for updating anime have been reworked</p>
-                                <p>&nbsp;&nbsp;&nbsp;&nbsp;- Watched Button - Able to update multiple episodes</p>
-                                <p>&nbsp;&nbsp;&nbsp;&nbsp;- Delayed Button - Able to delay multiple weeks</p>
+                                <p>Stats separated into categories, for more efficient filtering</p>
                             </li>
                             <li>
-                                <p>New Button/Prompt - Early Episodes</p>
-                                <p>&nbsp;&nbsp;&nbsp;&nbsp;- If episode is released and the estimation is wrong (a week behind), a prompt will appear to
-                                    offset all episode releases by a week.
-                                </p>
+                                <p>Finish date added to MAL when completing anime</p>
                             </li>
                             <li>
-                                <p>Settings</p>
-                                <p>Dark Mode/Light mode button</p>
-                                <p>Clear LocalStorage buttons</p>
-                            </li>
-                            <li>
-                                <p>Ability to change marker colour</p>
-                            </li>
-                            <li>
-                                <p>More accurate status for anime with no broadcast time</p>
-                            </li>
-                            <li>
-                                <p>Stay signed in for 30 days</p>
-                            </li>
-                            <br/>
-                            <h2>2.1</h2>
-                            <li>
-                                <p>Expandable Dates for more information</p>
-                            </li>
-                            <h2>2.1.1</h2>
-                            <li>
-                                <p>Changed time to be sorted by ascending order when expanding dates</p>
-                            </li>
-                            <h2>2.2</h2>
-                            <li>
-                                <p>Added Anime Stats for your viewing preferences</p>
-                            </li>
-                            <li>
-                                <p>Fixed issue with display when displaying dates on phone</p>
+                                <p>Start date added to MAL when starting/updating anime</p>
                             </li>
                         </ul>
                         <br/>
-
-                        <h2 className='smaller-title'>Planned Updates:</h2>
-                        <ul className='list'>
-                            <li>
-                                <p>Dashboard with data about your anime viewing preferences. Prob will be similar to Spotify Wrapped.</p>
-                            </li>
-                            <li>
-                                <p>Notifications when estimated release</p>
-                            </li>
-                            <li>
-                                <p>Control calendar by scrolling + scroll animation</p>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>

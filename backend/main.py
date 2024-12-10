@@ -72,15 +72,15 @@ scheduler.start()
 
 # TODO uncomment for main push/merge
 # React Router should be doing this
-# @app.route('/a')
-# @app.route('/home')
-# def serve_react_pages():
-#     try:
-#         return render_template('index.html')
-#         # return redirect("https://localhost:5173", code=302)
-#     except Exception:
-#         app.logger.error('Unable to load home page.')
-#         abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
+@app.route('/a')
+@app.route('/home')
+def serve_react_pages():
+    try:
+        return render_template('index.html')
+        # return redirect("https://localhost:5173", code=302)
+    except Exception:
+        app.logger.error('Unable to load home page.')
+        abort(500, description="Internal Server Error: Unable to load the page. Please try again and report issue if it reoccurs.")
 
 # Get Logo Image
 @app.route('/api/logo', methods=["GET"])
