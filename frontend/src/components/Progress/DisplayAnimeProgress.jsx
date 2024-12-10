@@ -34,10 +34,9 @@ function retryGetAnimeLists(handleSuccess, setError, setLoaded) {
         const animeList = [];
 
         for (let animeData of storeAnime) {
-            assignAnimeColour(animeData);
             animeList.push(
                 new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
-                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date, null)
+                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData.start_date, null, animeData.started_watching)
             );
         }
 
@@ -50,7 +49,7 @@ function retryGetAnimeLists(handleSuccess, setError, setLoaded) {
             for (let animePlanned of storePlanToWatch) {
                 ptwList.push(
                     new Anime(
-                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date, animePlanned.season
+                        animePlanned.id, animePlanned.title, 0, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, null, animePlanned.img, animePlanned.start_date, animePlanned.season, null
                     )
                 )
             }
@@ -251,10 +250,9 @@ function getUsersAnime(handleSuccess, setLoaded, setError) {
         const animeList = [];
 
         for (let animeData of storeAnime) {
-            // assignAnimeColour(animeData);
             animeList.push(
                 new Anime(animeData.id, animeData.title, animeData.eps, animeData.eps_watched, animeData.air_status, 
-                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData. start_date, null)
+                    animeData.broadcast_time, animeData.delayed_eps, animeData.end_date, animeData.img, animeData.start_date, null, animeData.started_watching)
             );
         }
 
@@ -268,6 +266,7 @@ function getUsersAnime(handleSuccess, setLoaded, setError) {
                 ptwList.push(
                     new Anime(
                         animePlanned.id, animePlanned.title, animePlanned.eps, 0, animePlanned.air_status, animePlanned.broadcast_time, 0, animePlanned.end_date, animePlanned.img, animePlanned.start_date, animePlanned.season
+                        , null
                     )
                 )
             }

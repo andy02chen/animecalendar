@@ -72,7 +72,7 @@ def test_update_anime_sucess(mock_requests_patch, mock_access_token, mock_expiry
     mock_response.status_code = 200
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10, 'started_watching' : '2024-12-09'})
     assert response.status_code == 200
     mock_requests_patch.assert_called_once()
 
@@ -94,7 +94,7 @@ def test_update_anime_unsuccessful(mock_requests_patch, mock_access_token, mock_
     mock_response.status_code = 400
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'score': 10, 'started_watching' : '2024-12-09'})
     assert response.status_code == 502
     mock_requests_patch.assert_called_once()
 
@@ -150,7 +150,7 @@ def test_update_anime_no_score(mock_requests_patch, mock_access_token, mock_expi
     mock_response.status_code = 200
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': True, 'started_watching' : '2024-12-09'})
     assert response.status_code == 200
     mock_requests_patch.assert_called_once()
 
@@ -214,7 +214,7 @@ def test_update_anime_sucess_not_completed(mock_requests_patch, mock_access_toke
     mock_response.status_code = 200
     mock_requests_patch.return_value = mock_response
 
-    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': False, 'score': 10})
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': False, 'score': 10, 'started_watching' : '2024-12-09'})
     assert response.status_code == 200
     mock_requests_patch.assert_called_once()
 
@@ -247,3 +247,25 @@ def test_api_exception(mock_rate_limit, client):
     response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'score': 10, 'completed': False})
     assert response.status_code == 500
     assert response.data.decode() == 'An error has prevented the server from fulfilling this request. Pleaase try again later or report this bug'
+
+# test move from plan to watch
+@patch('main.is_rate_limited')
+@patch('main.get_session_id')
+@patch('main.find_user_function')
+@patch('main.check_expiry')
+@patch('main.cipher_suite.decrypt')
+@patch('main.requests.patch')
+def test_plan_to_watch(mock_requests_patch, mock_access_token, mock_expiry, mock_user_query, mock_session_id, mock_rate_limit, client):
+    mock_rate_limit.return_value = False
+    mock_session_id.return_value = "fake_session"
+    mock_user_query.return_value = MagicMock(access_token='fake_access_token')
+    mock_access_token.return_value = b"fake_access_token"
+    mock_expiry.return_value = '',100
+
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_requests_patch.return_value = mock_response
+
+    response = client.post('/api/update-anime', json={'anime-id': 1, 'eps-watched': 0, 'completed': False, "started_watching": None})
+    assert response.status_code == 200
+    mock_requests_patch.assert_called_once()
