@@ -1,5 +1,5 @@
 import pytest
-from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data, filter_preference_data, filter_viewing_data
+from main import guest_filter_user_anime_for_stats, filter_scoring_data, filter_genre_data, filter_preference_data, filter_viewing_data, filter_studio_data
 
 # !!!! GUEST FUNCTION !!!!!!
 
@@ -854,3 +854,127 @@ def test_view_4():
     res = filter_viewing_data(view_test_4)
     assert res == {}
 
+############ STUDIO STATS
+# no data
+studio_test_1 = {
+    "data": []
+}
+
+def test_studio_1():
+    res = filter_studio_data(studio_test_1)
+    assert res == {}
+
+# no completed
+studio_test_2 = {
+    "data": [
+        {
+            "node": {
+                "id": 1,
+                "title": "Anime A",
+                "my_list_status": {"status": "watching", "score": 8},
+                "studios": [{"id": 101, "name": "Studio A"}],
+            }
+        }
+    ]
+}
+
+def test_studio_2():
+    res = filter_studio_data(studio_test_2)
+    assert res == {}
+
+# multiple studios
+studio_test_3 = {
+    "data": [
+        {
+            "node": {
+                "id": 2,
+                "title": "Anime B",
+                "my_list_status": {"status": "completed", "score": 9},
+                "studios": [{"id": 102, "name": "Studio B"}, {"id": 103, "name": "Studio C"}],
+            }
+        }
+    ]
+}
+
+def test_studio_3():
+    res = filter_studio_data(studio_test_3)
+    assert res == {}
+
+# 1 studio
+studio_test_4 = {
+    "data": [
+        {
+            "node": {
+                "id": 3,
+                "title": "Anime C",
+                "my_list_status": {"status": "completed", "score": 7},
+                "studios": [{"id": 104, "name": "Studio D"}],
+            }
+        }
+    ]
+}
+
+def test_studio_4():
+    res = filter_studio_data(studio_test_4)
+    assert res == {
+        "top_10_studios_count": [{"studio_name": "Studio D", "count": 1}],
+        "top_10_studios_avg": [{"studio_name": "Studio D", "average": 7.0, "count": 1}]
+    }
+
+# multiple
+studio_test_5 = {
+    "data": [
+        {
+            "node": {
+                "id": 4,
+                "title": "Anime E",
+                "my_list_status": {"status": "completed", "score": 10},
+                "studios": [{"id": 105, "name": "Studio E"}],
+            }
+        },
+        {
+            "node": {
+                "id": 5,
+                "title": "Anime F",
+                "my_list_status": {"status": "completed", "score": 8},
+                "studios": [{"id": 105, "name": "Studio E"}],
+            }
+        }
+    ]
+}
+
+def test_studio_5():
+    res = filter_studio_data(studio_test_5)
+    assert res == {
+        "top_10_studios_count": [{"studio_name": "Studio E", "count": 2}],
+        "top_10_studios_avg": [{"studio_name": "Studio E", "average": 9.0, "count": 2}]
+    }
+
+# zero scores
+studio_test_6 = {
+    "data": [
+        {
+            "node": {
+                "id": 6,
+                "title": "Anime G",
+                "my_list_status": {"status": "completed", "score": 0},
+                "studios": [{"id": 106, "name": "Studio F"}],
+            }
+        },
+        {
+            "node": {
+                "id": 7,
+                "title": "Anime H",
+                "my_list_status": {"status": "completed", "score": 6},
+                "studios": [{"id": 106, "name": "Studio F"}],
+            }
+        }
+    ]
+}
+
+def test_studio_6():
+    res = filter_studio_data(studio_test_6)
+    assert res == {
+        "top_10_studios_count": [{"studio_name": "Studio F", "count": 2}],
+        "top_10_studios_avg": [{"studio_name": "Studio F", "average": 6.0, "count": 2}]
+    }
