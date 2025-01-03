@@ -45,7 +45,7 @@ function updateAnimeProgress(anime, setUpdate, setLoading, setDisplayError, rati
         anime.markCompleted();
     }
 
-    if(anime.daysTillRelease > 0) {
+    if(anime.daysTillRelease > 0 && anime.broadcast_time !== null) {
         if(localStorage.getItem(anime.id+'early') === null) {
             localStorage.setItem(anime.id+'early',anime.currentProgress - anime.minProgress);
         } else {
