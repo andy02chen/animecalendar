@@ -497,7 +497,7 @@ genre_test_1 = {
                 "my_list_status": {
                     "status": "completed",
                     "score": 9,
-                    "finish_date": "2023-12-25",
+                    "finish_date": "2024-12-25",
                 },
                 "genres": [{"name": "Drama"}, {"name": "Romance"}],
             }
@@ -510,7 +510,7 @@ genre_test_1 = {
                 "my_list_status": {
                     "status": "completed",
                     "score": 7,
-                    "finish_date": "2023-11-05",
+                    "finish_date": "2024-11-05",
                 },
                 "genres": [{"name": "Action"}, {"name": "Drama"}],
             }
@@ -553,12 +553,12 @@ def test_genre_basic():
             {"genre": "Romance", "count": 1},
         ],
         "top_10_most_watched_this_year": [
-            {"genres": "Action", "count": 1},
+            {"genres": "Action", "count": 2},
+            {"genres": "Drama", "count": 2},
             {"genres": "Adventure", "count": 1},
-            {"genres": "Drama", "count": 1},
             {"genres": "Romance", "count": 1},
         ],
-        "genres_this_year": ["Adventure", "Romance"],
+        "genres_this_year": ['Action',"Adventure", 'Drama',"Romance"],
     }
 
 # Empty

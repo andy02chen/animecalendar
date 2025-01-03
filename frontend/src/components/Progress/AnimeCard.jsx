@@ -8,7 +8,7 @@ function increaseAnimeProgress(anime, setUpdate, setShowDelay) {
     setUpdate(u => !u);
     setShowDelay(false);
 
-    if(anime.daysTillRelease > 0) {
+    if(anime.daysTillRelease > 0 && anime.broadcast_time !== null) {
         document.getElementById(anime.id+'earlyMsg').style.display = "inline";
     }
 
