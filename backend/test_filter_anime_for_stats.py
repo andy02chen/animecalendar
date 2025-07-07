@@ -484,7 +484,7 @@ genre_test_1 = {
                 "my_list_status": {
                     "status": "completed",
                     "score": 8,
-                    "finish_date": "2024-01-15",
+                    "finish_date": "2025-01-15",
                 },
                 "genres": [{"name": "Action"}, {"name": "Adventure"}],
             }
@@ -497,7 +497,7 @@ genre_test_1 = {
                 "my_list_status": {
                     "status": "completed",
                     "score": 9,
-                    "finish_date": "2024-12-25",
+                    "finish_date": "2025-12-25",
                 },
                 "genres": [{"name": "Drama"}, {"name": "Romance"}],
             }
@@ -510,7 +510,7 @@ genre_test_1 = {
                 "my_list_status": {
                     "status": "completed",
                     "score": 7,
-                    "finish_date": "2024-11-05",
+                    "finish_date": "2025-11-05",
                 },
                 "genres": [{"name": "Action"}, {"name": "Drama"}],
             }
@@ -523,7 +523,7 @@ genre_test_1 = {
                 "my_list_status": {
                     "status": "dropped",  # Not "completed"
                     "score": 5,
-                    "finish_date": "2024-02-01",
+                    "finish_date": "2025-02-01",
                 },
                 "genres": [{"name": "Comedy"}],
             }
@@ -602,7 +602,7 @@ genre_test_4 = {
                 "my_list_status": {
                     "status": "completed",
                     "score": 10,
-                    "finish_date": "2024-03-01",
+                    "finish_date": "2025-03-01",
                 },
                 "genres": [{"name": "Action"}, {"name": "Fantasy"}, {"name": "Adventure"}],
             }
@@ -748,8 +748,8 @@ view_test_1 = {
                 'title': 'Anime 1',
                 'my_list_status': {
                     'status': 'completed',
-                    'start_date': '2024-01-01',
-                    'finish_date': '2024-02-01',
+                    'start_date': '2025-01-01',
+                    'finish_date': '2025-02-01',
                     'num_episodes_watched': 12
                 },
                 'media_type': 'tv',
@@ -763,8 +763,8 @@ view_test_1 = {
                 'title': 'Anime 2',
                 'my_list_status': {
                     'status': 'completed',
-                    'start_date': '2024-05-01',
-                    'finish_date': '2024-05-15',
+                    'start_date': '2025-05-01',
+                    'finish_date': '2025-05-15',
                     'num_episodes_watched': 10
                 },
                 'media_type': 'movie',
