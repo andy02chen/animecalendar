@@ -110,9 +110,6 @@ def find_user_function(user_session_id):
 @app.route('/api/update-anime', methods=["POST"])
 def updateStatus():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=10, period=60):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -344,9 +341,6 @@ def filter_plan_to_watch_anime(data):
 @app.route('/api/get-plan-to-watch', methods=["GET"])
 def plan_to_watch():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -873,7 +867,7 @@ def filter_viewing_data(data):
     average_completion_time = float(round(df['completion_time'].mean(),2))
 
     # Shortest Completion Time
-    shows_only = df[(df['media_type'] != 'movie') & (df['media_type'] != 'tv_special')][['title','img','completion_time']]
+    shows_only = df[(df['media_type'] != 'movie') & (df['media_type'] != 'special') & (df['eps'] > 1) & (df['media_type'] != 'tv_special')][['title','img','completion_time','media_type']]
     shows_only = shows_only.sort_values(by='completion_time', ascending=False)
 
     min_completion_time = shows_only['completion_time'].min()
@@ -955,9 +949,6 @@ def filter_studio_data(data):
 @app.route('/api/user-stats-studio', methods=["GET"])
 def userStudioData():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -1008,9 +999,6 @@ def userStudioData():
 @app.route('/api/user-stats-view', methods=["GET"])
 def userViewData():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -1061,9 +1049,6 @@ def userViewData():
 @app.route('/api/user-stats-pref', methods=["GET"])
 def userPrefData():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -1115,9 +1100,6 @@ def userPrefData():
 @app.route('/api/user-stats-genres', methods=["GET"])
 def userGenreData():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -1169,9 +1151,6 @@ def userGenreData():
 @app.route('/api/user-stats', methods=["GET"])
 def userData():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=1, period=300):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()
@@ -1237,9 +1216,6 @@ def userData():
 @app.route('/api/get-weekly-anime', methods=["GET"])
 def weekly_anime():
     try:
-        # Check limit
-        if is_rate_limited(request.remote_addr, request.endpoint, limit=20, period=60):
-            return jsonify({"error": "rate limit exceeded"}), 429
 
         # Find user using session id
         user_session_id = get_session_id()

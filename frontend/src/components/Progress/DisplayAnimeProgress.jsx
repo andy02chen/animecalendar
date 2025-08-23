@@ -403,7 +403,7 @@ function DisplayAnimeProgress() {
                 )}
                 <div className='display-which-list'>
                     <button id='change-list-button-cw' className='change-list-button active-list' onClick={() => changeDisplayedList('cw', setListSelected, listSelected)}>
-                        Currently Airing
+                        Watching
                     </button>
                     <button id='change-list-button-ptw' className='change-list-button' onClick={() => changeDisplayedList('ptw', setListSelected, listSelected)}>
                         Plan To Watch
